@@ -8,9 +8,13 @@ const FormValidator = ({ schema, onChange, values }) => {
 
   console.log('schema', schema);
   console.log('values', values);
-  debugger;
 
-  return <Form onChange={onChange} values={values} errors={errors} schema={schema} />;
+  const onFormChange = (values, field) => {
+    console.log('onFormChange', values, field);
+    onChange(values, field);
+  };
+
+  return <Form onChange={onFormChange} values={values} errors={errors} schema={schema} />;
 };
 
 export default FormValidator;

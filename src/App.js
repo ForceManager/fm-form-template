@@ -19,9 +19,14 @@ class App extends PureComponent {
     });
   }
 
-  onSelectorChange = (selectedForm) => this.setState({ selectedForm });
+  onSelectorChange = (value) => this.setState({ selectedForm: value });
 
-  onFormChange = (formValues) => this.setState({ formValues });
+  onFormChange = (values, field) => {
+    console.log('onFormChange', values, field);
+    // this.setState({
+    //   formValues: [...this.state.formValues, this.state.formValues[selectedForm]: values,
+    // });
+  };
 
   componentDidMount() {
     this.getFormInitData()
@@ -35,6 +40,8 @@ class App extends PureComponent {
 
   render() {
     const { formInitData, formValues, selectedForm } = this.state;
+
+    console.log('formValues', formValues);
 
     if (formInitData && !selectedForm) {
       return (
