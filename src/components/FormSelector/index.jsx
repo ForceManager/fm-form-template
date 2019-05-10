@@ -1,63 +1,26 @@
-import React, { Component } from 'react';
-// import FormsSelector from './componenents/FormsSelector';
-import { Select, Form } from 'hoi-poi-ui';
+import React from 'react';
+import { Select } from 'hoi-poi-ui';
 
-import './style.css';
+import './style.scss';
 
-class FormSelector extends Component {
-  state = { selectedForm: null, formValues: {} };
+const FormSelector = ({ schema, selectedForm, onChange }) => {
+  const options = schema.map((form) => {
+    return { label: form.title, value: form.id };
+  });
 
-  componentDidMount() {
-    this.initWidget();
-  }
+  const onFormChange = (formValues) => onChange(formValues);
 
-  initWidget = () => {};
-
-  onFormChange = (formValues, field) => this.setState({ formValues });
-
-  onSelectorChange = (selectedForm) => this.setState({ selectedForm });
-
-  renderSelector() {
-    const { schema } = this.props;
-    const { selectedForm } = this.state;
-    const options = schema.map((form) => {
-      return { label: form.title, value: form.id };
-    });
-    console.log('options', options);
-
-    return (
+  return (
+    <div className="forms-select">
       <Select
         label="Form Type"
         placeholder="Select one"
-        onChange={this.onSelectorChange}
+        onChange={onFormChange}
         options={options}
         value={selectedForm}
       />
-    );
-  }
-
-  renderForm() {
-    const { schema } = this.props;
-    const { formValues, selectedForm } = this.state;
-    const errors = {
-      phone: 'Invalid phone',
-    };
-    const formSchema = schema.filter((form) => form.id === selectedForm.value)[0].schema;
-    console.log('formSchema', formSchema);
-
-    return (
-      <Form onFormChange={this.onChange} values={formValues} errors={errors} schema={formSchema} />
-    );
-  }
-
-  render() {
-    const { selectedForm } = this.state;
-
-    if (selectedForm) {
-      return this.renderForm();
-    }
-    return this.renderSelector();
-  }
-}
+    </div>
+  );
+};
 
 export default FormSelector;

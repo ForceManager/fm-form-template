@@ -1,0 +1,23 @@
+.forms-pager {
+  .forms-pager-bar {
+    display: flex;
+    padding: 15px 20px;
+    justify-content: space-between;
+    border-top: 1px solid #f0f3f5;
+    .forms-pager-prev {
+      cursor: pointer;
+      svg {
+        transform: rotate(90deg)
+      }
+    }
+    .forms-pager-number{
+      color: #7a8792;
+    }
+    .forms-pager-next{
+      cursor: pointer;
+      svg {
+        transform: rotate(-90deg)
+      }
+    }
+  }
+}

@@ -154,6 +154,38 @@
   {
     "title": "Standard Service and After Sales Service Report (Time)",
     "id": 2,
-    "schema": []
+    "schema": [
+      {
+        "title": "Extra2",
+        "fields": [
+          {
+            "name": "biography",
+            "type": "inputGroup",
+            "attrs": {
+              "showInputsLabel": "Show translations",
+              "hideInputsLabel": "Hide translations",
+              "inputs": [
+                {
+                  "label": "Biography",
+                  "name": "english"
+                },
+                {
+                  "label": "Spanish",
+                  "name": "spanish"
+                },
+                {
+                  "label": "French",
+                  "name": "french"
+                },
+                {
+                  "label": "Germany",
+                  "name": "germany"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
   }
 ]

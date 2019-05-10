@@ -1,17 +1,58 @@
-import React from 'react';
-import { HoiPoiProvider } from 'hoi-poi-ui';
-import FormSelector from '../components/FormSelector;
+import React, { PureComponent } from 'react';
+// import { bridge } from 'fm-bridge';
+import FormSelector from './components/FormSelector';
+import FormEdit from './components/FormEdit';
+import FormSummary from './components/FormSummary';
 import schema from './schema.json';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <HoiPoiProvider>
-        <FormsSelector schema={schema} />
-      </HoiPoiProvider>
-    </div>
-  );
+class App extends PureComponent {
+  state = {
+    formInitData: null,
+    selectedForm: null,
+    formValues: [],
+  };
+
+  getFormInitData() {
+    return new Promise((resolve) => {
+      resolve({ data: 'cacota' });
+    });
+  }
+
+  onSelectorChange = (selectedForm) => this.setState({ selectedForm });
+
+  onFormChange = (formValues) => this.setState({ formValues });
+
+  componentDidMount() {
+    this.getFormInitData()
+      .then((res) => {
+        this.setState({ formInitData: res.data });
+      })
+      .catch((err) => {
+        console.warn(err);
+      });
+  }
+
+  render() {
+    const { formInitData, formValues, selectedForm } = this.state;
+
+    if (formInitData && !selectedForm) {
+      return (
+        <FormSelector
+          schema={schema}
+          selectedForm={selectedForm}
+          onChange={this.onSelectorChange}
+        />
+      );
+    } else if (formInitData && selectedForm) {
+      const formSchema = schema.filter((form) => form.id === selectedForm.value)[0].schema;
+      console.log('formSchema', formSchema);
+
+      return <FormEdit schema={formSchema} values={formValues} onChange={this.onFormChange} />;
+    } else {
+      return <FormSummary values={formValues} />;
+    }
+  }
 }
 
 export default App;
