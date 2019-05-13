@@ -28,6 +28,13 @@ class FormPager extends PureComponent {
     }
   };
 
+  onFormChange = (values, field) => {
+    const { onChange } = this.props;
+    const { currentPage } = this.state;
+
+    onChange(values, field, currentPage);
+  };
+
   renderPrev() {
     const { currentPage } = this.state;
 
@@ -51,7 +58,7 @@ class FormPager extends PureComponent {
   }
 
   render() {
-    const { schema, onChange, values } = this.props;
+    const { schema, values } = this.props;
     const { totalPages, currentPage } = this.state;
 
     if (!values[currentPage]) values[currentPage] = {};
@@ -62,7 +69,7 @@ class FormPager extends PureComponent {
       <div className="forms-pager">
         <FormValidator
           schema={[schema[currentPage]]}
-          onChange={onChange}
+          onChange={this.onFormChange}
           values={values[currentPage]}
         />
         <div className="forms-pager-bar">

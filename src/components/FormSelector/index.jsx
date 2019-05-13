@@ -4,8 +4,8 @@ import { Select } from 'hoi-poi-ui';
 import './style.scss';
 
 const FormSelector = ({ schema, selectedForm, onChange }) => {
-  const options = schema.map((form) => {
-    return { label: form.title, value: form.id };
+  const options = Object.keys(schema).map((key) => {
+    return { label: schema[key].title, value: schema[key].id };
   });
 
   const onFormChange = (formValues) => onChange(formValues);

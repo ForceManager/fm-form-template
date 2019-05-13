@@ -10,7 +10,7 @@ class App extends PureComponent {
   state = {
     formInitData: null,
     selectedForm: null,
-    formValues: [],
+    formValues: {},
   };
 
   getFormInitData() {
@@ -21,11 +21,13 @@ class App extends PureComponent {
 
   onSelectorChange = (value) => this.setState({ selectedForm: value });
 
-  onFormChange = (values, field) => {
-    console.log('onFormChange', values, field);
-    // this.setState({
-    //   formValues: [...this.state.formValues, this.state.formValues[selectedForm]: values,
-    // });
+  onFormChange = (values, field, currentPage) => {
+    const { formValues } = this.state;
+
+    console.log('onFormChange', values, field, currentPage);
+    this.setState({
+      formValues: { ...formValues, [currentPage]: values },
+    });
   };
 
   componentDidMount() {
@@ -52,7 +54,7 @@ class App extends PureComponent {
         />
       );
     } else if (formInitData && selectedForm) {
-      const formSchema = schema.filter((form) => form.id === selectedForm.value)[0].schema;
+      const formSchema = schema[selectedForm.value].schema;
       console.log('formSchema', formSchema);
 
       return <FormEdit schema={formSchema} values={formValues} onChange={this.onFormChange} />;

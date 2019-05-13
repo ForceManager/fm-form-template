@@ -1,7 +1,7 @@
-[
-  {
+{
+  "nmori": {
     "title": "New Machine or Line Installation",
-    "id": 1,
+    "id": "nmori",
     "schema": [
       {
         "title": "General",
@@ -151,9 +151,9 @@
       }
     ]
   },
-  {
+  "ssaassr": {
     "title": "Standard Service and After Sales Service Report (Time)",
-    "id": 2,
+    "id": "ssaassr",
     "schema": [
       {
         "title": "Extra2",
@@ -188,4 +188,4 @@
       }
     ]
   }
-]
+}
