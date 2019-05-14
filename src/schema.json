@@ -1,188 +1,206 @@
 {
-  "nmori": {
+  "form1": {
     "title": "New Machine or Line Installation",
-    "id": "nmori",
+    "id": "form1",
     "schema": [
       {
-        "title": "General",
+        "title": "General information Start",
         "fields": [
           {
-            "label": "Name",
-            "name": "name",
+            "label": "Form No.",
+            "name": "formNo",
             "type": "text",
-            "placeholder": "Your name",
+            "isReadOnly": true
+          },
+          {
+            "label": "Customer.",
+            "name": "customer",
+            "type": "text",
+            "isReadOnly": true
+          },
+          {
+            "label": "Contact",
+            "name": "contact",
+            "type": "select",
+            "isRequired": true,
+            "attrs": {
+              "options": []
+            }
+          },
+          {
+            "label": "Date from",
+            "name": "dateForm",
+            "type": "text",
             "isRequired": true
           },
           {
-            "label": "Email",
-            "name": "email",
+            "label": "Date to",
+            "name": "dateTo",
             "type": "text",
-            "placeholder": "Your email",
-            "hint": "No spam!",
-            "isReadOnly": true,
+            "isRequired": true
+          },
+          {
+            "label": "Service Engineer",
+            "name": "serviceEngineer",
+            "type": "text"
+          },
+          {
+            "label": "Machine type & Serial No. ",
+            "name": "machineTypeSerialNo",
+            "type": "select",
             "attrs": {
-              "type": "email"
+              "options": []
             }
           },
           {
-            "label": "Password",
-            "name": "password",
+            "label": "Machine hours",
+            "name": "machineHours",
             "type": "text",
-            "placeholder": "Your password",
+            "isReadOnly": true
+          },
+          {
+            "label": "Depart from Marchesini",
+            "name": "departFromMarchesini",
+            "type": "text",
+            "isRequired": true
+          },
+          {
+            "label": "Arrive to customer",
+            "name": "arriveToCustomer",
+            "type": "text",
+            "isRequired": true
+          }
+        ]
+      },
+      {
+        "title": "Time Allocation Table",
+        "fields": [
+          {
+            "label": "Activity",
+            "name": "activity",
+            "type": "select",
+            "attrs": {
+              "options": []
+            }
+          },
+          {
+            "label": "Day",
+            "name": "day",
+            "type": "text",
+            "isRequired": true
+          },
+          {
+            "label": "Hour: From",
+            "name": "hourFrom",
+            "type": "text",
+            "isRequired": true
+          },
+          {
+            "label": "Hour: To",
+            "name": "hourTo",
+            "type": "text",
+            "isRequired": true
+          },
+          {
+            "label": "+ Add",
+            "name": "addTimeRow",
+            "type": "button"
+          }
+        ]
+      },
+      {
+        "title": "Work Performed",
+        "fields": [
+          {
+            "label": "Customer.",
+            "name": "customer",
+            "type": "text",
+            "isReadOnly": true
+          },
+          {
+            "label": "Contact",
+            "name": "contact",
+            "type": "select",
             "isRequired": true,
             "attrs": {
-              "type": "password"
+              "options": []
             }
           },
           {
-            "label": "Gender",
-            "name": "gender",
-            "type": "select",
-            "placeholder": "Select your gender",
-            "attrs": {
-              "options": [
-                {
-                  "label": "Male",
-                  "value": "male"
-                },
-                {
-                  "label": "Female",
-                  "value": "female"
-                },
-                {
-                  "label": "Other",
-                  "value": "other"
-                }
-              ]
-            }
+            "label": "Service incomplete",
+            "name": "serviceIncomplete",
+            "type": "checkbox",
+            "isRequired": true
           },
           {
-            "label": "Employment status",
-            "name": "employmentStatus",
-            "type": "radioGroup",
-            "attrs": {
-              "options": [
-                {
-                  "label": "Employee",
-                  "value": "employee"
-                },
-                {
-                  "label": "Worker",
-                  "value": "worker"
-                },
-                {
-                  "label": "Self-employed",
-                  "value": "self-employed"
-                }
-              ]
-            }
+            "label": "Training and instruction received",
+            "name": "trainingReceived",
+            "type": "checkbox",
+            "isRequired": true
           },
           {
-            "label": "Interest",
-            "name": "interest",
-            "type": "slider"
+            "label": "Spare requested",
+            "name": "spareRequested",
+            "type": "checkbox",
+            "isRequired": true
+          },
+          {
+            "label": "Modification requested",
+            "name": "modificationRequested",
+            "type": "checkbox",
+            "isRequired": true
+          },
+          {
+            "label": "Description of work performed.",
+            "name": "description",
+            "type": "text",
+            "isReadOnly": true
           }
         ]
       },
       {
-        "title": "Contact details",
+        "title": "Signatures",
         "fields": [
           {
-            "label": "Address",
-            "name": "address",
-            "type": "text",
-            "placeholder": "Write an address"
+            "label": "Customer’s signature.",
+            "name": "customerSignature",
+            "type": "signature"
           },
           {
-            "label": "Phone",
-            "name": "phone",
+            "label": "Date of the Customer’s signature",
+            "name": "dateCustomerSignature",
             "type": "text",
-            "placeholder": "Write a phone"
+            "isReadOnly": true
           },
           {
-            "label": "Prefered way",
-            "name": "prefered-way",
-            "type": "checkboxGroup",
-            "attrs": {
-              "options": [
-                {
-                  "label": "Email",
-                  "value": "email"
-                },
-                {
-                  "label": "Phone",
-                  "value": "phone"
-                }
-              ]
-            }
+            "label": "Service engineer’s signature.",
+            "name": "serviceEngineerSignature",
+            "type": "signature"
+          },
+          {
+            "label": "Date of the Service engineer’s signature",
+            "name": "dateServiceEngineerSignature",
+            "type": "text",
+            "isReadOnly": true
           }
         ]
       },
       {
-        "title": "Extra",
-        "fields": [
-          {
-            "name": "biography",
-            "type": "inputGroup",
-            "attrs": {
-              "showInputsLabel": "Show translations",
-              "hideInputsLabel": "Hide translations",
-              "inputs": [
-                {
-                  "label": "Biography",
-                  "name": "english"
-                },
-                {
-                  "label": "Spanish",
-                  "name": "spanish"
-                },
-                {
-                  "label": "French",
-                  "name": "french"
-                },
-                {
-                  "label": "Germany",
-                  "name": "germany"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    ]
-  },
-  "ssaassr": {
-    "title": "Standard Service and After Sales Service Report (Time)",
-    "id": "ssaassr",
-    "schema": [
+        "title": "Photos",
+        "fields": []
+      },
       {
-        "title": "Extra2",
+        "title": "General information End",
         "fields": [
           {
-            "name": "biography",
-            "type": "inputGroup",
-            "attrs": {
-              "showInputsLabel": "Show translations",
-              "hideInputsLabel": "Hide translations",
-              "inputs": [
-                {
-                  "label": "Biography",
-                  "name": "english"
-                },
-                {
-                  "label": "Spanish",
-                  "name": "spanish"
-                },
-                {
-                  "label": "French",
-                  "name": "french"
-                },
-                {
-                  "label": "Germany",
-                  "name": "germany"
-                }
-              ]
-            }
+            "label": "Depart from customer",
+            "name": "departFromCustomer",
+            "type": "text"
+          },
+          {
+            "label": "Arrive to Marchesini",
+            "name": "arriveToMarchesini",
+            "type": "text"
           }
         ]
       }

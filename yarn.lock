@@ -4142,9 +4142,9 @@ hmac-drbg@^1.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.1"
 
-hoi-poi-ui@^0.0.1-alpha.25:
-  version "0.0.1-alpha.25"
-  resolved "https://registry.yarnpkg.com/hoi-poi-ui/-/hoi-poi-ui-0.0.1-alpha.25.tgz#28213e3f277a24326c1db42563a9d7ba1c2f1bfc"
+hoi-poi-ui@^0.0.1-alpha.27:
+  version "0.0.1-alpha.27"
+  resolved "https://registry.yarnpkg.com/hoi-poi-ui/-/hoi-poi-ui-0.0.1-alpha.27.tgz#f33b64d916ef223c9354714132651a79da8adeec"
   dependencies:
     classnames "^2.2.6"
     cross-env "^5.2.0"
@@ -9134,6 +9134,10 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+validator@^10.11.0:
+  version "10.11.0"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-10.11.0.tgz#003108ea6e9a9874d31ccc9e5006856ccd76b228"
 
 vary@~1.1.2:
   version "1.1.2"

@@ -1,20 +1,33 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
+// import validator from 'validator';
 import { Form } from 'hoi-poi-ui';
 
 import './style.scss';
 
-const FormValidator = ({ schema, onChange, values }) => {
-  const errors = {};
+class FormValidator extends PureComponent {
+  state = { errors: {}, validations: {} };
 
-  console.log('schema', schema);
-  console.log('values', values);
+  validateField = (field, value) => {
+    const { schema, currentPage } = this.props;
 
-  const onFormChange = (values, field) => {
+    console.log('schema', schema[currentPage].fields);
+    console.log('value', value);
+  };
+
+  onFormChange = (values, field, value) => {
+    const { onChange } = this.props;
+
     console.log('onFormChange', values, field);
+    this.validateField(field, value);
     onChange(values, field);
   };
 
-  return <Form onChange={onFormChange} values={values} errors={errors} schema={schema} />;
-};
+  render() {
+    const { errors } = this.state;
+    const { schema, values } = this.props;
+
+    return <Form onChange={this.onFormChange} values={values} errors={errors} schema={schema} />;
+  }
+}
 
 export default FormValidator;

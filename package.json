@@ -4,11 +4,12 @@
   "private": true,
   "dependencies": {
     "fm-bridge": "^0.0.1-beta.3",
-    "hoi-poi-ui": "^0.0.1-alpha.25",
+    "hoi-poi-ui": "^0.0.1-alpha.27",
     "node-sass": "^4.12.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "validator": "^10.11.0"
   },
   "scripts": {
     "start": "react-scripts start",

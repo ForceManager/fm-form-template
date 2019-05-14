@@ -15,7 +15,7 @@ class FormPager extends PureComponent {
   onClickPrev = (event) => {
     const { currentPage } = this.state;
 
-    if (currentPage > 1) {
+    if (currentPage > 0) {
       this.setState({ currentPage: currentPage - 1 });
     }
   };
@@ -69,6 +69,7 @@ class FormPager extends PureComponent {
       <div className="forms-pager">
         <FormValidator
           schema={[schema[currentPage]]}
+          currentPage={currentPage}
           onChange={this.onFormChange}
           values={values[currentPage]}
         />

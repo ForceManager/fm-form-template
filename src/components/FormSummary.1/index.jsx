@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 // import FormsSelector from './componenents/FormsSelector';
 import { Select, Form } from 'hoi-poi-ui';
 
 import './style.css';
 
-class FormsSelector extends Component {
+class FormsSelector extends PureComponent {
   state = { selectedForm: null, formValues: {} };
 
   componentDidMount() {
