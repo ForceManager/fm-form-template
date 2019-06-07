@@ -5,7 +5,7 @@ import './style.scss';
 
 const FormSelector = ({ schema, selectedForm, onChange }) => {
   const options = Object.keys(schema).map((key) => {
-    return { label: schema[key].title, value: schema[key].id };
+    return { label: schema[key].title, value: schema[key].name };
   });
 
   const onFormChange = (formValues) => onChange(formValues);
@@ -18,6 +18,8 @@ const FormSelector = ({ schema, selectedForm, onChange }) => {
         onChange={onFormChange}
         options={options}
         value={selectedForm}
+        labelMode="vertical"
+        isFullWidth
       />
     </div>
   );

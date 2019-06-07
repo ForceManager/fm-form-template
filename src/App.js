@@ -1,102 +1,353 @@
 import React, { PureComponent } from 'react';
-// import { bridge } from 'fm-bridge';
+import { Toast, toast } from 'hoi-poi-ui';
+import moment from 'moment';
+import { bridge } from 'fm-bridge';
 import FormSelector from './components/FormSelector';
 import FormEdit from './components/FormEdit';
 import FormSummary from './components/FormSummary';
-import schema from './schema.json';
-import './App.css';
+import Signature from './components/Signature';
+import DatePicker from './components/DatePicker';
+import TimePicker from './components/TimePicker';
+import DateTimePicker from './components/DateTimePicker';
+import utils from './utils';
+import config from './configs/config.json';
+import defaultValues from './configs/defaultValues';
+
+import './App.scss';
 
 class App extends PureComponent {
   state = {
-    formInitData: null,
-    selectedForm:
-      Object.keys(schema).length > 1
-        ? null
-        : { name: schema[Object.keys(schema)[0]].title, value: Object.keys(schema)[0] },
-    formValues: {},
+    // selectedForm:
+    //   Object.keys(config.formSchema).length > 1
+    //     ? null
+    //     : {
+    //         name: config.formSchema[Object.keys(config.formSchema)[0]].title,
+    //         value: Object.keys(config.formSchema)[0],
+    //       },
+    selectedForm: { name: 'Standard Service', value: 'standardService' },
+    formSchema: null,
+    imagesView: false,
   };
 
   componentDidMount() {
-    this.getFormInitData()
+    bridge
+      .showLoading()
+      .then(() => bridge.getFormInitData())
       .then((res) => {
-        return this.setDefaultValues(res.data);
-      })
-      .then((res) => {
-        console.log('setDefaultValues', res);
-        this.setState({ ...this.state, ...res });
+        let newState;
+        if (res.mode === 'creation') {
+          newState = {
+            formData: {
+              formObject: {
+                fechaCreacion: moment().format('DD/MM/YYYY HH:mm'),
+                userCreacion: res.user.id,
+              },
+              idFormType: 1,
+              idState: 1,
+              endState: 0,
+              listObject: config.listObject,
+              detailObject: config.detailObject,
+            },
+            company: res.company,
+            user: res.user,
+            entityForm: res.entityForm,
+            mode: res.mode,
+            isReadonly: res.isReadonly || false,
+            idPreSelectedFormType: res.idPreSelectedFormType,
+            entityFormExtraFields: res.entityFormExtraFields,
+            imei: res.imei,
+          };
+        } else if (res.mode === 'edition') {
+          newState = {
+            formData: {
+              formObject: res.entityForm.fullObject.formObject,
+              idFormType: res.idFormType,
+              idState: res.idState,
+              endState: res.endState,
+              listObject: res.entityForm.listObject,
+              detailObject: {
+                detailTitle: config.detailObject.detailTitle,
+                detailValues: res.entityForm.detailObject,
+              },
+            },
+            company: res.company,
+            user: res.user,
+            entityForm: res.entityForm,
+            mode: res.mode,
+            isReadonly: res.isReadonly || false,
+          };
+        }
+        this.setState({ ...this.state, ...newState });
+        bridge.hideLoading();
       })
       .catch((err) => {
         console.warn(err);
       });
   }
 
-  getFormInitData() {
-    //TEMP
-    return new Promise((resolve, reject) => {
-      try {
-        let data = JSON.parse(
-          '{"company":{"agendaMetadata":"","calificacion":"","cif":"","countContacto":-1,"countExpediente":-1,"countGestiones":-1,"countOfertas":-1,"distancia":"0","email":"","email2":"","email3":"","entorno":"Sales","extId":"","fax":"","idCalificacion":-1,"idEstadoEmpresa":-1,"idresponsable":101,"identorno":16,"idTarifa":0,"idTipoEmpresa":40,"idWarning":-1,"idresponsable2":-1,"idresponsable3":-1,"idresponsable4":-1,"idresponsable5":-1,"intgeoaccuracy":0,"isActiveWarning":false,"followingItem":-1,"blnReadOnly":false,"lastAccuracy":0,"lastActivityDate":0,"lastCheckinDate":"","lastUserCheckinDate":"","lastDistance":0,"logo":"-1","movil":"","nombre":"Test","numAgenda":"0","observaciones":"","relation":{"id":-1,"isDeleted":0,"pendingCrud":0,"relationType":0,"serverOrder":-1,"sqlId":-1,"updateTime":-1,"uuid":"a9224ab2-c973-47bc-97fb-62a510acb8d6"},"responsable":"Test Marchesiniusa","responsable2":"","responsable3":"","responsable4":"","responsable5":"","strSearchField":"TestBarcelonaBarcelona08034CarrerdeJosepIrlaiBosch,1","strPoblacion":"Barcelona","strProvincia":"Barcelona","tel":"","tel2":"","tipoEmpresa":"Other","web":"","country":"España","cp":"08034","direccion":"Carrer de Josep Irla i Bosch, 1","idCountry":73,"mLatitude":"41.3912239","mLongitude":"2.12918568","poblacion":"Barcelona","provincia":"Barcelona","fcreado":"14\\/05\\/2019 15:23:46","fmodificado":"","id":2323,"isDeleted":0,"pendingCrud":0,"serverOrder":-1,"sqlId":995,"symbolCurrency":"$","updateTime":1557841895141,"uuid":"a9224ab2-c973-47bc-97fb-62a510acb8d6"},"user":{"username":"test@marchesiniusa","userId":101,"name":"Test","lang":"es","langDB":"es","locale":"es-ES"},"idPreSelectedFormType":1,"entityFormExtraFields":"[]","isReadonly":false,"mode":"creation","imei":"867560031532166"}',
-        );
-        resolve({ data });
-      } catch (error) {
-        reject(error);
+  componentDidUpdate() {
+    const { selectedForm, formSchema, formData, company } = this.state;
+
+    if (selectedForm && !formSchema) {
+      let schemaPromises = [];
+      let schemaPositions = [];
+      let defaultValuesPromises = [];
+      let defaultValuesPositions = [];
+      let defaultValues = {};
+      let newFormSchema = [...config.formSchema[selectedForm.value].schema];
+      bridge.showLoading();
+      const mapSections = (sections, currentPath, valueObject) => {
+        sections.map((section, sectionIndex) => {
+          section.className = [section.className, 'form-page'];
+          // section.attrs = { isExpandable: false };
+          let newValueObject = {
+            ...valueObject,
+            [currentPath[sectionIndex].name]: {},
+          };
+          mapFields(section.fields, currentPath[sectionIndex].fields, newValueObject);
+        });
+      };
+      const mapFields = (fields, currentPath, valueObject) => {
+        console.log('valueObject', valueObject);
+        fields.map((field, fieldIndex) => {
+          if (!field.isFullWidth) field.isFullWidth = true;
+          if (!field.labelMode) field.labelMode = 'vertical';
+          switch (field.type) {
+            case 'multiplier':
+              let newValueObject = {
+                ...valueObject,
+                [currentPath[fieldIndex].name]: {},
+              };
+              mapSections(field.schema, currentPath[fieldIndex].schema, newValueObject);
+              break;
+            case 'select':
+              if (field.attrs && field.attrs.table && field.attrs.table !== '') {
+                schemaPromises.push(
+                  bridge
+                    .getValueList(field.attrs.table)
+                    .then((res) => {
+                      field.attrs.options = res;
+                    })
+                    .catch((err) => {
+                      console.warn(err);
+                    }),
+                );
+                schemaPositions.push(currentPath[fieldIndex].attrs.options);
+                break;
+              } else if (
+                field.attrs &&
+                field.attrs.relatedEntity &&
+                field.attrs.relatedEntity !== ''
+              ) {
+                const id =
+                  field.attrs.relatedEntity[1] === 'account' && field.attrs.relatedEntity[2] === -1
+                    ? company.id
+                    : field.attrs.relatedEntity[2];
+                schemaPromises.push(
+                  bridge
+                    .getRelatedEntity(
+                      field.attrs.relatedEntity[0],
+                      field.attrs.relatedEntity[1],
+                      id,
+                    )
+                    .then((res) => {
+                      console.log('getRelatedEntity', res);
+                      field.attrs.options = utils.formatEntityList(
+                        field.attrs.relatedEntity[0],
+                        res,
+                      );
+                    })
+                    .catch((err) => {
+                      console.warn(err);
+                      toast({
+                        type: 'error',
+                        text: 'Get value list failed',
+                        title: 'Error',
+                      });
+                    }),
+                );
+                schemaPositions.push(currentPath[fieldIndex].attrs.options);
+                break;
+              }
+            case 'text':
+              if (field.defaultValue && field.defaultValue !== '') {
+                defaultValuesPromises.push(this.setDefaultValue(field.defaultValue));
+                let newValueObject = {
+                  [valueObject]: {
+                    [currentPath[fieldIndex].name]: '',
+                  },
+                };
+                defaultValuesPositions.push(newValueObject);
+                break;
+              }
+            default:
+              break;
+          }
+        });
+      };
+
+      mapSections(newFormSchema, newFormSchema, {});
+      // console.log('schemaPromises', schemaPromises);
+      // console.log('schemaPositions', schemaPositions);
+      // console.log('defaultValuesPromises', defaultValuesPromises);
+      // console.log('defaultValuesPositions', defaultValuesPositions);
+      Promise.all(schemaPromises)
+        .then((res) => {
+          res.map((el, i) => {
+            schemaPositions[i] = el;
+          });
+          return Promise.all(defaultValuesPromises);
+        })
+        .then((res) => {
+          this.setState({
+            ...this.state,
+            formSchema: newFormSchema,
+            formData: {
+              ...formData,
+              formObject: {
+                ...formData.formObject,
+                defaultValues,
+              },
+            },
+          });
+          bridge.hideLoading();
+        })
+        .catch((err) => {
+          console.warn(err);
+        });
+    }
+  }
+
+  setDefaultValue(defaultValue) {
+    console.log('defaultValues', defaultValues);
+    return new Promise((resolve) => {
+      if (defaultValues && defaultValues[defaultValue]) {
+        console.log('defaultValue', defaultValues[defaultValue]);
+        resolve(defaultValues[defaultValue]);
+      } else {
+        resolve();
       }
-      resolve({ data: 'cacota' });
+      // //## WRITE HERE YOUR CUSTOM DEFAULT VALUES ##//
+      // switch (defaultValue) {
+      //   case 'accountName':
+      //     console.log('company', company);
+      //     resolve(company.nombre);
+      //     break;
+      //   case 'userName':
+      //     console.log('user', user);
+      //     resolve(user.name);
+      //     break;
+      //   default:
+      //     resolve();
+      // }
     });
   }
 
-  setSelectors(formInitData) {
-    return new Promise((resolve, reject) => {
-      let state = { formInitData };
-      state.formValues = {
-        0: { customer: formInitData.company.nombre, serviceEngineer: formInitData.user.name },
-      };
-      resolve(state);
-    });
-  }
+  setImagesView = (value) => {
+    this.setState({ imagesView: value });
+  };
 
-  setDefaultValues(formInitData) {
-    return new Promise((resolve, reject) => {
-      let state = { formInitData };
-      state.formValues = {
-        0: { customer: formInitData.company.nombre, serviceEngineer: formInitData.user.name },
-      };
-      resolve(state);
-    });
-  }
+  onFieldFocus = (values, field, currentPage) => {
+    const { formData, formSchema } = this.state;
+    const sectionName = formSchema[currentPage].name;
+
+    if (field.subType === 'date') {
+      bridge
+        .openDatePicker()
+        .then((res) => {
+          this.setState({
+            formData: {
+              ...formData,
+              formObject: {
+                ...formData.formObject,
+                [sectionName]: {
+                  ...formData.formObject[sectionName],
+                  [field.name]: res,
+                },
+              },
+            },
+          });
+        })
+        .catch((err) => {
+          console.warn(err);
+        });
+    }
+  };
 
   onSelectorChange = (value) => this.setState({ selectedForm: value });
 
   onFormChange = (values, field, currentPage) => {
-    const { formValues } = this.state;
+    const { formData, formSchema } = this.state;
+    const sectionName = formSchema[currentPage].name;
 
-    console.log('onFormChange', values, field, currentPage);
+    // console.log('onFormChange', values, field, currentPage);
+
     this.setState({
-      formValues: { ...formValues, [currentPage]: values },
+      formData: {
+        ...formData,
+        formObject: {
+          ...formData.formObject,
+          [sectionName]: values,
+        },
+      },
     });
   };
 
-  render() {
-    const { formInitData, formValues, selectedForm } = this.state;
+  onPickerChange = (a, b, c) => {
+    console.log('onPickerChange', a, b, c);
+  };
+
+  MyDatePicker = (...props) => <DatePicker onChange={this.onPickerChange} />;
+
+  customFields = {
+    datePicker: DatePicker,
+    timePicker: TimePicker,
+    dateTimePicker: DateTimePicker,
+    signature: Signature,
+  };
+
+  renderContent() {
+    const { mode, selectedForm, formData, formSchema, imagesView } = this.state;
 
     console.log('this.state', this.state);
 
-    if (formInitData && !selectedForm) {
+    if (mode === 'creation' && !selectedForm) {
       return (
         <FormSelector
-          schema={schema}
+          schema={config.formSchema}
           selectedForm={selectedForm}
           onChange={this.onSelectorChange}
         />
       );
-    } else if (formInitData && selectedForm) {
-      const formSchema = schema[selectedForm.value].schema;
-      console.log('formSchema', formSchema);
-
-      return <FormEdit schema={formSchema} values={formValues} onChange={this.onFormChange} />;
+    } else if (
+      (formSchema && (this.state.mode === 'creation' && selectedForm)) ||
+      this.state.mode === 'edition'
+    ) {
+      return (
+        <FormEdit
+          schema={formSchema}
+          onChange={this.onFormChange}
+          onFocus={this.onFieldFocus}
+          formData={formData}
+          customFields={this.customFields}
+          setImagesView={this.setImagesView}
+          imagesView={imagesView}
+        />
+      );
+    } else if (this.state.mode === 'edition') {
+      return <FormSummary schema={formSchema} values={formData.formObject} />;
     } else {
-      return <FormSummary values={formValues} />;
+      return;
     }
+  }
+
+  render() {
+    return (
+      <div className="fom-container">
+        {this.renderContent()}
+        <Toast />
+      </div>
+    );
   }
 }
 

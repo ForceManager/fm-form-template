@@ -1,0 +1,512 @@
+{
+  "formSchema": {
+    "standardService": {
+      "title": "Standard Service",
+      "name": "standardService",
+      "schema": [
+        {
+          "title": "General information Start",
+          "name": "generalInformation",
+          "className": "general-info-start",
+          "fields": [
+            {
+              "label": "Form No.",
+              "name": "formNo",
+              "type": "text",
+              "isReadOnly": true
+            },
+            {
+              "label": "Customer.",
+              "name": "customer",
+              "type": "text",
+              "defaultValue": "accountName",
+              "isReadOnly": true
+            },
+            {
+              "label": "Contact",
+              "name": "contact",
+              "type": "select",
+              "isRequired": true,
+              "attrs": {
+                "relatedEntity": ["contacts", "accounts", -1],
+                "options": []
+              }
+            },
+            {
+              "label": "Date from",
+              "name": "dateForm",
+              "type": "datePicker",
+              "isRequired": true
+            },
+            {
+              "label": "Date to",
+              "name": "dateTo",
+              "type": "datePicker",
+              "isRequired": true
+            },
+            {
+              "label": "Service Engineer",
+              "name": "serviceEngineer",
+              "type": "text",
+              "defaultValue": "userName"
+            },
+            {
+              "label": "Machine type & Serial No. ",
+              "name": "machineTypeSerialNo",
+              "type": "text",
+              "isRequired": true
+            },
+            {
+              "label": "Machine hours",
+              "name": "machineHours",
+              "type": "text",
+              "isRequired": true
+            },
+            {
+              "label": "Depart from Marchesini",
+              "name": "departFromMarchesini",
+              "type": "dateTimePicker",
+              "isRequired": true
+            },
+            {
+              "label": "Arrive to customer",
+              "name": "arriveToCustomer",
+              "type": "dateTimePicker",
+              "isRequired": true
+            }
+          ]
+        },
+        {
+          "title": "Time Allocation Table",
+          "name": "timeAllocationTable",
+          "className": "time-allocation-table",
+          "fields": [
+            {
+              "name": "timeAllocationLine",
+              "type": "multiplier",
+              "buttonLabel": "ADD",
+              "buttonClassName": "time-allocation-add-button",
+              "schema": [
+                {
+                  "className": "",
+                  "name": "",
+                  "fields": [
+                    {
+                      "label": "Activity",
+                      "name": "activity",
+                      "type": "select",
+                      "attrs": {
+                        "table": "Z_tblActivities_Standard_Service",
+                        "options": []
+                      }
+                    },
+                    {
+                      "label": "Day",
+                      "name": "day",
+                      "type": "datePicker",
+                      "isRequired": true
+                    },
+                    {
+                      "label": "Hour: From",
+                      "name": "hourFrom",
+                      "type": "timePicker",
+                      "isRequired": true
+                    },
+                    {
+                      "label": "Hour: To",
+                      "name": "hourTo",
+                      "type": "timePicker",
+                      "isRequired": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Work Performed",
+          "name": "workPerformed",
+          "className": "work-performed",
+          "fields": [
+            {
+              "label": "Customer.",
+              "name": "customer",
+              "type": "text",
+              "isReadOnly": true
+            },
+            {
+              "label": "Contact",
+              "name": "contact",
+              "type": "select",
+              "isRequired": true,
+              "attrs": {
+                "options": []
+              }
+            },
+            {
+              "label": "Service incomplete",
+              "name": "serviceIncomplete",
+              "type": "checkbox",
+              "isRequired": true
+            },
+            {
+              "label": "Training and instruction received",
+              "name": "trainingReceived",
+              "type": "checkbox",
+              "isRequired": true
+            },
+            {
+              "label": "Spare requested",
+              "name": "spareRequested",
+              "type": "checkbox",
+              "isRequired": true
+            },
+            {
+              "label": "Modification requested",
+              "name": "modificationRequested",
+              "type": "checkbox",
+              "isRequired": true
+            },
+            {
+              "label": "Description of work performed.",
+              "name": "description",
+              "type": "text",
+              "isReadOnly": true
+            }
+          ]
+        },
+        {
+          "title": "Signatures",
+          "name": "signatures",
+          "className": "signatures",
+          "fields": [
+            {
+              "label": "Customer’s signature.",
+              "name": "customerSignature",
+              "type": "signature"
+            },
+            {
+              "label": "Date of the Customer’s signature",
+              "name": "dateCustomerSignature",
+              "type": "text",
+              "isReadOnly": true
+            },
+            {
+              "label": "Service engineer’s signature.",
+              "name": "serviceEngineerSignature",
+              "type": "signature"
+            },
+            {
+              "label": "Date of the Service engineer’s signature",
+              "name": "dateServiceEngineerSignature",
+              "type": "text",
+              "isReadOnly": true
+            }
+          ]
+        },
+        {
+          "title": "General information End",
+          "name": "generalInformationEnd",
+          "className": "general-info-end",
+          "imagesView": true,
+          "fields": [
+            {
+              "label": "Depart from customer",
+              "name": "departFromCustomer",
+              "type": "dateTimePicker",
+              "isRequired": true
+            },
+            {
+              "label": "Arrive to Marchesini",
+              "name": "arriveToMarchesini",
+              "type": "dateTimePicker",
+              "isRequired": true
+            }
+          ]
+        }
+      ]
+    },
+    "newMachine": {
+      "title": "New Machine or Line Installation",
+      "name": "newMachine",
+      "schema": [
+        {
+          "title": "General information Start",
+          "name": "generalInformationStart",
+          "className": "general-info-start",
+          "fields": [
+            {
+              "label": "Form No.",
+              "name": "formNo",
+              "type": "text",
+              "isReadOnly": true
+            },
+            {
+              "label": "Customer.",
+              "name": "customer",
+              "type": "text",
+              "isReadOnly": true
+            },
+            {
+              "label": "Contact",
+              "name": "contact",
+              "type": "select",
+              "isRequired": true,
+              "attrs": {
+                "options": []
+              }
+            },
+            {
+              "label": "Date from",
+              "name": "dateForm",
+              "type": "text",
+              "subType": "date",
+              "isRequired": true
+            },
+            {
+              "label": "Date to",
+              "name": "dateTo",
+              "type": "text",
+              "subType": "date",
+              "isRequired": true
+            },
+            {
+              "label": "Service Engineer",
+              "name": "serviceEngineer",
+              "type": "text"
+            },
+            {
+              "label": "Machine type & Serial No. ",
+              "name": "machineTypeSerialNo",
+              "type": "select",
+              "attrs": {
+                "options": []
+              }
+            },
+            {
+              "label": "Machine hours",
+              "name": "machineHours",
+              "type": "text",
+              "isReadOnly": true
+            },
+            {
+              "label": "Depart from Marchesini",
+              "name": "departFromMarchesini",
+              "type": "text",
+              "isRequired": true
+            },
+            {
+              "label": "Arrive to customer",
+              "name": "arriveToCustomer",
+              "type": "text",
+              "isRequired": true
+            }
+          ]
+        },
+        {
+          "title": "Time Allocation Table",
+          "name": "timeAllocationTable",
+          "className": "time-allocation-table",
+          "fields": [
+            {
+              "name": "timeAllocationLine",
+              "type": "multiplier",
+              "buttonLabel": "ADD",
+              "buttonClassName": "time-allocation-add-button",
+              "schema": [
+                {
+                  "className": "",
+                  "name": "",
+                  "fields": [
+                    {
+                      "label": "Activity",
+                      "name": "activity",
+                      "type": "select",
+                      "attrs": {
+                        "table": "Z_tblActivities_New_Machine",
+                        "options": []
+                      }
+                    },
+                    {
+                      "label": "Day",
+                      "name": "day",
+                      "type": "datePicker",
+                      "isRequired": true
+                    },
+                    {
+                      "label": "Hour: From",
+                      "name": "hourFrom",
+                      "type": "timePicker",
+                      "isRequired": true
+                    },
+                    {
+                      "label": "Hour: To",
+                      "name": "hourTo",
+                      "type": "timePicker",
+                      "isRequired": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Work Performed",
+          "name": "workPerformed",
+          "className": "work-performed",
+          "fields": [
+            {
+              "label": "Customer.",
+              "name": "customer",
+              "type": "text",
+              "isReadOnly": true
+            },
+            {
+              "label": "Contact",
+              "name": "contact",
+              "type": "select",
+              "isRequired": true,
+              "attrs": {
+                "options": []
+              }
+            },
+            {
+              "label": "Service incomplete",
+              "name": "serviceIncomplete",
+              "type": "checkbox",
+              "isRequired": true
+            },
+            {
+              "label": "Training and instruction received",
+              "name": "trainingReceived",
+              "type": "checkbox",
+              "isRequired": true
+            },
+            {
+              "label": "Spare requested",
+              "name": "spareRequested",
+              "type": "checkbox",
+              "isRequired": true
+            },
+            {
+              "label": "Modification requested",
+              "name": "modificationRequested",
+              "type": "checkbox",
+              "isRequired": true
+            },
+            {
+              "label": "Description of work performed.",
+              "name": "description",
+              "type": "text",
+              "isReadOnly": true
+            }
+          ]
+        },
+        {
+          "title": "Signatures",
+          "name": "signatures",
+          "className": "signatures",
+          "fields": [
+            {
+              "label": "Customer’s signature.",
+              "name": "customerSignature",
+              "type": "signature"
+            },
+            {
+              "label": "Date of the Customer’s signature",
+              "name": "dateCustomerSignature",
+              "type": "text",
+              "isReadOnly": true
+            },
+            {
+              "label": "Service engineer’s signature.",
+              "name": "serviceEngineerSignature",
+              "type": "signature"
+            },
+            {
+              "label": "Date of the Service engineer’s signature",
+              "name": "dateServiceEngineerSignature",
+              "type": "text",
+              "isReadOnly": true
+            }
+          ]
+        },
+        {
+          "title": "General information End",
+          "name": "generalInformationEnd",
+          "className": "general-info-end",
+          "imagesView": true,
+          "fields": [
+            {
+              "label": "Depart from customer",
+              "name": "departFromCustomer",
+              "type": "dateTimePicker",
+              "isRequired": true
+            },
+            {
+              "label": "Arrive to Marchesini",
+              "name": "arriveToMarchesini",
+              "type": "dateTimePicker",
+              "isRequired": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "listObject": {
+    "pos11": "",
+    "pos12": "",
+    "pos13": "",
+    "pos21": "state",
+    "pos22": "fechaCreacion",
+    "pos23": ""
+  },
+  "detailObject": {
+    "detailTitle": "Detalle",
+    "detailValues": [
+      {
+        "type": "title",
+        "titleName": "Datos del formulario",
+        "key": "",
+        "value": "",
+        "entityId": "",
+        "entityType": ""
+      },
+      {
+        "type": "text",
+        "titleName": "",
+        "key": "Tipo",
+        "value": "",
+        "entityId": "",
+        "entityType": ""
+      },
+      {
+        "type": "text",
+        "titleName": "",
+        "key": "Fecha de creación",
+        "value": "fechaCreacion",
+        "entityId": "",
+        "entityType": ""
+      },
+      {
+        "type": "text",
+        "titleName": "",
+        "key": "Estado",
+        "value": "state",
+        "entityId": "",
+        "entityType": ""
+      },
+      {
+        "type": "text",
+        "titleName": "",
+        "key": "Responsable",
+        "value": "",
+        "entityId": "",
+        "entityType": ""
+      }
+    ]
+  }
+}

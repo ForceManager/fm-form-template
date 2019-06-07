@@ -8,25 +8,37 @@ class FormValidator extends PureComponent {
   state = { errors: {}, validations: {} };
 
   validateField = (field, value) => {
-    const { schema, currentPage } = this.props;
-
-    console.log('schema', schema[currentPage].fields);
-    console.log('value', value);
+    // const { schema, currentPage } = this.props;
   };
 
   onFormChange = (values, field, value) => {
     const { onChange } = this.props;
 
-    console.log('onFormChange', values, field);
     this.validateField(field, value);
     onChange(values, field);
   };
 
+  onFieldFocus = (values, field, value) => {
+    const { onFocus } = this.props;
+
+    onFocus(values, field, value);
+  };
+
   render() {
     const { errors } = this.state;
-    const { schema, values } = this.props;
+    const { schema, values, customFields } = this.props;
 
-    return <Form onChange={this.onFormChange} values={values} errors={errors} schema={schema} />;
+    // console.log('FormValidator values', values);
+    return (
+      <Form
+        onChange={this.onFormChange}
+        onFocus={this.onFieldFocus}
+        values={values}
+        errors={errors}
+        schema={schema}
+        customFields={customFields}
+      />
+    );
   }
 }
 
