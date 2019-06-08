@@ -206,10 +206,15 @@
           ]
         },
         {
+          "name": "photos",
+          "className": "photos",
+          "imagesView": true,
+          "fields": []
+        },
+        {
           "title": "General information End",
           "name": "generalInformationEnd",
           "className": "general-info-end",
-          "imagesView": true,
           "fields": [
             {
               "label": "Depart from customer",
@@ -434,10 +439,15 @@
           ]
         },
         {
+          "name": "photos",
+          "className": "photos",
+          "imagesView": true,
+          "fields": []
+        },
+        {
           "title": "General information End",
           "name": "generalInformationEnd",
           "className": "general-info-end",
-          "imagesView": true,
           "fields": [
             {
               "label": "Depart from customer",

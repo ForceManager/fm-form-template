@@ -11,7 +11,7 @@ import TimePicker from './components/TimePicker';
 import DateTimePicker from './components/DateTimePicker';
 import utils from './utils';
 import config from './configs/config.json';
-import defaultValues from './configs/defaultValues';
+import getDefaultValue from './configs/getDefaultValue';
 
 import './App.scss';
 
@@ -93,32 +93,26 @@ class App extends PureComponent {
       let schemaPositions = [];
       let defaultValuesPromises = [];
       let defaultValuesPositions = [];
-      let defaultValues = {};
+      let defaultValuePath = [];
       let newFormSchema = [...config.formSchema[selectedForm.value].schema];
       bridge.showLoading();
-      const mapSections = (sections, currentPath, valueObject) => {
+      const mapSections = (sections, currentPath, subsection) => {
         sections.map((section, sectionIndex) => {
           section.className = [section.className, 'form-page'];
           // section.attrs = { isExpandable: false };
-          let newValueObject = {
-            ...valueObject,
-            [currentPath[sectionIndex].name]: {},
-          };
-          mapFields(section.fields, currentPath[sectionIndex].fields, newValueObject);
+          if (!subsection) defaultValuePath = [];
+          defaultValuePath.push(currentPath[sectionIndex].name);
+          mapFields(section.fields, currentPath[sectionIndex].fields);
         });
       };
-      const mapFields = (fields, currentPath, valueObject) => {
-        console.log('valueObject', valueObject);
+      const mapFields = (fields, currentPath) => {
+        // console.log('currentValuePath', currentValuePath);
         fields.map((field, fieldIndex) => {
           if (!field.isFullWidth) field.isFullWidth = true;
           if (!field.labelMode) field.labelMode = 'vertical';
           switch (field.type) {
             case 'multiplier':
-              let newValueObject = {
-                ...valueObject,
-                [currentPath[fieldIndex].name]: {},
-              };
-              mapSections(field.schema, currentPath[fieldIndex].schema, newValueObject);
+              mapSections(field.schema, currentPath[fieldIndex].schema, true);
               break;
             case 'select':
               if (field.attrs && field.attrs.table && field.attrs.table !== '') {
@@ -171,13 +165,9 @@ class App extends PureComponent {
               }
             case 'text':
               if (field.defaultValue && field.defaultValue !== '') {
-                defaultValuesPromises.push(this.setDefaultValue(field.defaultValue));
-                let newValueObject = {
-                  [valueObject]: {
-                    [currentPath[fieldIndex].name]: '',
-                  },
-                };
-                defaultValuesPositions.push(newValueObject);
+                defaultValuesPromises.push(getDefaultValue(this.state, field.defaultValue));
+                let position = [...defaultValuePath, currentPath[fieldIndex].name];
+                defaultValuesPositions.push(position);
                 break;
               }
             default:
@@ -186,11 +176,7 @@ class App extends PureComponent {
         });
       };
 
-      mapSections(newFormSchema, newFormSchema, {});
-      // console.log('schemaPromises', schemaPromises);
-      // console.log('schemaPositions', schemaPositions);
-      // console.log('defaultValuesPromises', defaultValuesPromises);
-      // console.log('defaultValuesPositions', defaultValuesPositions);
+      mapSections(newFormSchema, newFormSchema, false);
       Promise.all(schemaPromises)
         .then((res) => {
           res.map((el, i) => {
@@ -199,6 +185,21 @@ class App extends PureComponent {
           return Promise.all(defaultValuesPromises);
         })
         .then((res) => {
+          let defaultValues = {};
+          let pointer = defaultValues;
+          res.map((defaultValue, index) => {
+            defaultValuesPositions[index].map((key, index) => {
+              if (index < defaultValuesPositions[index].length - 1) {
+                if (!pointer[key]) {
+                  pointer[key] = {};
+                }
+                pointer = pointer[key];
+              } else {
+                pointer[key] = defaultValue;
+                pointer = defaultValues;
+              }
+            });
+          });
           this.setState({
             ...this.state,
             formSchema: newFormSchema,
@@ -206,7 +207,7 @@ class App extends PureComponent {
               ...formData,
               formObject: {
                 ...formData.formObject,
-                defaultValues,
+                ...defaultValues,
               },
             },
           });
@@ -216,31 +217,6 @@ class App extends PureComponent {
           console.warn(err);
         });
     }
-  }
-
-  setDefaultValue(defaultValue) {
-    console.log('defaultValues', defaultValues);
-    return new Promise((resolve) => {
-      if (defaultValues && defaultValues[defaultValue]) {
-        console.log('defaultValue', defaultValues[defaultValue]);
-        resolve(defaultValues[defaultValue]);
-      } else {
-        resolve();
-      }
-      // //## WRITE HERE YOUR CUSTOM DEFAULT VALUES ##//
-      // switch (defaultValue) {
-      //   case 'accountName':
-      //     console.log('company', company);
-      //     resolve(company.nombre);
-      //     break;
-      //   case 'userName':
-      //     console.log('user', user);
-      //     resolve(user.name);
-      //     break;
-      //   default:
-      //     resolve();
-      // }
-    });
   }
 
   setImagesView = (value) => {

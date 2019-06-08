@@ -1946,7 +1946,7 @@ babel-preset-react-app@^9.0.0:
     babel-plugin-macros "2.5.1"
     babel-plugin-transform-react-remove-prop-types "0.4.24"
 
-babel-runtime@6.x, babel-runtime@^6.26.0:
+babel-runtime@6.x, babel-runtime@^6.23.0, babel-runtime@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   dependencies:
@@ -2378,7 +2378,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@2.x, classnames@^2.2.5, classnames@^2.2.6:
+classnames@2.x, classnames@^2.2.3, classnames@^2.2.5, classnames@^2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
 
@@ -4317,20 +4317,21 @@ hmac-drbg@^1.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.1"
 
-hoi-poi-ui@^0.0.1-alpha.32:
-  version "0.0.1-alpha.32"
-  resolved "https://registry.yarnpkg.com/hoi-poi-ui/-/hoi-poi-ui-0.0.1-alpha.32.tgz#ef53e9c676e2201833e3caf7e64b752b39ed3617"
+hoi-poi-ui@^0.0.1-alpha.34:
+  version "0.0.1-alpha.34"
+  resolved "https://registry.yarnpkg.com/hoi-poi-ui/-/hoi-poi-ui-0.0.1-alpha.34.tgz#6c8dc37e662657438578874786e4625e82e510db"
   dependencies:
     classnames "^2.2.6"
     cross-env "^5.2.0"
     deepmerge "^3.2.0"
     jss "^10.0.0-alpha.16"
     prop-types "^15.7.2"
-    rc-slider "^8.6.11"
+    rc-slider "^8.6.12"
+    rc-steps "^3.4.1"
     rc-tabs "^9.6.4"
     rc-tooltip "^3.7.3"
     react "^16.8.6"
-    react-animate-height "^2.0.8"
+    react-animate-height "^2.0.9"
     react-custom-scrollbars "^4.2.1"
     react-data-grid "^6.1.0"
     react-dom "^16.8.6"
@@ -7484,7 +7485,7 @@ prompts@^2.0.1:
     kleur "^3.0.2"
     sisteransi "^1.0.0"
 
-prop-types@15.x, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@15.x, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   dependencies:
@@ -7642,7 +7643,7 @@ rc-hammerjs@~0.6.0:
     hammerjs "^2.0.8"
     prop-types "^15.5.9"
 
-rc-slider@^8.6.11:
+rc-slider@^8.6.12:
   version "8.6.12"
   resolved "https://registry.yarnpkg.com/rc-slider/-/rc-slider-8.6.12.tgz#40bb0a6e35f13183f08a3e6aa9a2adbd8dabd39d"
   dependencies:
@@ -7653,6 +7654,15 @@ rc-slider@^8.6.11:
     rc-util "^4.0.4"
     shallowequal "^1.0.1"
     warning "^4.0.3"
+
+rc-steps@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/rc-steps/-/rc-steps-3.4.1.tgz#7f7d127dd60f9fa92ece27c06035c9319c5cab8e"
+  dependencies:
+    babel-runtime "^6.23.0"
+    classnames "^2.2.3"
+    lodash "^4.17.5"
+    prop-types "^15.5.7"
 
 rc-tabs@^9.6.4:
   version "9.6.4"
@@ -7706,9 +7716,9 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-animate-height@^2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/react-animate-height/-/react-animate-height-2.0.8.tgz#fe1d8188a6e40b68790e396131de821294ef1ba2"
+react-animate-height@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/react-animate-height/-/react-animate-height-2.0.9.tgz#25a0608a4cb40eb3e52eac3ba01c091cb69acf31"
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.6.1"
