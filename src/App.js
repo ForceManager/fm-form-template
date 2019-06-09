@@ -12,6 +12,7 @@ import DateTimePicker from './components/DateTimePicker';
 import utils from './utils';
 import config from './configs/config.json';
 import getDefaultValue from './configs/getDefaultValue';
+import getCustomAction from './configs/getCustomAction';
 
 import './App.scss';
 
@@ -36,6 +37,7 @@ class App extends PureComponent {
       .then((res) => {
         let newState;
         if (res.mode === 'creation') {
+          bridge.setTitle('Form creation');
           newState = {
             formData: {
               formObject: {
@@ -58,6 +60,7 @@ class App extends PureComponent {
             imei: res.imei,
           };
         } else if (res.mode === 'edition') {
+          bridge.setTitle('Form edition');
           newState = {
             formData: {
               formObject: res.entityForm.fullObject.formObject,
@@ -134,7 +137,8 @@ class App extends PureComponent {
                 field.attrs.relatedEntity !== ''
               ) {
                 const id =
-                  field.attrs.relatedEntity[1] === 'account' && field.attrs.relatedEntity[2] === -1
+                  field.attrs.relatedEntity[1] === 'accounts' &&
+                  field.attrs.relatedEntity[2] === 'this'
                     ? company.id
                     : field.attrs.relatedEntity[2];
                 schemaPromises.push(
@@ -256,7 +260,19 @@ class App extends PureComponent {
     const { formData, formSchema } = this.state;
     const sectionName = formSchema[currentPage].name;
 
-    // console.log('onFormChange', values, field, currentPage);
+    console.log('onFormChange', values, field, currentPage);
+
+    debugger;
+    let pageFields = formSchema[currentPage].fields;
+    let field = fields.map;
+    if (
+      formSchema[currentPage].fields[field.name].customActions &&
+      formSchema[currentPage].fields[field.name].customActions.onChange &&
+      formSchema[currentPage].fields[field.name].customActions.onChange !== '' &&
+      getCustomAction[formSchema[currentPage].fields[field.name].customActions.onChange]
+    ) {
+      getCustomAction[formSchema[currentPage].fields[field.name].customActions.onChange]();
+    }
 
     this.setState({
       formData: {
@@ -274,6 +290,10 @@ class App extends PureComponent {
   };
 
   MyDatePicker = (...props) => <DatePicker onChange={this.onPickerChange} />;
+
+  overrides = {
+    Select: { menu: {} },
+  };
 
   customFields = {
     datePicker: DatePicker,
@@ -308,6 +328,7 @@ class App extends PureComponent {
           customFields={this.customFields}
           setImagesView={this.setImagesView}
           imagesView={imagesView}
+          overrrides={this.overrides}
         />
       );
     } else if (this.state.mode === 'edition') {

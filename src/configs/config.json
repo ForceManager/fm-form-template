@@ -18,8 +18,11 @@
             {
               "label": "Customer.",
               "name": "customer",
-              "type": "text",
+              "type": "select",
               "defaultValue": "accountName",
+              "customActions": {
+                "onChange": "onChangeCustomer"
+              },
               "isReadOnly": true
             },
             {
@@ -28,7 +31,7 @@
               "type": "select",
               "isRequired": true,
               "attrs": {
-                "relatedEntity": ["contacts", "accounts", -1],
+                "relatedEntity": ["contacts", "accounts", "this"],
                 "options": []
               }
             },
@@ -47,8 +50,9 @@
             {
               "label": "Service Engineer",
               "name": "serviceEngineer",
-              "type": "text",
-              "defaultValue": "userName"
+              "type": "select",
+              "defaultValue": "userName",
+              "isReadOnly": true
             },
             {
               "label": "Machine type & Serial No. ",

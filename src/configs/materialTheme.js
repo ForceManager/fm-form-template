@@ -51,6 +51,9 @@ const materialTheme = createMuiTheme({
     MuiButtonBase: {
       disableRipple: true,
     },
+    TimePicker: {
+      format: 'dd/MM/yyyy',
+    },
   },
   palette: {
     primary: {

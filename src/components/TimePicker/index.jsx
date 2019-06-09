@@ -3,8 +3,8 @@ import { TimePicker as MaterialTimePicker } from '@material-ui/pickers';
 
 import './style.scss';
 
-function TimePicker({ title, signatureImage }) {
-  return <MaterialTimePicker format="HH:mm" />;
+function TimePicker({ ...props }) {
+  return <MaterialTimePicker format="HH:mm" {...props} />;
 }
 
 export default TimePicker;

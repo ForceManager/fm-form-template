@@ -13,7 +13,7 @@ import materialTheme from './configs/materialTheme';
 
 ReactDOM.render(
   <HoiPoiProvider>
-    <MuiPickersUtilsProvider utils={MomentUtils} libInstance={moment}>
+    <MuiPickersUtilsProvider utils={MomentUtils}>
       <ThemeProvider theme={materialTheme}>
         <App />
       </ThemeProvider>
