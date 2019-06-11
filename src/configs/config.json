@@ -14,7 +14,6 @@
               "label": "Customer.",
               "name": "customer",
               "type": "select",
-              "defaultValue": "accountName",
               "isReadOnly": true
             },
             {
@@ -45,7 +44,6 @@
               "label": "Service Engineer",
               "name": "serviceEngineer",
               "type": "select",
-              "defaultValue": "userName",
               "isReadOnly": true
             },
             {
@@ -130,7 +128,6 @@
               "label": "Customer.",
               "name": "customer",
               "type": "select",
-              "defaultValue": "accountName",
               "isReadOnly": true
             },
             {

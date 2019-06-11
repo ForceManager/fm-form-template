@@ -13,7 +13,7 @@ import Textarea from './components/Textarea';
 import Checkbox from './components/Checkbox';
 import utils from './utils';
 import config from './configs/config.json';
-import getDefaultValue from './configs/getDefaultValue';
+import getDefaultValues from './configs/getDefaultValues';
 import customActions from './configs/customActions';
 
 import './App.scss';
@@ -114,17 +114,12 @@ class App extends PureComponent {
     if (selectedForm && !formSchema) {
       let schemaPromises = [];
       let schemaPositions = [];
-      let defaultValuesPromises = [];
-      let defaultValuesPositions = [];
-      let defaultValuePath = [];
       let newFormSchema = [...config.formSchema[selectedForm.value].schema];
       bridge.showLoading();
       const mapSections = (sections, currentPath, subsection) => {
         sections.forEach((section, sectionIndex) => {
           section.className = [section.className, 'form-page'];
           section.isExpandable = false;
-          if (!subsection) defaultValuePath = [];
-          defaultValuePath.push(currentPath[sectionIndex].name);
           mapFields(section.fields, currentPath[sectionIndex].fields);
         });
       };
@@ -188,27 +183,17 @@ class App extends PureComponent {
                 );
                 schemaPositions.push(currentPath[fieldIndex].attrs.options);
               }
-              if (field.defaultValue && field.defaultValue !== '') {
-                defaultValuesPromises.push(getDefaultValue(this.state, field.defaultValue));
-                let position = [...defaultValuePath, currentPath[fieldIndex].name];
-                defaultValuesPositions.push(position);
-              }
               break;
             case 'checkboxGroup':
               break;
             case 'text':
-              if (field.defaultValue && field.defaultValue !== '') {
-                defaultValuesPromises.push(getDefaultValue(this.state, field.defaultValue));
-                let position = [...defaultValuePath, currentPath[fieldIndex].name];
-                defaultValuesPositions.push(position);
-              }
               break;
             case 'datePicker':
             case 'dateTimePicker':
             case 'dateTime':
-              defaultValuesPromises.push(Promise.resolve(null));
-              let position = [...defaultValuePath, currentPath[fieldIndex].name];
-              defaultValuesPositions.push(position);
+              // defaultValuesPromises.push(Promise.resolve(null));
+              // let position = [...defaultValuePath, currentPath[fieldIndex].name];
+              // defaultValuesPositions.push(position);
               break;
             default:
           }
@@ -221,24 +206,10 @@ class App extends PureComponent {
           res.forEach((el, i) => {
             schemaPositions[i] = el;
           });
-          return Promise.all(defaultValuesPromises);
+          console.log('this.state', this.state);
+          return getDefaultValues(this.state, selectedForm.value);
         })
         .then((res) => {
-          let defaultValues = {};
-          let pointer = defaultValues;
-          res.forEach((defaultValue, index) => {
-            defaultValuesPositions[index].forEach((key, index) => {
-              if (index < defaultValuesPositions[index].length - 1) {
-                if (!pointer[key]) {
-                  pointer[key] = {};
-                }
-                pointer = pointer[key];
-              } else {
-                pointer[key] = defaultValue;
-                pointer = defaultValues;
-              }
-            });
-          });
           this.setState({
             ...this.state,
             formSchema: newFormSchema,
@@ -246,7 +217,7 @@ class App extends PureComponent {
               ...formData,
               formObject: {
                 ...formData.formObject,
-                ...defaultValues,
+                ...res,
               },
               idFormType: config.formSchema[selectedForm.value].id,
             },
