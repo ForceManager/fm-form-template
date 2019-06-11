@@ -65,13 +65,12 @@ class FormsEdit extends PureComponent {
   };
 
   onClickNext = (event) => {
-    const { formData, values } = this.props;
+    const { formData } = this.props;
     const { currentPage } = this.state;
 
     bridge
       .showLoading()
       .then(() => {
-        console.log('values', values);
         return bridge.saveData(formData);
       })
       .then(() => {

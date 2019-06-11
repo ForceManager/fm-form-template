@@ -4,12 +4,12 @@ import { HoiPoiProvider } from 'hoi-poi-ui';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { ThemeProvider } from '@material-ui/styles';
 import MomentUtils from '@date-io/moment';
-import moment from 'moment';
+// import moment from 'moment';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import materialTheme from './configs/materialTheme';
-// import hoiPoiTheme from './hoiPoiTheme.js';
+// import hoiPoiTheme from './configs/hoiPoiTheme.js';
 
 ReactDOM.render(
   <HoiPoiProvider>

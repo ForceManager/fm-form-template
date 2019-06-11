@@ -4,7 +4,7 @@ import { bridge } from 'fm-bridge';
 
 import './style.scss';
 
-function Signature({ title, value, onChange }) {
+function Signature({ label, value, onChange, summary }) {
   const onClickSign = () => {
     bridge
       .openSignatureView()
@@ -19,14 +19,16 @@ function Signature({ title, value, onChange }) {
 
   return (
     <div className="signature">
-      <div className="signature-title">{title}</div>
+      {summary && <div className="signature-label">{label}</div>}
       <div className="signature-image-container">
-        {value && <img className="signature-image" src={`data:image/png;base64,${value}`} />}
+        {value && <img className="signature-image" src={`data:image/png;base64,${value}`} alt="" />}
       </div>
 
-      <Button className="signature-button" color="primary" onClick={onClickSign}>
-        SIGN
-      </Button>
+      {!summary && (
+        <Button className="signature-button" color="primary" onClick={onClickSign}>
+          SIGN
+        </Button>
+      )}
     </div>
   );
 }

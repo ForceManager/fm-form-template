@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Section, Input } from 'hoi-poi-ui';
+import Signature from '../../components/Signature';
+import Checkbox from '../../components/Checkbox';
 
 import './style.scss';
 
@@ -14,11 +16,27 @@ class FormSummary extends PureComponent {
     // console.log('sectionFields', sectionFields);
     // console.log('sectionValues', sectionValues);
     if (!sectionValues) return null;
-    return Object.keys(sectionValues).map((key) => {
-      let field = sectionValues[key];
-      let fieldLabel = sectionFields.find((el) => el.name === key).label;
-      console.log('fieldLabel', fieldLabel);
-      return <Input key={key} label={fieldLabel} value={field.label} />;
+    // debugger;
+    return Object.keys(sectionValues).forEach((key) => {
+      console.log('key', key);
+      let field = sectionFields.find((el) => el.name === key);
+      if (!field) return;
+      let fieldValue = field.type === 'select' ? sectionValues[key].label : sectionValues[key];
+      let Field;
+      switch (field.type) {
+        case 'signature':
+          Field = Signature;
+          break;
+        case 'checkbox':
+          Field = Checkbox;
+          break;
+        default:
+          Field = Input;
+          break;
+      }
+      return (
+        <Field key={key} label={field.label} value={fieldValue} isReadOnly={true} summary={true} />
+      );
     });
   }
 

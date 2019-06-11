@@ -9,23 +9,25 @@ import Signature from './components/Signature';
 import DatePicker from './components/DatePicker';
 import TimePicker from './components/TimePicker';
 import DateTimePicker from './components/DateTimePicker';
+import Textarea from './components/Textarea';
+import Checkbox from './components/Checkbox';
 import utils from './utils';
 import config from './configs/config.json';
 import getDefaultValue from './configs/getDefaultValue';
-import getCustomAction from './configs/getCustomAction';
+import customActions from './configs/customActions';
 
 import './App.scss';
 
 class App extends PureComponent {
   state = {
-    // selectedForm:
-    //   Object.keys(config.formSchema).length > 1
-    //     ? null
-    //     : {
-    //         name: config.formSchema[Object.keys(config.formSchema)[0]].title,
-    //         value: Object.keys(config.formSchema)[0],
-    //       },
-    selectedForm: { name: 'Standard Service', value: 'standardService' },
+    selectedForm:
+      Object.keys(config.formSchema).length > 1
+        ? null
+        : {
+            name: config.formSchema[Object.keys(config.formSchema)[0]].title,
+            value: Object.keys(config.formSchema)[0],
+          },
+    // selectedForm: { name: 'Standard Service', value: 'standardService' },
     formSchema: null,
     imagesView: false,
   };
@@ -35,6 +37,7 @@ class App extends PureComponent {
       .showLoading()
       .then(() => bridge.getFormInitData())
       .then((res) => {
+        console.log('config.formSchema', config.formSchema);
         let newState;
         if (res.mode === 'creation') {
           bridge.setTitle('Form creation');
@@ -44,7 +47,7 @@ class App extends PureComponent {
                 fechaCreacion: moment().format('DD/MM/YYYY HH:mm'),
                 userCreacion: res.user.id,
               },
-              idFormType: 1,
+              idFormType: null,
               idState: 1,
               endState: 0,
               listObject: config.listObject,
@@ -59,6 +62,23 @@ class App extends PureComponent {
             entityFormExtraFields: res.entityFormExtraFields,
             imei: res.imei,
           };
+          // Object.keys(newState.formData.listObject).forEach((key) => {
+          // let element = newState.formData.listObject[key];
+          //   switch (element) {
+          //     case 'selectedForm':
+          //       element = this.state.selectedForm;
+          //       break;
+          //     case 'creationDate':
+          //       element = newState.formData.formObject.fechaCreacion;
+          //       break;
+          //     case 'state':
+          //       element = newState.formData.formObject.fechaCreacion;
+          //       break;
+
+          //     default:
+          //       break;
+          //   }
+          // });
         } else if (res.mode === 'edition') {
           bridge.setTitle('Form edition');
           newState = {
@@ -100,9 +120,9 @@ class App extends PureComponent {
       let newFormSchema = [...config.formSchema[selectedForm.value].schema];
       bridge.showLoading();
       const mapSections = (sections, currentPath, subsection) => {
-        sections.map((section, sectionIndex) => {
+        sections.forEach((section, sectionIndex) => {
           section.className = [section.className, 'form-page'];
-          // section.attrs = { isExpandable: false };
+          section.isExpandable = false;
           if (!subsection) defaultValuePath = [];
           defaultValuePath.push(currentPath[sectionIndex].name);
           mapFields(section.fields, currentPath[sectionIndex].fields);
@@ -110,14 +130,17 @@ class App extends PureComponent {
       };
       const mapFields = (fields, currentPath) => {
         // console.log('currentValuePath', currentValuePath);
-        fields.map((field, fieldIndex) => {
+        fields.forEach((field, fieldIndex) => {
           if (!field.isFullWidth) field.isFullWidth = true;
-          if (!field.labelMode) field.labelMode = 'vertical';
+          if (field.type !== 'checkbox' && !field.labelMode) field.labelMode = 'vertical';
+          if (!field.attrs) field.attrs = {};
+          field.attrs['className'] = `field-${field.type}`;
           switch (field.type) {
             case 'multiplier':
               mapSections(field.schema, currentPath[fieldIndex].schema, true);
               break;
             case 'select':
+              field.isSearchable = false;
               if (field.attrs && field.attrs.table && field.attrs.table !== '') {
                 schemaPromises.push(
                   bridge
@@ -130,7 +153,6 @@ class App extends PureComponent {
                     }),
                 );
                 schemaPositions.push(currentPath[fieldIndex].attrs.options);
-                break;
               } else if (
                 field.attrs &&
                 field.attrs.relatedEntity &&
@@ -165,17 +187,30 @@ class App extends PureComponent {
                     }),
                 );
                 schemaPositions.push(currentPath[fieldIndex].attrs.options);
-                break;
               }
+              if (field.defaultValue && field.defaultValue !== '') {
+                defaultValuesPromises.push(getDefaultValue(this.state, field.defaultValue));
+                let position = [...defaultValuePath, currentPath[fieldIndex].name];
+                defaultValuesPositions.push(position);
+              }
+              break;
+            case 'checkboxGroup':
+              break;
             case 'text':
               if (field.defaultValue && field.defaultValue !== '') {
                 defaultValuesPromises.push(getDefaultValue(this.state, field.defaultValue));
                 let position = [...defaultValuePath, currentPath[fieldIndex].name];
                 defaultValuesPositions.push(position);
-                break;
               }
-            default:
               break;
+            case 'datePicker':
+            case 'dateTimePicker':
+            case 'dateTime':
+              defaultValuesPromises.push(Promise.resolve(null));
+              let position = [...defaultValuePath, currentPath[fieldIndex].name];
+              defaultValuesPositions.push(position);
+              break;
+            default:
           }
         });
       };
@@ -183,7 +218,7 @@ class App extends PureComponent {
       mapSections(newFormSchema, newFormSchema, false);
       Promise.all(schemaPromises)
         .then((res) => {
-          res.map((el, i) => {
+          res.forEach((el, i) => {
             schemaPositions[i] = el;
           });
           return Promise.all(defaultValuesPromises);
@@ -191,8 +226,8 @@ class App extends PureComponent {
         .then((res) => {
           let defaultValues = {};
           let pointer = defaultValues;
-          res.map((defaultValue, index) => {
-            defaultValuesPositions[index].map((key, index) => {
+          res.forEach((defaultValue, index) => {
+            defaultValuesPositions[index].forEach((key, index) => {
               if (index < defaultValuesPositions[index].length - 1) {
                 if (!pointer[key]) {
                   pointer[key] = {};
@@ -213,6 +248,7 @@ class App extends PureComponent {
                 ...formData.formObject,
                 ...defaultValues,
               },
+              idFormType: config.formSchema[selectedForm.value].id,
             },
           });
           bridge.hideLoading();
@@ -257,24 +293,40 @@ class App extends PureComponent {
   onSelectorChange = (value) => this.setState({ selectedForm: value });
 
   onFormChange = (values, field, currentPage) => {
-    const { formData, formSchema } = this.state;
+    const { formData, formSchema, selectedForm } = this.state;
     const sectionName = formSchema[currentPage].name;
 
     console.log('onFormChange', values, field, currentPage);
 
-    debugger;
-    let pageFields = formSchema[currentPage].fields;
-    let field = fields.map;
     if (
-      formSchema[currentPage].fields[field.name].customActions &&
-      formSchema[currentPage].fields[field.name].customActions.onChange &&
-      formSchema[currentPage].fields[field.name].customActions.onChange !== '' &&
-      getCustomAction[formSchema[currentPage].fields[field.name].customActions.onChange]
+      (field.type === 'datePicker' ||
+        field.type === 'timePicker' ||
+        field.type === 'dateTimePicker') &&
+      !values[field.name]
     ) {
-      getCustomAction[formSchema[currentPage].fields[field.name].customActions.onChange]();
+      values[field.name] = null;
     }
 
-    this.setState({
+    if (field.type === 'datePicker')
+      values[field.name] = moment(values[field.name]).format('MM/DD/YYYY');
+    if (field.type === 'timePicker')
+      values[field.name] = moment(values[field.name]).format('HH:mm');
+    if (field.type === 'dateTimePicker')
+      values[field.name] = moment(values[field.name]).format('MM/DD/YYYY HH:mm');
+
+    if (field.type === 'checkbox') {
+      if (formData.formObject[sectionName][field.name]) {
+        values[field.name] = false;
+      } else {
+        values[field.name] = true;
+      }
+    }
+
+    if (field.type === 'multiplier') {
+      // values = values[field.name];
+    }
+
+    let newState = {
       formData: {
         ...formData,
         formObject: {
@@ -282,14 +334,35 @@ class App extends PureComponent {
           [sectionName]: values,
         },
       },
-    });
+    };
+    if (
+      customActions[selectedForm.value] &&
+      customActions[selectedForm.value][sectionName] &&
+      customActions[selectedForm.value][sectionName][field.name] &&
+      customActions[selectedForm.value][sectionName][field.name].onChange
+    ) {
+      let data = { state: newState, values, field, currentPage };
+      customActions[selectedForm.value][sectionName][field.name]
+        .onChange(data)
+        .then((res) => {
+          console.log('customActions state', res);
+          this.setState({
+            ...newState,
+            ...res,
+          });
+        })
+        .catch((err) => {
+          console.warn(err);
+          this.setState({ ...newState });
+        });
+    } else {
+      this.setState({ ...newState });
+    }
   };
 
   onPickerChange = (a, b, c) => {
     console.log('onPickerChange', a, b, c);
   };
-
-  MyDatePicker = (...props) => <DatePicker onChange={this.onPickerChange} />;
 
   overrides = {
     Select: { menu: {} },
@@ -300,6 +373,8 @@ class App extends PureComponent {
     timePicker: TimePicker,
     dateTimePicker: DateTimePicker,
     signature: Signature,
+    textarea: Textarea,
+    checkbox: Checkbox,
   };
 
   renderContent() {
