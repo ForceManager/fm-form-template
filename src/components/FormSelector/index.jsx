@@ -18,8 +18,6 @@ const FormSelector = ({ schema, selectedForm, onChange }) => {
         onChange={onFormChange}
         options={options}
         value={selectedForm}
-        labelMode="vertical"
-        isFullWidth
       />
     </div>
   );

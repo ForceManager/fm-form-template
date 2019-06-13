@@ -143,37 +143,31 @@
               "label": "Service incomplete",
               "name": "serviceIncomplete",
               "type": "checkbox",
-              "isRequired": true,
-              "attrs": {
-                "options": [{ "value": "serviceIncomplete" }]
-              }
+              "isRequired": true
+            },
+            {
+              "label": "Customer confirmation of the work completed",
+              "name": "confirmationWorkCompleted",
+              "type": "checkbox",
+              "isRequired": true
             },
             {
               "label": "Training and instruction received",
               "name": "trainingReceived",
               "type": "checkbox",
-              "isRequired": true,
-              "attrs": {
-                "options": [{ "value": "checkbox" }]
-              }
+              "isRequired": true
             },
             {
               "label": "Spare requested",
               "name": "spareRequested",
               "type": "checkbox",
-              "isRequired": true,
-              "attrs": {
-                "options": [{ "value": "checkbox" }]
-              }
+              "isRequired": true
             },
             {
               "label": "Modification requested",
               "name": "modificationRequested",
               "type": "checkbox",
-              "isRequired": true,
-              "attrs": {
-                "options": [{ "value": "modificationRequested" }]
-              }
+              "isRequired": true
             },
             {
               "label": "Description of work performed",
@@ -397,6 +391,12 @@
               "isRequired": true
             },
             {
+              "label": "Customer confirmation of the work completed",
+              "name": "confirmationWorkCompleted",
+              "type": "checkbox",
+              "isRequired": true
+            },
+            {
               "label": "Training and instruction received",
               "name": "trainingReceived",
               "type": "checkbox",
@@ -488,11 +488,11 @@
     "pos23": ""
   },
   "detailObject": {
-    "detailTitle": "Detalle",
+    "detailTitle": "Detail",
     "detailValues": [
       {
         "type": "title",
-        "titleName": "Datos del formulario",
+        "titleName": "Form data",
         "key": "",
         "value": "",
         "entityId": "",
@@ -501,7 +501,7 @@
       {
         "type": "text",
         "titleName": "",
-        "key": "Tipo",
+        "key": "Type",
         "value": "",
         "entityId": "",
         "entityType": ""
@@ -509,24 +509,16 @@
       {
         "type": "text",
         "titleName": "",
-        "key": "Fecha de creación",
-        "value": "fechaCreacion",
+        "key": "Creation date",
+        "value": "creationDate",
         "entityId": "",
         "entityType": ""
       },
       {
         "type": "text",
         "titleName": "",
-        "key": "Estado",
+        "key": "State",
         "value": "state",
-        "entityId": "",
-        "entityType": ""
-      },
-      {
-        "type": "text",
-        "titleName": "",
-        "key": "Responsable",
-        "value": "",
         "entityId": "",
         "entityType": ""
       }

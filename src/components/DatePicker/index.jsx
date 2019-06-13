@@ -4,7 +4,7 @@ import { DatePicker as MaterialDatePicker } from '@material-ui/pickers';
 import './style.scss';
 
 function DatePicker({ ...props }) {
-  return <MaterialDatePicker format="DD/MM/YYYY" {...props} />;
+  return <MaterialDatePicker format="DD/MM/YYYY" invalidDateMessage={null} {...props} value={props.value || null}/>;
 }
 
 export default DatePicker;

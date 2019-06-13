@@ -15,12 +15,12 @@ class FormSummary extends PureComponent {
 
     // console.log('sectionFields', sectionFields);
     // console.log('sectionValues', sectionValues);
-    if (!sectionValues) return null;
-    // debugger;
+    if (!sectionValues) return <div/>;
     return Object.keys(sectionValues).forEach((key) => {
       console.log('key', key);
       let field = sectionFields.find((el) => el.name === key);
       if (!field) return;
+      debugger;
       let fieldValue = field.type === 'select' ? sectionValues[key].label : sectionValues[key];
       let Field;
       switch (field.type) {
@@ -53,7 +53,7 @@ class FormSummary extends PureComponent {
   }
 
   render() {
-    return <dic className="summary">{this.renderSections()}</dic>;
+    return <div className="summary">{this.renderSections()}</div>;
   }
 }
 

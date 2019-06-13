@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react';
-import { Icon, Toast, toast } from 'hoi-poi-ui';
+import { Form, Icon, Toast, toast } from 'hoi-poi-ui';
 import { bridge } from 'fm-bridge';
-import FormValidator from '../FormValidator';
+// import FormValidator from '../FormValidator';
 import FormSummary from '../FormSummary';
 
 import './style.scss';
 
 class FormsEdit extends PureComponent {
-  state = { currentPage: 0, showSummary: false };
+  state = { currentPage: 0, showSummary: false, errors: {} };
 
   constructor(props) {
     super(props);
@@ -40,6 +40,41 @@ class FormsEdit extends PureComponent {
     }
   }
 
+  validate = () => {
+    return new Promise((resolve, reject)=>{
+      const { schema, formData } = this.props;
+      const { currentPage } = this.state;
+      const pageSchema = schema[currentPage];
+      let allValid = true;
+      let errors = {};
+
+      function validateFields(fields, errorPos, values) {
+        fields.forEach(element => {
+          if (element.type === 'multiplier') {
+              if (!errors[element.name]) errors[element.name] = [];
+              const multiplierValues = values[element.name] ?  values[element.name] : {};
+              validateFields(element.schema[0].fields, errors[element.name], multiplierValues);
+          } else {
+            if (element.isRequired && !values[element.name]) {
+              allValid = false;
+              errorPos[element.name] = 'This field is requiered';
+            }
+          }
+        })
+      }
+
+      validateFields(pageSchema.fields, errors, formData.formObject[schema[currentPage].name]);
+
+      if (allValid) {
+        this.setState({errors: {}});
+        resolve();
+      } else {
+        this.setState({errors});
+        reject({ type: 'invalid' });
+      }
+    });
+  };
+
   onClickPrev = (event) => {
     const { formData } = this.props;
     const { currentPage } = this.state;
@@ -53,14 +88,18 @@ class FormsEdit extends PureComponent {
           bridge.hideLoading();
         })
         .catch((err) => {
-          console.warn(err);
+          if (err.type === 'invalid') {
+
+          } else {
+            console.warn(err);
+            toast({
+              type: 'error',
+              text: 'The form could not be saved',
+              title: 'Error',
+            });
+          }
           bridge.hideLoading();
-          toast({
-            type: 'error',
-            text: 'The form could not be saved',
-            title: 'Error',
-          });
-        });
+      });
     }
   };
 
@@ -70,21 +109,24 @@ class FormsEdit extends PureComponent {
 
     bridge
       .showLoading()
-      .then(() => {
-        return bridge.saveData(formData);
-      })
+      .then(() => this.validate())
+      .then(() =>  bridge.saveData(formData))
       .then(() => {
         this.setState({ currentPage: currentPage + 1 });
         bridge.hideLoading();
       })
       .catch((err) => {
-        console.warn(err);
+        if (err.type === 'invalid') {
+
+        } else {
+          console.warn(err);
+          toast({
+            type: 'error',
+            text: 'The form could not be saved',
+            title: 'Error',
+          });
+        }
         bridge.hideLoading();
-        toast({
-          type: 'error',
-          text: 'The form could not be saved',
-          title: 'Error',
-        });
       });
   };
 
@@ -143,19 +185,20 @@ class FormsEdit extends PureComponent {
 
   renderContent() {
     const { schema, formData, customFields } = this.props;
-    const { currentPage, totalPages } = this.state;
+    const { currentPage, totalPages, errors } = this.state;
 
     if (currentPage === totalPages) {
       return <FormSummary schema={schema} values={formData.formObject} />;
     }
     return (
-      <FormValidator
+      <Form
         schema={[schema[currentPage]]}
         currentPage={currentPage}
         onChange={this.onFormChange}
         onFocus={this.onFieldFocus}
         values={formData.formObject[schema[currentPage].name] || {}}
         customFields={customFields}
+        errors={errors}
       />
     );
   }

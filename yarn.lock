@@ -4325,9 +4325,9 @@ hmac-drbg@^1.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.1"
 
-hoi-poi-ui@^0.0.1-alpha.37:
-  version "0.0.1-alpha.37"
-  resolved "https://registry.yarnpkg.com/hoi-poi-ui/-/hoi-poi-ui-0.0.1-alpha.37.tgz#1196fcceee67125a06db97f154b2cac9498d5a6e"
+hoi-poi-ui@^0.0.1-alpha.39:
+  version "0.0.1-alpha.39"
+  resolved "https://registry.yarnpkg.com/hoi-poi-ui/-/hoi-poi-ui-0.0.1-alpha.39.tgz#03efb0a4aedabb7f1a3b449381d9f8b2d8346908"
   dependencies:
     classnames "^2.2.6"
     cross-env "^5.2.0"
@@ -7712,8 +7712,8 @@ rc-hammerjs@~0.6.0:
     prop-types "^15.5.9"
 
 rc-slider@^8.6.12:
-  version "8.6.12"
-  resolved "https://registry.yarnpkg.com/rc-slider/-/rc-slider-8.6.12.tgz#40bb0a6e35f13183f08a3e6aa9a2adbd8dabd39d"
+  version "8.6.13"
+  resolved "https://registry.yarnpkg.com/rc-slider/-/rc-slider-8.6.13.tgz#88a8150c2dda6709f3f119135de11fba80af765b"
   dependencies:
     babel-runtime "6.x"
     classnames "^2.2.5"
@@ -7756,8 +7756,8 @@ rc-tooltip@^3.7.0, rc-tooltip@^3.7.3:
     rc-trigger "^2.2.2"
 
 rc-trigger@^2.2.2:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/rc-trigger/-/rc-trigger-2.6.2.tgz#a9c09ba5fad63af3b2ec46349c7db6cb46657001"
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/rc-trigger/-/rc-trigger-2.6.3.tgz#9d8b1adcb8f438038ee64039571dafbe03864fec"
   dependencies:
     babel-runtime "6.x"
     classnames "^2.2.6"

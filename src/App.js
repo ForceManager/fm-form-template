@@ -15,19 +15,20 @@ import utils from './utils';
 import config from './configs/config.json';
 import getDefaultValues from './configs/getDefaultValues';
 import customActions from './configs/customActions';
+import CONSTANTS from './constants';
 
 import './App.scss';
 
 class App extends PureComponent {
   state = {
-    selectedForm:
-      Object.keys(config.formSchema).length > 1
-        ? null
-        : {
-            name: config.formSchema[Object.keys(config.formSchema)[0]].title,
-            value: Object.keys(config.formSchema)[0],
-          },
-    // selectedForm: { name: 'Standard Service', value: 'standardService' },
+    // selectedForm:
+      // Object.keys(config.formSchema).length > 1
+      //   ? null
+      //   : {
+      //       name: config.formSchema[Object.keys(config.formSchema)[0]].title,
+      //       value: Object.keys(config.formSchema)[0],
+      //     },
+    selectedForm: { name: 'Standard Service', value: 'standardService' },
     formSchema: null,
     imagesView: false,
   };
@@ -37,21 +38,18 @@ class App extends PureComponent {
       .showLoading()
       .then(() => bridge.getFormInitData())
       .then((res) => {
-        console.log('config.formSchema', config.formSchema);
         let newState;
         if (res.mode === 'creation') {
           bridge.setTitle('Form creation');
           newState = {
             formData: {
               formObject: {
-                fechaCreacion: moment().format('DD/MM/YYYY HH:mm'),
+                fechaCreacion: moment().format('DD/MM/YYYY hh:mm A'),
                 userCreacion: res.user.id,
               },
               idFormType: null,
-              idState: 1,
+              idState: CONSTANTS.STATE.DRAFT,
               endState: 0,
-              listObject: config.listObject,
-              detailObject: config.detailObject,
             },
             company: res.company,
             user: res.user,
@@ -112,10 +110,14 @@ class App extends PureComponent {
     const { selectedForm, formSchema, formData, company } = this.state;
 
     if (selectedForm && !formSchema) {
+      let defaultValues;
       let schemaPromises = [];
       let schemaPositions = [];
       let newFormSchema = [...config.formSchema[selectedForm.value].schema];
+      let newListObject= { ...config.listObject};
+      let newDetailObject = { ...config.detailObject};
       bridge.showLoading();
+
       const mapSections = (sections, currentPath, subsection) => {
         sections.forEach((section, sectionIndex) => {
           section.className = [section.className, 'form-page'];
@@ -126,8 +128,8 @@ class App extends PureComponent {
       const mapFields = (fields, currentPath) => {
         // console.log('currentValuePath', currentValuePath);
         fields.forEach((field, fieldIndex) => {
-          if (!field.isFullWidth) field.isFullWidth = true;
-          if (field.type !== 'checkbox' && !field.labelMode) field.labelMode = 'vertical';
+          // if (!field.isFullWidth) field.isFullWidth = true;
+          // if (field.type !== 'checkbox' && !field.labelMode) field.labelMode = 'vertical';
           if (!field.attrs) field.attrs = {};
           field.attrs['className'] = `field-${field.type}`;
           switch (field.type) {
@@ -185,31 +187,70 @@ class App extends PureComponent {
               }
               break;
             case 'checkboxGroup':
-              break;
             case 'text':
-              break;
             case 'datePicker':
             case 'dateTimePicker':
             case 'dateTime':
-              // defaultValuesPromises.push(Promise.resolve(null));
-              // let position = [...defaultValuePath, currentPath[fieldIndex].name];
-              // defaultValuesPositions.push(position);
-              break;
             default:
           }
         });
       };
 
+      function setListObject() {
+        return new Promise((resolve, reject) => {
+          Object.keys(newListObject).forEach(key => {
+            switch (newListObject[key]) {
+              case 'selectedForm':
+                newListObject[key] = selectedForm.name;
+                break;
+              case 'state':
+                newListObject[key] = CONSTANTS.LITERALS.STATE[formData.idState]['en'];
+                break;
+              case 'creationDate':
+                newListObject[key] = formData.formObject.fechaCreacion;
+                break;
+              default:
+            }
+          });
+          resolve();
+        });
+      }
+
+      function setDetailObject() {
+        return new Promise((resolve, reject) => {
+          newDetailObject.detailValues.forEach(element => {
+            switch (element.value) {
+              case 'selectedForm':
+                element.value = selectedForm.name;
+                break;
+              case 'state':
+                element.value = CONSTANTS.LITERALS.STATE[formData.idState]['en'];
+                break;
+              case 'creationDate':
+                element.value = formData.formObject.fechaCreacion;
+                break;
+              default:
+            }
+          });
+          resolve();
+        });
+      }
+
       mapSections(newFormSchema, newFormSchema, false);
+
       Promise.all(schemaPromises)
         .then((res) => {
           res.forEach((el, i) => {
             schemaPositions[i] = el;
           });
-          console.log('this.state', this.state);
           return getDefaultValues(this.state, selectedForm.value);
         })
         .then((res) => {
+          defaultValues = res;
+          return setListObject();
+        })
+        .then(() =>  setDetailObject())
+        .then(() => {
           this.setState({
             ...this.state,
             formSchema: newFormSchema,
@@ -217,8 +258,10 @@ class App extends PureComponent {
               ...formData,
               formObject: {
                 ...formData.formObject,
-                ...res,
+                ...defaultValues,
               },
+              listObject: newListObject,
+              detailObject: newDetailObject,
               idFormType: config.formSchema[selectedForm.value].id,
             },
           });
@@ -267,23 +310,29 @@ class App extends PureComponent {
     const { formData, formSchema, selectedForm } = this.state;
     const sectionName = formSchema[currentPage].name;
 
-    console.log('onFormChange', values, field, currentPage);
+    // console.log('onFormChange', values, field, currentPage);
 
-    if (
-      (field.type === 'datePicker' ||
-        field.type === 'timePicker' ||
-        field.type === 'dateTimePicker') &&
-      !values[field.name]
-    ) {
-      values[field.name] = null;
+    function formatPickers(pickerField, pickerValue) {
+      if (pickerField.type === 'datePicker' && typeof pickerValue === 'object')
+        return moment(pickerValue).format('MM/DD/YYYY');
+      if (pickerField.type === 'timePicker' && typeof pickerValue === 'object')
+        return moment(pickerValue).format('hh:mm A');
+      if (pickerField.type === 'dateTimePicker' && typeof pickerValue === 'object')
+        return moment(pickerValue).format('MM/DD/YYYY hh:mm A');
+      return pickerValue;
     }
 
-    if (field.type === 'datePicker')
-      values[field.name] = moment(values[field.name]).format('MM/DD/YYYY');
-    if (field.type === 'timePicker')
-      values[field.name] = moment(values[field.name]).format('HH:mm');
-    if (field.type === 'dateTimePicker')
-      values[field.name] = moment(values[field.name]).format('MM/DD/YYYY HH:mm');
+     values[field.name] = formatPickers(field, values[field.name]);
+
+    // if (
+    //   (field.type === 'datePicker' ||
+    //     field.type === 'timePicker' ||
+    //     field.type === 'dateTimePicker') &&
+    //   !values[field.name]
+    // ) {
+    //   values[field.name] = null;
+    // }
+    
 
     if (field.type === 'checkbox') {
       if (formData.formObject[sectionName][field.name]) {
@@ -294,8 +343,17 @@ class App extends PureComponent {
     }
 
     if (field.type === 'multiplier') {
-      // values = values[field.name];
+      values[field.name].forEach((element) => {
+        if (element) {
+          Object.keys(element).forEach(key => {
+            const mField = field.schema[0].fields.find(el => el.name === key);
+            element[key] = formatPickers(mField, element[key]);
+          })
+        }
+      });
     }
+
+    console.log('values', values);
 
     let newState = {
       formData: {
@@ -316,7 +374,6 @@ class App extends PureComponent {
       customActions[selectedForm.value][sectionName][field.name]
         .onChange(data)
         .then((res) => {
-          console.log('customActions state', res);
           this.setState({
             ...newState,
             ...res,
@@ -329,10 +386,6 @@ class App extends PureComponent {
     } else {
       this.setState({ ...newState });
     }
-  };
-
-  onPickerChange = (a, b, c) => {
-    console.log('onPickerChange', a, b, c);
   };
 
   overrides = {
