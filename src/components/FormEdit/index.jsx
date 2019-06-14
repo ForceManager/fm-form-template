@@ -14,10 +14,14 @@ class FormsEdit extends PureComponent {
     this.state.totalPages = props.schema.length;
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevState) {
     const { currentPage } = this.state;
-    const { schema, setImagesView, imagesView } = this.props;
+    const { schema, setImagesView, imagesView, onChangePage } = this.props;
     const pageSchema = schema[currentPage];
+
+    if (this.state.currentPage !== prevState.currentPage) {
+      onChangePage(currentPage);
+    }
 
     if (pageSchema && pageSchema.imagesView && !imagesView) {
       bridge
@@ -46,24 +50,29 @@ class FormsEdit extends PureComponent {
       const { currentPage } = this.state;
       const pageSchema = schema[currentPage];
       let allValid = true;
-      let errors = {};
 
-      function validateFields(fields, errorPos, values) {
+      function validateFields(fields, values) {
+        let errors = {};
         fields.forEach(element => {
           if (element.type === 'multiplier') {
               if (!errors[element.name]) errors[element.name] = [];
-              const multiplierValues = values[element.name] ?  values[element.name] : {};
-              validateFields(element.schema[0].fields, errors[element.name], multiplierValues);
+              if (!values) {
+                errors[element.name] = element.schema[0].fields.map((field) => validateFields(element.schema[0].fields, values));
+              } else {
+                 const multiplierValues = values[element.name] ?  values[element.name] : [];
+                errors[element.name] = multiplierValues.map((values) => validateFields(element.schema[0].fields, values));
+              }
           } else {
-            if (element.isRequired && !values[element.name]) {
+            if (element.isRequired && (!values || !values[element.name])) {
               allValid = false;
-              errorPos[element.name] = 'This field is requiered';
+              errors[element.name] = 'This field is requiered';
             }
           }
-        })
+        });
+        return errors;
       }
 
-      validateFields(pageSchema.fields, errors, formData.formObject[schema[currentPage].name]);
+      let errors = validateFields(pageSchema.fields, formData.formObject[schema[currentPage].name]);
 
       if (allValid) {
         this.setState({errors: {}});
@@ -109,8 +118,8 @@ class FormsEdit extends PureComponent {
 
     bridge
       .showLoading()
-      .then(() => this.validate())
-      .then(() =>  bridge.saveData(formData))
+      // .then(() => this.validate())
+      .then(() => bridge.saveData(formData))
       .then(() => {
         this.setState({ currentPage: currentPage + 1 });
         bridge.hideLoading();
@@ -145,7 +154,19 @@ class FormsEdit extends PureComponent {
   };
 
   onClickFinish = () => {
-    bridge.finishActivity();
+    const { formData } = this.props;
+
+    formData.endState =  1;
+    bridge.saveData(formData)
+      .then(() => bridge.finishActivity())
+      .catch((err) => {
+        console.warn(err);
+          toast({
+            type: 'error',
+            text: 'The form could not be saved',
+            title: 'Error',
+          });
+      });
   };
 
   renderPrev() {

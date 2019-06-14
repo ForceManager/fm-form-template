@@ -13,14 +13,10 @@ class FormSummary extends PureComponent {
     const sectionFields = schema[index].fields;
     const sectionValues = values[section.name];
 
-    // console.log('sectionFields', sectionFields);
-    // console.log('sectionValues', sectionValues);
-    if (!sectionValues) return <div/>;
-    return Object.keys(sectionValues).forEach((key) => {
-      console.log('key', key);
+    if (!sectionValues) return;
+    return Object.keys(sectionValues).map((key) => {
       let field = sectionFields.find((el) => el.name === key);
-      if (!field) return;
-      debugger;
+      if (!field) return null;
       let fieldValue = field.type === 'select' ? sectionValues[key].label : sectionValues[key];
       let Field;
       switch (field.type) {

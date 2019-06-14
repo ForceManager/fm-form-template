@@ -1,21 +1,19 @@
 import moment from 'moment';
+import CONSTANTS from '../constants';
 
 const customActions = {
-  standardService: {
-    generalInformation: {
-      contact: {
-        onChange: setContact,
+  onChange: {
+    standardService: {
+      generalInformation: {
+        contact: setContact,
       },
-    },
-    signatures: {
-      customerSignature: {
-        onChange: setDateCustomerSignature,
-      },
-      serviceEngineerSignature: {
-        onChange: setDateServiceEngineerSignature,
+      signatures: {
+        customerSignature: setDateCustomerSignature,
+        serviceEngineerSignature: setDateServiceEngineerSignature,
       },
     },
   },
+  onChangePage,
 };
 
 function setContact(data) {
@@ -72,6 +70,28 @@ function setDateServiceEngineerSignature(data) {
       },
     };
     resolve(newState);
+  });
+}
+
+function onChangePage(data) {
+  return new Promise((resolve) => {
+    if (data.currentPage === 4) {
+      console.log('nextPage', data);
+      let newState = {
+        ...data.state,
+        formData: {
+          ...data.state.formData,
+          listObject: {
+            ...data.state.formData.listObject,
+            pos21: CONSTANTS.LITERALS.SIGNED['en'],
+          },
+          idState: CONSTANTS.STATE.SIGNED,
+        },
+      };
+      resolve(newState);
+    } else {
+      resolve();
+    }
   });
 }
 

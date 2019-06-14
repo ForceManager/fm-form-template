@@ -65,6 +65,13 @@
           &.field-datePicker,
           &.field-timePicker,
           &.field-dateTimePicker {
+            &[class*="errored"] {
+              & div[class*="formControl"]::before {
+                border-bottom: 1px solid #f04540;
+                transform: scaleX(1);
+                z-index: 1;
+              }
+            }
             div[class*="postComponent"] {
               position: absolute;
               right: 0;
@@ -131,9 +138,6 @@
                 span {
                   height: 13px;
                   width: 13px;
-                  svg {
-                    // transform: rotate(-90deg);
-                  }
                 }
               }
             }

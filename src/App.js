@@ -38,13 +38,14 @@ class App extends PureComponent {
       .showLoading()
       .then(() => bridge.getFormInitData())
       .then((res) => {
+        console.log('initData', res);
         let newState;
         if (res.mode === 'creation') {
           bridge.setTitle('Form creation');
           newState = {
             formData: {
               formObject: {
-                fechaCreacion: moment().format('DD/MM/YYYY hh:mm A'),
+                fechaCreacion: moment().format('MM/DD/YYYY hh:mm A'),
                 userCreacion: res.user.id,
               },
               idFormType: null,
@@ -60,25 +61,9 @@ class App extends PureComponent {
             entityFormExtraFields: res.entityFormExtraFields,
             imei: res.imei,
           };
-          // Object.keys(newState.formData.listObject).forEach((key) => {
-          // let element = newState.formData.listObject[key];
-          //   switch (element) {
-          //     case 'selectedForm':
-          //       element = this.state.selectedForm;
-          //       break;
-          //     case 'creationDate':
-          //       element = newState.formData.formObject.fechaCreacion;
-          //       break;
-          //     case 'state':
-          //       element = newState.formData.formObject.fechaCreacion;
-          //       break;
-
-          //     default:
-          //       break;
-          //   }
-          // });
         } else if (res.mode === 'edition') {
           bridge.setTitle('Form edition');
+          // let formType = Object.keys(config.formSchema).find(key => res.idFormType === config.formSchema[key].id)
           newState = {
             formData: {
               formObject: res.entityForm.fullObject.formObject,
@@ -97,7 +82,9 @@ class App extends PureComponent {
             mode: res.mode,
             isReadonly: res.isReadonly || false,
           };
-        }
+        } 
+        // else if (res.mode === 'edition' && endState) {
+        // }
         this.setState({ ...this.state, ...newState });
         bridge.hideLoading();
       })
@@ -107,8 +94,9 @@ class App extends PureComponent {
   }
 
   componentDidUpdate() {
-    const { selectedForm, formSchema, formData, company } = this.state;
+    const { selectedForm, formSchema, formData, company, mode } = this.state;
 
+    console.log('componentDidUpdate', selectedForm, formSchema);
     if (selectedForm && !formSchema) {
       let defaultValues;
       let schemaPromises = [];
@@ -118,7 +106,7 @@ class App extends PureComponent {
       let newDetailObject = { ...config.detailObject};
       bridge.showLoading();
 
-      const mapSections = (sections, currentPath, subsection) => {
+      const mapSections = (sections, currentPath) => {
         sections.forEach((section, sectionIndex) => {
           section.className = [section.className, 'form-page'];
           section.isExpandable = false;
@@ -134,7 +122,7 @@ class App extends PureComponent {
           field.attrs['className'] = `field-${field.type}`;
           switch (field.type) {
             case 'multiplier':
-              mapSections(field.schema, currentPath[fieldIndex].schema, true);
+              mapSections(field.schema, currentPath[fieldIndex].schema);
               break;
             case 'select':
               field.isSearchable = false;
@@ -236,9 +224,10 @@ class App extends PureComponent {
         });
       }
 
-      mapSections(newFormSchema, newFormSchema, false);
+      if (mode === 'creation') {
+        mapSections(newFormSchema, newFormSchema);
 
-      Promise.all(schemaPromises)
+        Promise.all(schemaPromises)
         .then((res) => {
           res.forEach((el, i) => {
             schemaPositions[i] = el;
@@ -270,6 +259,28 @@ class App extends PureComponent {
         .catch((err) => {
           console.warn(err);
         });
+      } else if (mode === 'edition' && !formData.endState) {
+        console.log('newFormSchema 0', newFormSchema);
+        mapSections(newFormSchema, newFormSchema, false);
+
+        console.log('newFormSchema 1', newFormSchema);
+        Promise.all(schemaPromises)
+        .then((res) => {
+          res.forEach((el, i) => {
+            schemaPositions[i] = el;
+          });
+          console.log('newFormSchema 2', newFormSchema);
+          this.setState({
+            ...this.state,
+            formSchema: newFormSchema,
+          });
+          bridge.hideLoading();
+        })
+        .catch((err) => {
+          console.warn(err);
+        });
+      } else if (mode === 'edition' && formData.endState) {
+      }
     }
   }
 
@@ -316,7 +327,7 @@ class App extends PureComponent {
       if (pickerField.type === 'datePicker' && typeof pickerValue === 'object')
         return moment(pickerValue).format('MM/DD/YYYY');
       if (pickerField.type === 'timePicker' && typeof pickerValue === 'object')
-        return moment(pickerValue).format('hh:mm A');
+        return moment(pickerValue).format('hh:mm A MM/DD/YYYY');
       if (pickerField.type === 'dateTimePicker' && typeof pickerValue === 'object')
         return moment(pickerValue).format('MM/DD/YYYY hh:mm A');
       return pickerValue;
@@ -365,14 +376,12 @@ class App extends PureComponent {
       },
     };
     if (
-      customActions[selectedForm.value] &&
-      customActions[selectedForm.value][sectionName] &&
-      customActions[selectedForm.value][sectionName][field.name] &&
-      customActions[selectedForm.value][sectionName][field.name].onChange
+      customActions.onChange &&
+      customActions.onChange[selectedForm.value][sectionName] &&
+      customActions.onChange[selectedForm.value][sectionName][field.name]
     ) {
       let data = { state: newState, values, field, currentPage };
-      customActions[selectedForm.value][sectionName][field.name]
-        .onChange(data)
+      customActions.onChange[selectedForm.value][sectionName][field.name](data)
         .then((res) => {
           this.setState({
             ...newState,
@@ -388,6 +397,20 @@ class App extends PureComponent {
     }
   };
 
+  onChangePage = (currentPage) => {
+    if (customActions.onChangePage) {
+      let data = { state: this.state, currentPage }
+      customActions.onChangePage(data)
+        .then(newSate => {
+          console.log('newSate', newSate);
+          if (newSate) {
+            // this.setState({ ...newSate });
+          }
+        })
+        .catch(err => console.warn(err));
+    } 
+  }
+
   overrides = {
     Select: { menu: {} },
   };
@@ -401,11 +424,13 @@ class App extends PureComponent {
     checkbox: Checkbox,
   };
 
+
+
   renderContent() {
     const { mode, selectedForm, formData, formSchema, imagesView } = this.state;
 
     console.log('this.state', this.state);
-
+  
     if (mode === 'creation' && !selectedForm) {
       return (
         <FormSelector
@@ -415,8 +440,9 @@ class App extends PureComponent {
         />
       );
     } else if (
-      (formSchema && (this.state.mode === 'creation' && selectedForm)) ||
-      this.state.mode === 'edition'
+      formSchema && 
+      ((mode === 'creation' && selectedForm) ||
+      (mode === 'edition' && !formData.endState))
     ) {
       return (
         <FormEdit
@@ -428,9 +454,10 @@ class App extends PureComponent {
           setImagesView={this.setImagesView}
           imagesView={imagesView}
           overrrides={this.overrides}
+          onChangePage={this.onChangePage}
         />
       );
-    } else if (this.state.mode === 'edition') {
+    } else if (formSchema && mode === 'edition' && formData.endState) {
       return <FormSummary schema={formSchema} values={formData.formObject} />;
     } else {
       return;

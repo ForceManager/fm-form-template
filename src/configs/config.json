@@ -90,6 +90,7 @@
                       "label": "Activity",
                       "name": "activity",
                       "type": "select",
+                      "isRequired": true,
                       "attrs": {
                         "table": "Z_tblActivities_Standard_Service",
                         "options": []
@@ -142,32 +143,27 @@
             {
               "label": "Service incomplete",
               "name": "serviceIncomplete",
-              "type": "checkbox",
-              "isRequired": true
+              "type": "checkbox"
             },
             {
               "label": "Customer confirmation of the work completed",
               "name": "confirmationWorkCompleted",
-              "type": "checkbox",
-              "isRequired": true
+              "type": "checkbox"
             },
             {
               "label": "Training and instruction received",
               "name": "trainingReceived",
-              "type": "checkbox",
-              "isRequired": true
+              "type": "checkbox"
             },
             {
               "label": "Spare requested",
               "name": "spareRequested",
-              "type": "checkbox",
-              "isRequired": true
+              "type": "checkbox"
             },
             {
               "label": "Modification requested",
               "name": "modificationRequested",
-              "type": "checkbox",
-              "isRequired": true
+              "type": "checkbox"
             },
             {
               "label": "Description of work performed",
@@ -335,6 +331,7 @@
                       "label": "Activity",
                       "name": "activity",
                       "type": "select",
+                      "isRequired": true,
                       "attrs": {
                         "table": "Z_tblActivities_New_Machine",
                         "options": []
@@ -387,32 +384,27 @@
             {
               "label": "Service incomplete",
               "name": "serviceIncomplete",
-              "type": "checkbox",
-              "isRequired": true
+              "type": "checkbox"
             },
             {
               "label": "Customer confirmation of the work completed",
               "name": "confirmationWorkCompleted",
-              "type": "checkbox",
-              "isRequired": true
+              "type": "checkbox"
             },
             {
               "label": "Training and instruction received",
               "name": "trainingReceived",
-              "type": "checkbox",
-              "isRequired": true
+              "type": "checkbox"
             },
             {
               "label": "Spare requested",
               "name": "spareRequested",
-              "type": "checkbox",
-              "isRequired": true
+              "type": "checkbox"
             },
             {
               "label": "Modification requested",
               "name": "modificationRequested",
-              "type": "checkbox",
-              "isRequired": true
+              "type": "checkbox"
             },
             {
               "label": "Description of work performed.",
