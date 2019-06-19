@@ -1,0 +1,40 @@
+window.webkit.messageHandlers.getRelatedEntitiesById.postMessage({
+    idEntityItem: eventName,
+    idEntityIn: CONSTANTS.ENTITY[data.fromEntity],
+    idEntityRecupear: data.id,
+    idEntityOut: CONSTANTS.ENTITY[data.getEntity],
+});
+
+idEntityOut idEntityIn idEntityRecupear
+2(contacts) accounts 233 => get contacts where accountId = 233
+1(accounts) 1(accounts) 567 => get accounts where accountId = 567
+1(accounts) 1(accounts) -1 => get accounts
+2(contacts) 2(contacts) -1 => get contacts
+12(users) 12(users) -1 => get users
+...
+
+window.addEventListener('getRelatedEntitiesById', function(event){console.log(JSON.parse(event.detail.response))});
+window.AndroidForms.getRelatedEntitiesById('getRelatedEntitiesById',12,-1,12,);
+
+
+TODO
+----
+que se cierre el form al finalizar
+fechas formato USA
+timepicker
+summary
+validaciones en  time allocation table
+summary time allocation
+readonly en list (y en sumary)
+modo edición
+checkbox obligatorio uno de todos
+
+Signed state y solo poder finalizar si esta signado y con fechas
+
+EXTRAS
+------
+teclado numerico en Machine hours
+
+
+
+

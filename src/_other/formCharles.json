@@ -1,0 +1,94 @@
+[xmlFields: null
+]	Element	<fields><field name='idForm' value='1' /><field name='entityType' value='EMPRESA' /><field name='jsonList' value='{
+    "pos13": "",
+    "pos21": "Draft",
+    "pos12": "",
+    "pos11": "Standard Service",
+    "pos23": "",
+    "pos22": "06\/18\/2019 10:11 AM"
+}' /><field name='jsonDetail' value='{
+    "detailTitle": "Detail",
+    "detailValues": []
+}' /><field name='entityId' value='582' /><field name='idState' value='1' /><field name='idCurrency' value='-1' /><field name='jsonData' value='{
+    "idState": 1,
+    "endState": 0,
+    "listObject": {
+        "pos11": "Standard Service",
+        "pos12": "",
+        "pos13": "",
+        "pos21": "Draft",
+        "pos22": "06/18/2019 10:11 AM",
+        "pos23": ""
+    },
+    "detailObject": {
+        "detailTitle": "Detail",
+        "detailValues": [
+            {
+                "type": "title",
+                "titleName": "Form data",
+                "key": "",
+                "value": "",
+                "entityId": "",
+                "entityType": ""
+            },
+            {
+                "type": "text",
+                "titleName": "",
+                "key": "Type",
+                "value": "",
+                "entityId": "",
+                "entityType": ""
+            },
+            {
+                "type": "text",
+                "titleName": "",
+                "key": "Creation date",
+                "value": "06/18/2019 10:11 AM",
+                "entityId": "",
+                "entityType": ""
+            },
+            {
+                "type": "text",
+                "titleName": "",
+                "key": "State",
+                "value": "Draft",
+                "entityId": "",
+                "entityType": ""
+            }
+        ]
+    },
+    "idFormType": 1,
+    "formObject": {
+        "fechaCreacion": "06/18/2019 10:11 AM",
+        "workPerformed": {
+            "customer": {
+                "label": "Vetoquinol Prolab",
+                "value": 582
+            },
+            "contact": {
+                "value": "368",
+                "label": "Jacque Cliche"
+            }
+        },
+        "generalInformation": {
+            "customer": {
+                "label": "Vetoquinol Prolab",
+                "value": 582
+            },
+            "serviceEngineer": {
+                "label": "Test",
+                "value": 109
+            },
+            "contact": {
+                "value": "368",
+                "label": "Jacque Cliche"
+            },
+            "dateForm": "06/18/2019",
+            "dateTo": "06/18/2019",
+            "machineTypeSerialNo": "Hj",
+            "machineHours": "Yu",
+            "departFromMarchesini": "06/18/2019 10:11 AM",
+            "arriveToCustomer": "06/18/2019 10:11 AM"
+        }
+    }
+}' /><field name='device_guid' value='4AA2EC5C-22D7-4D60-B91F-69CB1EC6FCEA' /></fields>

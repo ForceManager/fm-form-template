@@ -36,13 +36,13 @@
             text-transform: uppercase;
             max-width: initial;
           }
-          &.field-select{
-            &[class*="isReadOnly"] {
-              .hoi-poi-select__indicators {
-                display: none;
-              }
-            }
-          }
+          // &.field-select{
+          //   &[class*="isReadOnly"] {
+          //     .hoi-poi-select__indicators {
+          //       display: none;
+          //     }
+          //   }
+          // }
           &.field-checkbox {
             > span {
               width: 100%;

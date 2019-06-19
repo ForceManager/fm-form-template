@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Section, Input } from 'hoi-poi-ui';
+import { Multiplier, Section, Input, CheckboxGroup } from 'hoi-poi-ui';
 import Signature from '../../components/Signature';
 import Checkbox from '../../components/Checkbox';
 
@@ -9,7 +9,7 @@ class FormSummary extends PureComponent {
   state = {};
 
   renderSectionContent(section, index) {
-    const { schema, values } = this.props;
+    const { schema, values, customFields } = this.props;
     const sectionFields = schema[index].fields;
     const sectionValues = values[section.name];
 
@@ -19,19 +19,39 @@ class FormSummary extends PureComponent {
       if (!field) return null;
       let fieldValue = field.type === 'select' ? sectionValues[key].label : sectionValues[key];
       let Field;
+      let options;
+      let multiplierSchema;
       switch (field.type) {
+        case 'multiplier':
+          Field = Multiplier;
+          multiplierSchema = sectionFields[0].schema;
+          break;
         case 'signature':
           Field = Signature;
           break;
         case 'checkbox':
           Field = Checkbox;
           break;
+        case 'checkboxGroup':
+          Field = CheckboxGroup;
+          options = field.attrs.options;
+          break;
         default:
           Field = Input;
           break;
       }
       return (
-        <Field key={key} label={field.label} value={fieldValue} isReadOnly={true} summary={true} />
+        <Field 
+          key={key}
+          label={field.label}
+          value={fieldValue}
+          values={fieldValue}
+          isReadOnly={true}
+          summary={true}
+          options={options}
+          schema={multiplierSchema}
+          customFields={customFields}
+        />
       );
     });
   }

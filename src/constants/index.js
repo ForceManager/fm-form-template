@@ -13,6 +13,7 @@ const CONSTANTS = {
       1: { en: 'Draft' },
       2: { en: 'Signed' },
     },
+
     ENTITY: {
       1: { en: 'Company' },
       2: { en: 'Contact' },

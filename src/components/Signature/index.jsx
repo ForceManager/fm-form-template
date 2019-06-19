@@ -8,13 +8,8 @@ function Signature({ label, value, onChange, summary }) {
   const onClickSign = () => {
     bridge
       .openSignatureView()
-      .then((res) => {
-        console.log('openSignatureView res', res);
-        onChange(res);
-      })
-      .catch((err) => {
-        console.warn(err);
-      });
+      .then((res) => onChange(res))
+      .catch((err) => console.warn(err));
   };
 
   return (

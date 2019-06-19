@@ -3,6 +3,7 @@ import { Form, Icon, Toast, toast } from 'hoi-poi-ui';
 import { bridge } from 'fm-bridge';
 // import FormValidator from '../FormValidator';
 import FormSummary from '../FormSummary';
+import config from '../../configs/config.json';
 
 import './style.scss';
 
@@ -14,7 +15,7 @@ class FormsEdit extends PureComponent {
     this.state.totalPages = props.schema.length;
   }
 
-  componentDidUpdate(prevState) {
+  componentDidUpdate(nextProps, prevState) {
     const { currentPage } = this.state;
     const { schema, setImagesView, imagesView, onChangePage } = this.props;
     const pageSchema = schema[currentPage];
@@ -24,6 +25,7 @@ class FormsEdit extends PureComponent {
     }
 
     if (pageSchema && pageSchema.imagesView && !imagesView) {
+      bridge.expandImagesView();
       bridge
         .showCameraImages()
         .then(() => {
@@ -35,9 +37,7 @@ class FormsEdit extends PureComponent {
     } else if (!pageSchema || (imagesView && !pageSchema.imagesView)) {
       bridge
         .hideCameraImages()
-        .then(() => {
-          setImagesView(false);
-        })
+        .then(() => setImagesView(false))
         .catch((err) => {
           console.warn(err);
         });
@@ -45,7 +45,7 @@ class FormsEdit extends PureComponent {
   }
 
   validate = () => {
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve, reject) => {
       const { schema, formData } = this.props;
       const { currentPage } = this.state;
       const pageSchema = schema[currentPage];
@@ -53,19 +53,34 @@ class FormsEdit extends PureComponent {
 
       function validateFields(fields, values) {
         let errors = {};
-        fields.forEach(element => {
+        fields.forEach((element) => {
           if (element.type === 'multiplier') {
-              if (!errors[element.name]) errors[element.name] = [];
-              if (!values) {
-                errors[element.name] = element.schema[0].fields.map((field) => validateFields(element.schema[0].fields, values));
-              } else {
-                 const multiplierValues = values[element.name] ?  values[element.name] : [];
-                errors[element.name] = multiplierValues.map((values) => validateFields(element.schema[0].fields, values));
-              }
+            if (!errors[element.name]) errors[element.name] = [];
+            if (!values) {
+              errors[element.name] = element.schema[0].fields.map((field) =>
+                validateFields(element.schema[0].fields, values),
+              );
+            } else {
+              const multiplierValues = values[element.name] ? values[element.name] : [];
+              errors[element.name] = multiplierValues.map((values) =>
+                validateFields(element.schema[0].fields, values),
+              );
+            }
           } else {
             if (element.isRequired && (!values || !values[element.name])) {
               allValid = false;
               errors[element.name] = 'This field is requiered';
+            } else if (element.validation) {
+              switch (element.validation) {
+                case 'oneOfAll':
+                  if (!values || !values[element.name]) {
+                    allValid = false;
+                    errors[element.name] = 'Select at least one option';
+                  }
+                  break;
+                default:
+                  break;
+              }
             }
           }
         });
@@ -75,10 +90,10 @@ class FormsEdit extends PureComponent {
       let errors = validateFields(pageSchema.fields, formData.formObject[schema[currentPage].name]);
 
       if (allValid) {
-        this.setState({errors: {}});
+        this.setState({ errors: {} });
         resolve();
       } else {
-        this.setState({errors});
+        this.setState({ errors });
         reject({ type: 'invalid' });
       }
     });
@@ -98,7 +113,6 @@ class FormsEdit extends PureComponent {
         })
         .catch((err) => {
           if (err.type === 'invalid') {
-
           } else {
             console.warn(err);
             toast({
@@ -108,7 +122,7 @@ class FormsEdit extends PureComponent {
             });
           }
           bridge.hideLoading();
-      });
+        });
     }
   };
 
@@ -121,12 +135,13 @@ class FormsEdit extends PureComponent {
       // .then(() => this.validate())
       .then(() => bridge.saveData(formData))
       .then(() => {
+        console.log('formData', formData);
+        debugger;
         this.setState({ currentPage: currentPage + 1 });
         bridge.hideLoading();
       })
       .catch((err) => {
         if (err.type === 'invalid') {
-
         } else {
           console.warn(err);
           toast({
@@ -156,16 +171,27 @@ class FormsEdit extends PureComponent {
   onClickFinish = () => {
     const { formData } = this.props;
 
-    formData.endState =  1;
-    bridge.saveData(formData)
+    formData.endState = 1;
+    Object.keys(config.listObject).forEach((key) => {
+      if (config.listObject[key] === 'state') {
+        formData.listObject[key] = 'Closed';
+      }
+    });
+    config.detailObject.detailValues.forEach((el, i) => {
+      if (el.value === 'state') {
+        formData.detailObject.detailValues[i] = 'Closed';
+      }
+    });
+    bridge
+      .saveData(formData)
       .then(() => bridge.finishActivity())
       .catch((err) => {
         console.warn(err);
-          toast({
-            type: 'error',
-            text: 'The form could not be saved',
-            title: 'Error',
-          });
+        toast({
+          type: 'error',
+          text: 'The form could not be saved',
+          title: 'Error',
+        });
       });
   };
 
@@ -209,7 +235,9 @@ class FormsEdit extends PureComponent {
     const { currentPage, totalPages, errors } = this.state;
 
     if (currentPage === totalPages) {
-      return <FormSummary schema={schema} values={formData.formObject} />;
+      return (
+        <FormSummary schema={schema} values={formData.formObject} customFields={customFields} />
+      );
     }
     return (
       <Form

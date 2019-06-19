@@ -30,7 +30,7 @@
             },
             {
               "label": "Date from",
-              "name": "dateForm",
+              "name": "dateFrom",
               "type": "datePicker",
               "isRequired": true
             },
@@ -141,29 +141,34 @@
               }
             },
             {
-              "label": "Service incomplete",
-              "name": "serviceIncomplete",
-              "type": "checkbox"
-            },
-            {
-              "label": "Customer confirmation of the work completed",
-              "name": "confirmationWorkCompleted",
-              "type": "checkbox"
-            },
-            {
-              "label": "Training and instruction received",
-              "name": "trainingReceived",
-              "type": "checkbox"
-            },
-            {
-              "label": "Spare requested",
-              "name": "spareRequested",
-              "type": "checkbox"
-            },
-            {
-              "label": "Modification requested",
-              "name": "modificationRequested",
-              "type": "checkbox"
+              "label": "Status",
+              "name": "status",
+              "type": "checkboxGroup",
+              "validation": "oneOfAll",
+              "attrs": {
+                "options": [
+                  {
+                    "label": "Service incomplete",
+                    "value": "serviceIncomplete"
+                  },
+                  {
+                    "label": "Customer confirmation of the work completed",
+                    "value": "confirmationWorkCompleted"
+                  },
+                  {
+                    "label": "Training and instruction received",
+                    "value": "trainingReceived"
+                  },
+                  {
+                    "label": "Spare requested",
+                    "value": "spareRequested"
+                  },
+                  {
+                    "label": "Modification requested",
+                    "value": "modificationRequested"
+                  }
+                ]
+              }
             },
             {
               "label": "Description of work performed",
@@ -180,6 +185,12 @@
           ]
         },
         {
+          "name": "photos",
+          "className": "photos",
+          "imagesView": true,
+          "fields": []
+        },
+        {
           "title": "Signatures",
           "name": "signatures",
           "className": "signatures",
@@ -187,7 +198,8 @@
             {
               "label": "Customer’s signature.",
               "name": "customerSignature",
-              "type": "signature"
+              "type": "signature",
+              "isRequired": true
             },
             {
               "label": "Date of the Customer’s signature",
@@ -198,7 +210,8 @@
             {
               "label": "Service engineer’s signature.",
               "name": "serviceEngineerSignature",
-              "type": "signature"
+              "type": "signature",
+              "isRequired": true
             },
             {
               "label": "Date of the Service engineer’s signature",
@@ -207,12 +220,6 @@
               "isReadOnly": true
             }
           ]
-        },
-        {
-          "name": "photos",
-          "className": "photos",
-          "imagesView": true,
-          "fields": []
         },
         {
           "title": "General information End",
@@ -242,19 +249,13 @@
       "schema": [
         {
           "title": "General information Start",
-          "name": "generalInformationStart",
+          "name": "generalInformation",
           "className": "general-info-start",
           "fields": [
             {
-              "label": "Form No.",
-              "name": "formNo",
-              "type": "text",
-              "isReadOnly": true
-            },
-            {
               "label": "Customer.",
               "name": "customer",
-              "type": "text",
+              "type": "select",
               "isReadOnly": true
             },
             {
@@ -262,53 +263,53 @@
               "name": "contact",
               "type": "select",
               "isRequired": true,
+              "isSearchable": false,
               "attrs": {
+                "isSearchable": false,
+                "relatedEntity": ["contacts", "accounts", "this"],
                 "options": []
               }
             },
             {
               "label": "Date from",
-              "name": "dateForm",
-              "type": "text",
-              "subType": "date",
+              "name": "dateFrom",
+              "type": "datePicker",
               "isRequired": true
             },
             {
               "label": "Date to",
               "name": "dateTo",
-              "type": "text",
-              "subType": "date",
+              "type": "datePicker",
               "isRequired": true
             },
             {
               "label": "Service Engineer",
               "name": "serviceEngineer",
-              "type": "text"
+              "type": "select",
+              "isReadOnly": true
             },
             {
               "label": "Machine type & Serial No. ",
               "name": "machineTypeSerialNo",
-              "type": "select",
-              "attrs": {
-                "options": []
-              }
+              "type": "text",
+              "isRequired": true
             },
             {
               "label": "Machine hours",
               "name": "machineHours",
               "type": "text",
-              "isReadOnly": true
+              "isRequired": true
             },
             {
               "label": "Depart from Marchesini",
               "name": "departFromMarchesini",
-              "type": "text",
+              "type": "dateTimePicker",
               "isRequired": true
             },
             {
               "label": "Arrive to customer",
               "name": "arriveToCustomer",
-              "type": "text",
+              "type": "dateTimePicker",
               "isRequired": true
             }
           ]
@@ -369,14 +370,14 @@
             {
               "label": "Customer.",
               "name": "customer",
-              "type": "text",
+              "type": "select",
               "isReadOnly": true
             },
             {
               "label": "Contact",
               "name": "contact",
               "type": "select",
-              "isRequired": true,
+              "isReadOnly": true,
               "attrs": {
                 "options": []
               }
@@ -407,12 +408,24 @@
               "type": "checkbox"
             },
             {
-              "label": "Description of work performed.",
+              "label": "Description of work performed",
               "name": "description",
-              "type": "text",
-              "isReadOnly": true
+              "type": "textarea",
+              "isRequired": true
+            },
+            {
+              "label": "Recommendations",
+              "name": "recommendations",
+              "type": "textarea",
+              "isRequired": true
             }
           ]
+        },
+        {
+          "name": "photos",
+          "className": "photos",
+          "imagesView": true,
+          "fields": []
         },
         {
           "title": "Signatures",
@@ -422,7 +435,8 @@
             {
               "label": "Customer’s signature.",
               "name": "customerSignature",
-              "type": "signature"
+              "type": "signature",
+              "isRequired": true
             },
             {
               "label": "Date of the Customer’s signature",
@@ -433,7 +447,8 @@
             {
               "label": "Service engineer’s signature.",
               "name": "serviceEngineerSignature",
-              "type": "signature"
+              "type": "signature",
+              "isRequired": true
             },
             {
               "label": "Date of the Service engineer’s signature",
@@ -442,12 +457,6 @@
               "isReadOnly": true
             }
           ]
-        },
-        {
-          "name": "photos",
-          "className": "photos",
-          "imagesView": true,
-          "fields": []
         },
         {
           "title": "General information End",
@@ -494,7 +503,7 @@
         "type": "text",
         "titleName": "",
         "key": "Type",
-        "value": "",
+        "value": "selectedForm",
         "entityId": "",
         "entityType": ""
       },
