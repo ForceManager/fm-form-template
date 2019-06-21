@@ -2,11 +2,15 @@ import React, { PureComponent } from 'react';
 import { Multiplier, Section, Input, CheckboxGroup } from 'hoi-poi-ui';
 import Signature from '../../components/Signature';
 import Checkbox from '../../components/Checkbox';
+import { bridge } from 'fm-bridge';
 
 import './style.scss';
 
 class FormSummary extends PureComponent {
   state = {};
+  componentDidMount() {
+    bridge.showCameraImages();
+  }
 
   renderSectionContent(section, index) {
     const { schema, values, customFields } = this.props;
@@ -41,7 +45,7 @@ class FormSummary extends PureComponent {
           break;
       }
       return (
-        <Field 
+        <Field
           key={key}
           label={field.label}
           value={fieldValue}

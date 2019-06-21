@@ -34,10 +34,19 @@ class App extends PureComponent {
   };
 
   componentDidMount() {
+    let states = {};
     bridge
       .showLoading()
+      .then(() => bridge.getValueList('tblEstadosForms'))
+      .then((res) => {
+        res.forEach((el) => {
+          states[el.value] = el.label;
+        });
+        console.log('tblEstadosForms', states);
+      })
       .then(() => bridge.getFormInitData())
       .then((res) => {
+        console.log('getFormInitData', res);
         let newState;
         if (res.mode === 'creation') {
           bridge.setTitle('Form creation');
@@ -59,6 +68,7 @@ class App extends PureComponent {
             idPreSelectedFormType: res.idPreSelectedFormType,
             entityFormExtraFields: res.entityFormExtraFields,
             imei: res.imei,
+            states,
           };
         } else if (res.mode === 'edition') {
           bridge.setTitle('Form edition');
@@ -73,10 +83,10 @@ class App extends PureComponent {
             formData: {
               formObject: res.entityForm.fullObject.formObject,
               idFormType: res.idFormType,
-              idState: res.idState,
-              endState: res.endState,
-              listObject: res.entityForm.listObject,
-              detailObject: res.entityForm.detailObject,
+              idState: res.entityForm.idState,
+              endState: res.entityForm.fullObject.endState,
+              listObject: res.entityForm.fullObject.listObject,
+              detailObject: res.entityForm.fullObject.detailObject,
             },
             company: res.company,
             user: res.user,
@@ -84,10 +94,9 @@ class App extends PureComponent {
             mode: res.mode,
             isReadonly: res.isReadonly || false,
             selectedForm,
+            states,
           };
         }
-        // else if (res.mode === 'edition' && endState) {
-        // }
         this.setState({ ...this.state, ...newState });
         bridge.hideLoading();
       })
@@ -277,6 +286,7 @@ class App extends PureComponent {
             console.warn(err);
           });
       } else if (mode === 'edition' && formData.endState) {
+        debugger;
         this.setState({
           formSchema: [...config.formSchema[selectedForm.value].schema],
         });
@@ -287,33 +297,6 @@ class App extends PureComponent {
   setImagesView = (value) => {
     this.setState({ imagesView: value });
   };
-
-  // onFinish = () => {
-  //   const { formData } = this.state;
-
-  //   formData.endState = 1;
-  //   Object.keys(config.listObject).forEach((key) => {
-  //     if (config.listObject[key] === 'state') {
-  //       formData.listObject[key] = 'Closed';
-  //     }
-  //   });
-  //   config.detailObject.detailValues.forEach((el, i) => {
-  //     if (el.value === 'state') {
-  //       formData.detailObject.detailValues[i] = 'Closed';
-  //     }
-  //   });
-  //   bridge
-  //     .saveData(formData)
-  //     .then(() => bridge.finishActivity())
-  //     .catch((err) => {
-  //       console.warn(err);
-  //       toast({
-  //         type: 'error',
-  //         text: 'The form could not be saved',
-  //         title: 'Error',
-  //       });
-  //     });
-  // };
 
   onFieldFocus = (values, field, currentPage) => {
     const { formData, formSchema } = this.state;
@@ -350,44 +333,12 @@ class App extends PureComponent {
 
     // console.log('onFormChange', values, field, currentPage);
 
-    function formatPickers(pickerField, pickerValue) {
-      if (pickerField.type === 'datePicker' && typeof pickerValue === 'object')
-        return moment(pickerValue).format('MM/DD/YYYY');
-      if (pickerField.type === 'timePicker' && typeof pickerValue === 'object')
-        return moment(pickerValue).format('MM/DD/YYYY hh:mm A');
-      if (pickerField.type === 'dateTimePicker' && typeof pickerValue === 'object')
-        return moment(pickerValue).format('MM/DD/YYYY hh:mm A');
-      return pickerValue;
-    }
-
-    values[field.name] = formatPickers(field, values[field.name]);
-
-    // if (
-    //   (field.type === 'datePicker' ||
-    //     field.type === 'timePicker' ||
-    //     field.type === 'dateTimePicker') &&
-    //   !values[field.name]
-    // ) {
-    //   values[field.name] = null;
-    // }
-
     if (field.type === 'checkbox') {
       if (formData.formObject[sectionName][field.name]) {
         values[field.name] = false;
       } else {
         values[field.name] = true;
       }
-    }
-
-    if (field.type === 'multiplier') {
-      values[field.name].forEach((element) => {
-        if (element) {
-          Object.keys(element).forEach((key) => {
-            const mField = field.schema[0].fields.find((el) => el.name === key);
-            element[key] = formatPickers(mField, element[key]);
-          });
-        }
-      });
     }
 
     let newState = {
@@ -426,19 +377,41 @@ class App extends PureComponent {
     }
   };
 
-  onChangePage = (currentPage) => {
-    if (customActions.onChangePage) {
-      let data = { state: this.state, currentPage };
-      customActions
-        .onChangePage(data)
-        .then((newSate) => {
-          console.log('newSate', newSate);
-          if (newSate) {
-            this.setState({ ...newSate });
-          }
-        })
-        .catch((err) => console.warn(err));
-    }
+  // onChangePage = (currentPage) => {
+  //   if (customActions.onChangePage) {
+  //     let data = { state: this.state, currentPage };
+  //     customActions
+  //       .onChangePage(data)
+  //       .then((newSate) => {
+  //         console.log('newSate', newSate);
+  //         if (newSate) {
+  //           this.setState({ ...newSate });
+  //         }
+  //       })
+  //       .catch((err) => console.warn(err));
+  //   }
+  // };
+
+  beforeChangePage = (currentPage) => {
+    return new Promise((resolve, reject) => {
+      if (customActions.beforeChangePage) {
+        let data = { state: this.state, currentPage };
+        customActions
+          .beforeChangePage(data)
+          .then((newSate) => {
+            console.log('newSate', newSate);
+            if (newSate) {
+              this.setState({ ...newSate });
+              resolve(newSate);
+            } else {
+              resolve();
+            }
+          })
+          .catch((err) => reject(err));
+      } else {
+        resolve();
+      }
+    });
   };
 
   overrides = {
@@ -482,6 +455,7 @@ class App extends PureComponent {
           imagesView={imagesView}
           overrrides={this.overrides}
           onChangePage={this.onChangePage}
+          beforeChangePage={this.beforeChangePage}
         />
       );
     } else if (formSchema && mode === 'edition' && formData.endState) {

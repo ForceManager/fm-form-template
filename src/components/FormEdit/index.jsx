@@ -4,6 +4,7 @@ import { bridge } from 'fm-bridge';
 // import FormValidator from '../FormValidator';
 import FormSummary from '../FormSummary';
 import config from '../../configs/config.json';
+import CONSTANTS from '../../constants';
 
 import './style.scss';
 
@@ -16,16 +17,15 @@ class FormsEdit extends PureComponent {
   }
 
   componentDidUpdate(nextProps, prevState) {
-    const { currentPage } = this.state;
-    const { schema, setImagesView, imagesView, onChangePage } = this.props;
+    const { currentPage, totalPages } = this.state;
+    const { schema, setImagesView, imagesView } = this.props;
     const pageSchema = schema[currentPage];
 
-    if (this.state.currentPage !== prevState.currentPage) {
-      onChangePage(currentPage);
-    }
+    // if (this.state.currentPage !== prevState.currentPage) {
+    //   onChangePage(currentPage);
+    // }
 
-    if (pageSchema && pageSchema.imagesView && !imagesView) {
-      bridge.expandImagesView();
+    if ((pageSchema && pageSchema.imagesView && !imagesView) || currentPage === totalPages) {
       bridge
         .showCameraImages()
         .then(() => {
@@ -71,9 +71,19 @@ class FormsEdit extends PureComponent {
               allValid = false;
               errors[element.name] = 'This field is requiered';
             } else if (element.validation) {
+              function allFalse(obj) {
+                for (var i in obj) {
+                  if (obj[i] === true) return false;
+                }
+                return true;
+              }
               switch (element.validation) {
                 case 'oneOfAll':
-                  if (!values || !values[element.name]) {
+                  if (
+                    !values ||
+                    !values[element.name] ||
+                    (values[element.name] && allFalse(values[element.name]))
+                  ) {
                     allValid = false;
                     errors[element.name] = 'Select at least one option';
                   }
@@ -127,16 +137,23 @@ class FormsEdit extends PureComponent {
   };
 
   onClickNext = (event) => {
-    const { formData } = this.props;
+    const { formData, beforeChangePage } = this.props;
     const { currentPage } = this.state;
 
     bridge
       .showLoading()
-      // .then(() => this.validate())
-      .then(() => bridge.saveData(formData))
+      .then(() => this.validate())
+      .then(() => beforeChangePage(currentPage))
+      .then((newState) => {
+        if (newState) {
+          debugger;
+          return bridge.saveData(newState.formData);
+        } else {
+          return bridge.saveData(formData);
+        }
+      })
       .then(() => {
         console.log('formData', formData);
-        debugger;
         this.setState({ currentPage: currentPage + 1 });
         bridge.hideLoading();
       })
@@ -168,9 +185,16 @@ class FormsEdit extends PureComponent {
     onFocus(values, field, currentPage);
   };
 
+  onClose = (...props) => {
+    const { onClose } = this.props;
+    console.log('onClose', props);
+    onClose({ ...props });
+  };
+
   onClickFinish = () => {
     const { formData } = this.props;
 
+    formData.idState = CONSTANTS.STATE.FINISHED;
     formData.endState = 1;
     Object.keys(config.listObject).forEach((key) => {
       if (config.listObject[key] === 'state') {
@@ -179,7 +203,7 @@ class FormsEdit extends PureComponent {
     });
     config.detailObject.detailValues.forEach((el, i) => {
       if (el.value === 'state') {
-        formData.detailObject.detailValues[i] = 'Closed';
+        formData.detailObject.detailValues[i].value = 'Closed';
       }
     });
     bridge
@@ -248,6 +272,7 @@ class FormsEdit extends PureComponent {
         values={formData.formObject[schema[currentPage].name] || {}}
         customFields={customFields}
         errors={errors}
+        onClose={this.onClose}
       />
     );
   }

@@ -24,7 +24,7 @@ const customActions = {
       },
     },
   },
-  onChangePage,
+  beforeChangePage,
 };
 
 function setContact(data) {
@@ -106,9 +106,9 @@ function setDateServiceEngineerSignature(data) {
   });
 }
 
-function onChangePage(data) {
+function beforeChangePage(data) {
   return new Promise((resolve) => {
-    if (data.currentPage === 5) {
+    if (data.currentPage === 4) {
       let detailValues = [...data.state.formData.detailObject.detailValues];
       detailValues[3].value = CONSTANTS.LITERALS.STATE[CONSTANTS.STATE.SIGNED]['en'];
       let newState = {
@@ -126,6 +126,7 @@ function onChangePage(data) {
           idState: CONSTANTS.STATE.SIGNED,
         },
       };
+      console.log('onChangePage newState', newState);
       resolve(newState);
     } else {
       resolve();

@@ -2,6 +2,7 @@ const CONSTANTS = {
   STATE: {
     DRAFT: 1,
     SIGNED: 2,
+    FINISHED: 3,
   },
   ENTITY: {
     COMPANY: 1,

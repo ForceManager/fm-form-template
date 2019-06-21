@@ -3,6 +3,7 @@
   flex-direction: column;
   height: 100%;
   overflow: scroll;
+  border-top: 1px solid #f0f3f5;
   > div {
     margin-bottom: 10px;
     > div:first-child {

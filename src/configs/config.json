@@ -11,7 +11,7 @@
           "className": "general-info-start",
           "fields": [
             {
-              "label": "Customer.",
+              "label": "Customer",
               "name": "customer",
               "type": "select",
               "isReadOnly": true
@@ -59,7 +59,7 @@
               "isRequired": true
             },
             {
-              "label": "Depart from Marchesini",
+              "label": "Depart",
               "name": "departFromMarchesini",
               "type": "dateTimePicker",
               "isRequired": true
@@ -126,7 +126,7 @@
           "className": "work-performed",
           "fields": [
             {
-              "label": "Customer.",
+              "label": "Customer",
               "name": "customer",
               "type": "select",
               "isReadOnly": true
@@ -233,7 +233,7 @@
               "isRequired": true
             },
             {
-              "label": "Arrive to Marchesini",
+              "label": "Arrive",
               "name": "arriveToMarchesini",
               "type": "dateTimePicker",
               "isRequired": true
@@ -301,7 +301,7 @@
               "isRequired": true
             },
             {
-              "label": "Depart from Marchesini",
+              "label": "Depart",
               "name": "departFromMarchesini",
               "type": "dateTimePicker",
               "isRequired": true
@@ -470,7 +470,7 @@
               "isRequired": true
             },
             {
-              "label": "Arrive to Marchesini",
+              "label": "Arrive",
               "name": "arriveToMarchesini",
               "type": "dateTimePicker",
               "isRequired": true
