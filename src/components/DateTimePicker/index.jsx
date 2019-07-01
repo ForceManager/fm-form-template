@@ -18,7 +18,6 @@ class DateTimePicker extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     if (!this.props.value && prevProps.value) {
-      console.log('if (!value && prevState.value)');
       this.setState({ value: null });
     }
   }
@@ -58,6 +57,7 @@ class DateTimePicker extends PureComponent {
       <MaterialDateTimePicker
         {...this.props}
         format="MM/DD/YYYY hh:mm A"
+        minutesStep={30}
         invalidDateMessage={null}
         onOpen={this.onOpen}
         onChange={this.onChange}

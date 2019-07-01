@@ -1,7 +1,7 @@
 {
   "formSchema": {
     "standardService": {
-      "title": "Standard Service",
+      "title": "Standard Service and After Sales Service Report",
       "name": "standardService",
       "id": 1,
       "schema": [
@@ -47,8 +47,14 @@
               "isReadOnly": true
             },
             {
-              "label": "Machine type & Serial No. ",
-              "name": "machineTypeSerialNo",
+              "label": "Machine type",
+              "name": "machineType",
+              "type": "text",
+              "isRequired": true
+            },
+            {
+              "label": " Serial No. ",
+              "name": "serialNo",
               "type": "text",
               "isRequired": true
             },
@@ -126,21 +132,6 @@
           "className": "work-performed",
           "fields": [
             {
-              "label": "Customer",
-              "name": "customer",
-              "type": "select",
-              "isReadOnly": true
-            },
-            {
-              "label": "Contact",
-              "name": "contact",
-              "type": "select",
-              "isReadOnly": true,
-              "attrs": {
-                "options": []
-              }
-            },
-            {
               "label": "Status",
               "name": "status",
               "type": "checkboxGroup",
@@ -164,7 +155,7 @@
                     "value": "spareRequested"
                   },
                   {
-                    "label": "Modification requested",
+                    "label": "Modification/Format requested and/or required",
                     "value": "modificationRequested"
                   }
                 ]
@@ -196,7 +187,13 @@
           "className": "signatures",
           "fields": [
             {
-              "label": "Customer’s signature.",
+              "label": "Customer’s name",
+              "name": "customerName",
+              "type": "text",
+              "isRequired": true
+            },
+            {
+              "label": "Customer’s signature",
               "name": "customerSignature",
               "type": "signature",
               "isRequired": true
@@ -289,8 +286,14 @@
               "isReadOnly": true
             },
             {
-              "label": "Machine type & Serial No. ",
-              "name": "machineTypeSerialNo",
+              "label": "Machine type",
+              "name": "machineType",
+              "type": "text",
+              "isRequired": true
+            },
+            {
+              "label": " Serial No. ",
+              "name": "serialNo",
               "type": "text",
               "isRequired": true
             },
@@ -368,21 +371,6 @@
           "className": "work-performed",
           "fields": [
             {
-              "label": "Customer.",
-              "name": "customer",
-              "type": "select",
-              "isReadOnly": true
-            },
-            {
-              "label": "Contact",
-              "name": "contact",
-              "type": "select",
-              "isReadOnly": true,
-              "attrs": {
-                "options": []
-              }
-            },
-            {
               "label": "Service incomplete",
               "name": "serviceIncomplete",
               "type": "checkbox"
@@ -403,7 +391,7 @@
               "type": "checkbox"
             },
             {
-              "label": "Modification requested",
+              "label": "Modification/Format requested and/or required",
               "name": "modificationRequested",
               "type": "checkbox"
             },
@@ -433,7 +421,13 @@
           "className": "signatures",
           "fields": [
             {
-              "label": "Customer’s signature.",
+              "label": "Customer’s name",
+              "name": "customerName",
+              "type": "text",
+              "isRequired": true
+            },
+            {
+              "label": "Customer’s signature",
               "name": "customerSignature",
               "type": "signature",
               "isRequired": true
@@ -445,7 +439,7 @@
               "isReadOnly": true
             },
             {
-              "label": "Service engineer’s signature.",
+              "label": "Service engineer’s signature",
               "name": "serviceEngineerSignature",
               "type": "signature",
               "isRequired": true

@@ -18,7 +18,6 @@ class DatePicker extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     if (!this.props.value && prevProps.value) {
-      console.log('if (!value && prevState.value)');
       this.setState({ value: null });
     }
   }

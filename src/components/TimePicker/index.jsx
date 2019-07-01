@@ -18,7 +18,6 @@ class TimePicker extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     if (!this.props.value && prevProps.value) {
-      console.log('if (!value && prevState.value)');
       this.setState({ value: null });
     }
   }
@@ -58,6 +57,7 @@ class TimePicker extends PureComponent {
       <MaterialTimePicker
         {...this.props}
         format="hh:mm A"
+        minutesStep={30}
         invalidDateMessage={null}
         onOpen={this.onOpen}
         onChange={this.onChange}
