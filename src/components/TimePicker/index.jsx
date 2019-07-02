@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { TimePicker as MaterialTimePicker } from '@material-ui/pickers';
+import moment from 'moment';
 
 import './style.scss';
 
@@ -12,7 +13,7 @@ class TimePicker extends PureComponent {
     const { value } = this.props;
 
     if (value) {
-      this.setState({ value });
+      this.setState({ value: new Date(value) });
     }
   }
 
@@ -43,7 +44,7 @@ class TimePicker extends PureComponent {
     const { onChange } = this.props;
 
     this.setState({ value: date });
-    onChange(date);
+    onChange(moment(date).format('HH:mm'));
   };
 
   onClose = () => {

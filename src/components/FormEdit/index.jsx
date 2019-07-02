@@ -16,31 +16,39 @@ class FormsEdit extends PureComponent {
     this.state.totalPages = props.schema.length;
   }
 
-  componentDidUpdate(nextProps, prevState) {
+  componentDidMount() {
+    const { formData } = this.props;
+
+    console.log('componentDidMount', formData.idState);
+    if (formData.idState === CONSTANTS.STATE.SIGNED) {
+      this.setState({ currentPage: 5 });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     const { currentPage, totalPages } = this.state;
     const { schema, setImagesView, imagesView } = this.props;
     const pageSchema = schema[currentPage];
 
-    // if (this.state.currentPage !== prevState.currentPage) {
-    //   onChangePage(currentPage);
-    // }
-
-    if ((pageSchema && pageSchema.imagesView && !imagesView) || currentPage === totalPages) {
-      bridge
-        .showCameraImages()
-        .then(() => {
-          setImagesView(true);
-        })
-        .catch((err) => {
-          console.warn(err);
-        });
-    } else if (!pageSchema || (imagesView && !pageSchema.imagesView)) {
-      bridge
-        .hideCameraImages()
-        .then(() => setImagesView(false))
-        .catch((err) => {
-          console.warn(err);
-        });
+    if (this.state.currentPage !== prevState.currentPage) {
+      // onChangePage(currentPage);
+      if ((pageSchema && pageSchema.imagesView && !imagesView) || currentPage === totalPages) {
+        bridge
+          .showCameraImages()
+          .then(() => {
+            setImagesView(true);
+          })
+          .catch((err) => {
+            console.warn(err);
+          });
+      } else if (!pageSchema || (imagesView && !pageSchema.imagesView)) {
+        bridge
+          .hideCameraImages()
+          .then(() => setImagesView(false))
+          .catch((err) => {
+            console.warn(err);
+          });
+      }
     }
   }
 
@@ -146,14 +154,12 @@ class FormsEdit extends PureComponent {
       .then(() => beforeChangePage(currentPage))
       .then((newState) => {
         if (newState) {
-          debugger;
           return bridge.saveData(newState.formData);
         } else {
           return bridge.saveData(formData);
         }
       })
       .then(() => {
-        console.log('formData', formData);
         this.setState({ currentPage: currentPage + 1 });
         bridge.hideLoading();
       })
@@ -187,7 +193,6 @@ class FormsEdit extends PureComponent {
 
   onClose = (...props) => {
     const { onClose } = this.props;
-    console.log('onClose', props);
     onClose({ ...props });
   };
 
@@ -257,6 +262,7 @@ class FormsEdit extends PureComponent {
   renderContent() {
     const { schema, formData, customFields } = this.props;
     const { currentPage, totalPages, errors } = this.state;
+    const isSignedForm = formData.idState === CONSTANTS.STATE.SIGNED && currentPage !== 5;
 
     if (currentPage === totalPages) {
       return (
@@ -273,6 +279,7 @@ class FormsEdit extends PureComponent {
         customFields={customFields}
         errors={errors}
         onClose={this.onClose}
+        isReadOnly={isSignedForm}
       />
     );
   }

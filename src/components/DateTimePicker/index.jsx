@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { DateTimePicker as MaterialDateTimePicker } from '@material-ui/pickers';
+import moment from 'moment';
 
 import './style.scss';
 
@@ -12,7 +13,7 @@ class DateTimePicker extends PureComponent {
     const { value } = this.props;
 
     if (value) {
-      this.setState({ value });
+      this.setState({ value: new Date(value) });
     }
   }
 
@@ -43,7 +44,7 @@ class DateTimePicker extends PureComponent {
     const { onChange } = this.props;
 
     this.setState({ value: date });
-    onChange(date);
+    onChange(moment(date).format('MM/DD/YYYY HH:mm'));
   };
 
   onClose = () => {

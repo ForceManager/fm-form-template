@@ -286,7 +286,6 @@ class App extends PureComponent {
             console.warn(err);
           });
       } else if (mode === 'edition' && formData.endState) {
-        debugger;
         this.setState({
           formSchema: [...config.formSchema[selectedForm.value].schema],
         });
