@@ -44,7 +44,7 @@ class DateTimePicker extends PureComponent {
     const { onChange } = this.props;
 
     this.setState({ value: date });
-    onChange(moment(date).format('MM/DD/YYYY HH:mm'));
+    onChange(moment(date).format('MM/DD/YYYY HH:mm A'));
   };
 
   onClose = () => {

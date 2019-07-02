@@ -44,7 +44,7 @@ class TimePicker extends PureComponent {
     const { onChange } = this.props;
 
     this.setState({ value: date });
-    onChange(moment(date).format('HH:mm'));
+    onChange(moment(date).format('HH:mm A'));
   };
 
   onClose = () => {
