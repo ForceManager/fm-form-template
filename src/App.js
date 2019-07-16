@@ -121,80 +121,83 @@ class App extends PureComponent {
         sections.forEach((section, sectionIndex) => {
           section.className = [section.className, 'form-page'];
           section.isExpandable = false;
-          mapFields(section.fields, currentPath[sectionIndex].fields);
+          console.log('fields', section.name, JSON.parse(JSON.stringify(section.fields)));
+          section.fields = mapFields(section.fields, currentPath[sectionIndex].fields);
         });
       };
       const mapFields = (fields, currentPath) => {
-        console.log('fields', fields);
+        const newFields = [];
         fields.forEach((field, fieldIndex) => {
           // if (!field.isFullWidth) field.isFullWidth = true;
           // if (field.type !== 'checkbox' && !field.labelMode) field.labelMode = 'vertical';
-          if (field.isVisible === false) {
-            fields.splice(fieldIndex, 1);
-          }
-          if (!field.attrs) field.attrs = {};
-          field.attrs['className'] = `field-${field.type}`;
-          switch (field.type) {
-            case 'multiplier':
-              mapSections(field.schema, currentPath[fieldIndex].schema);
-              break;
-            case 'select':
-              // field.isSearchable = false;
-              if (field.attrs && field.attrs.table && field.attrs.table !== '') {
-                schemaPromises.push(
-                  bridge
-                    .getValueList(field.attrs.table)
-                    .then((res) => {
-                      field.attrs.options = res;
-                    })
-                    .catch((err) => {
-                      console.warn(err);
-                    }),
-                );
-                schemaPositions.push(currentPath[fieldIndex].attrs.options);
-              } else if (
-                field.attrs &&
-                field.attrs.relatedEntity &&
-                field.attrs.relatedEntity !== ''
-              ) {
-                const id =
-                  field.attrs.relatedEntity[1] === 'accounts' &&
-                  field.attrs.relatedEntity[2] === 'this'
-                    ? company.id
-                    : field.attrs.relatedEntity[2];
-                schemaPromises.push(
-                  bridge
-                    .getRelatedEntity(
-                      field.attrs.relatedEntity[0],
-                      field.attrs.relatedEntity[1],
-                      id,
-                    )
-                    .then((res) => {
-                      field.attrs.options = [
-                        ...field.attrs.options,
-                        ...utils.formatEntityList(field.attrs.relatedEntity[0], res),
-                      ];
-                    })
-                    .catch((err) => {
-                      console.warn(err);
-                      toast({
-                        type: 'error',
-                        text: 'Get value list failed',
-                        title: 'Error',
-                      });
-                    }),
-                );
-                schemaPositions.push(currentPath[fieldIndex].attrs.options);
-              }
-              break;
-            case 'checkboxGroup':
-            case 'text':
-            case 'datePicker':
-            case 'dateTimePicker':
-            case 'dateTime':
-            default:
+          console.log('field', field.name, !field.isVisible, field.isVisible !== false);
+          if (field.isVisible !== false) {
+            if (!field.attrs) field.attrs = {};
+            field.attrs['className'] = `field-${field.type}`;
+            switch (field.type) {
+              case 'multiplier':
+                mapSections(field.schema, currentPath[fieldIndex].schema);
+                break;
+              case 'select':
+                // field.isSearchable = false;
+                if (field.attrs && field.attrs.table && field.attrs.table !== '') {
+                  schemaPromises.push(
+                    bridge
+                      .getValueList(field.attrs.table)
+                      .then((res) => {
+                        field.attrs.options = res;
+                      })
+                      .catch((err) => {
+                        console.warn(err);
+                      }),
+                  );
+                  schemaPositions.push(currentPath[fieldIndex].attrs.options);
+                } else if (
+                  field.attrs &&
+                  field.attrs.relatedEntity &&
+                  field.attrs.relatedEntity !== ''
+                ) {
+                  const id =
+                    field.attrs.relatedEntity[1] === 'accounts' &&
+                    field.attrs.relatedEntity[2] === 'this'
+                      ? company.id
+                      : field.attrs.relatedEntity[2];
+                  schemaPromises.push(
+                    bridge
+                      .getRelatedEntity(
+                        field.attrs.relatedEntity[0],
+                        field.attrs.relatedEntity[1],
+                        id,
+                      )
+                      .then((res) => {
+                        field.attrs.options = [
+                          ...field.attrs.options,
+                          ...utils.formatEntityList(field.attrs.relatedEntity[0], res),
+                        ];
+                      })
+                      .catch((err) => {
+                        console.warn(err);
+                        toast({
+                          type: 'error',
+                          text: 'Get value list failed',
+                          title: 'Error',
+                        });
+                      }),
+                  );
+                  schemaPositions.push(currentPath[fieldIndex].attrs.options);
+                }
+                break;
+              case 'checkboxGroup':
+              case 'text':
+              case 'datePicker':
+              case 'dateTimePicker':
+              case 'dateTime':
+              default:
+            }
+            newFields.push(field);
           }
         });
+        return newFields;
       };
 
       function setListObject() {

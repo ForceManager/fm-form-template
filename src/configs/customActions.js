@@ -36,10 +36,17 @@ function onChangeContact(data) {
       data.state.formData.formObject.generalInformation.contact &&
       data.state.formData.formObject.generalInformation.contact.value === 'other'
     ) {
-      let otherContact = config.formSchema[data.state.selectedForm.value].schema[0].fields[2];
-      generalInformation.splice(2, 0, otherContact);
+      let otherContactName = {
+        ...config.formSchema[data.state.selectedForm.value].schema[0].fields[2],
+      };
+      let otherContactEmail = {
+        ...config.formSchema[data.state.selectedForm.value].schema[0].fields[3],
+      };
+      generalInformation.splice(2, 0, otherContactName, otherContactEmail);
     } else {
-      generalInformation.splice(2, 1);
+      if (generalInformation[2].name === 'otherContactName') {
+        generalInformation.splice(2, 2);
+      }
     }
     let newState = {
       ...data.state,
