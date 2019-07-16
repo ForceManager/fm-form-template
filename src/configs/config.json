@@ -29,9 +29,17 @@
               }
             },
             {
-              "label": " ",
-              "name": "otherContact",
+              "label": "Contact name",
+              "name": "otherContactName",
               "type": "text",
+              "isRequired": true,
+              "isVisible": false
+            },
+            {
+              "label": "Contact email",
+              "name": "otherContactEmail",
+              "type": "text",
+              "isRequired": true,
               "isVisible": false
             },
             {
