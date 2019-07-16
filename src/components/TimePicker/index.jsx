@@ -9,11 +9,11 @@ class TimePicker extends PureComponent {
 
   reset = false;
 
-  componentDidMount() {
+  componentWillMount() {
     const { value } = this.props;
 
     if (value) {
-      this.setState({ value: new Date(value) });
+      this.setState({ value: moment(value, 'HH:mm A') });
     }
   }
 

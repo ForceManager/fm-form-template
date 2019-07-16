@@ -112,8 +112,8 @@ class App extends PureComponent {
       let defaultValues;
       let schemaPromises = [];
       let schemaPositions = [];
-      let newFormSchema = [...config.formSchema[selectedForm.value].schema];
-      let newListObject = { ...config.listObject };
+      let newFormSchema = JSON.parse(JSON.stringify(config.formSchema[selectedForm.value].schema));
+      let newListObject = JSON.parse(JSON.stringify(config.listObject));
       let newDetailObject = JSON.parse(JSON.stringify(config.detailObject));
       bridge.showLoading();
 
@@ -125,9 +125,13 @@ class App extends PureComponent {
         });
       };
       const mapFields = (fields, currentPath) => {
+        console.log('fields', fields);
         fields.forEach((field, fieldIndex) => {
           // if (!field.isFullWidth) field.isFullWidth = true;
           // if (field.type !== 'checkbox' && !field.labelMode) field.labelMode = 'vertical';
+          if (field.isVisible === false) {
+            fields.splice(fieldIndex, 1);
+          }
           if (!field.attrs) field.attrs = {};
           field.attrs['className'] = `field-${field.type}`;
           switch (field.type) {
@@ -166,10 +170,10 @@ class App extends PureComponent {
                       id,
                     )
                     .then((res) => {
-                      field.attrs.options = utils.formatEntityList(
-                        field.attrs.relatedEntity[0],
-                        res,
-                      );
+                      field.attrs.options = [
+                        ...field.attrs.options,
+                        ...utils.formatEntityList(field.attrs.relatedEntity[0], res),
+                      ];
                     })
                     .catch((err) => {
                       console.warn(err);

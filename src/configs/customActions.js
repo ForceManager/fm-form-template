@@ -1,11 +1,12 @@
 import moment from 'moment';
 import CONSTANTS from '../constants';
+import config from '../configs/config.json';
 
 const customActions = {
   onChange: {
     standardService: {
       generalInformation: {
-        contact: setContact,
+        contact: onChangeContact,
         // dateFrom: setDateToMin,
       },
       signatures: {
@@ -15,7 +16,7 @@ const customActions = {
     },
     newMachine: {
       generalInformation: {
-        contact: setContact,
+        contact: onChangeContact,
         // dateFrom: setDateToMin,
       },
       signatures: {
@@ -27,20 +28,22 @@ const customActions = {
   beforeChangePage,
 };
 
-function setContact(data) {
+function onChangeContact(data) {
   return new Promise((resolve) => {
+    let newFormSchema = data.state.formSchema;
+    let generalInformation = newFormSchema[0].fields;
+    if (
+      data.state.formData.formObject.generalInformation.contact &&
+      data.state.formData.formObject.generalInformation.contact.value === 'other'
+    ) {
+      let otherContact = config.formSchema[data.state.selectedForm.value].schema[0].fields[2];
+      generalInformation.splice(2, 0, otherContact);
+    } else {
+      generalInformation.splice(2, 1);
+    }
     let newState = {
       ...data.state,
-      formData: {
-        ...data.state.formData,
-        formObject: {
-          ...data.state.formData.formObject,
-          workPerformed: {
-            ...data.state.formData.formObject.workPerformed,
-            contact: data.values[data.field.name],
-          },
-        },
-      },
+      formSchema: newFormSchema,
     };
     resolve(newState);
   });

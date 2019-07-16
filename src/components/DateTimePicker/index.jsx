@@ -9,11 +9,11 @@ class DateTimePicker extends PureComponent {
 
   reset = false;
 
-  componentDidMount() {
+  componentWillMount() {
     const { value } = this.props;
 
     if (value) {
-      this.setState({ value: new Date(value) });
+      this.setState({ value: moment(value, 'MM/DD/YYYY HH:mm A') });
     }
   }
 
