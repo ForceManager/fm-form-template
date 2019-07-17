@@ -150,7 +150,7 @@ class FormsEdit extends PureComponent {
 
     bridge
       .showLoading()
-      // .then(() => this.validate())
+      .then(() => this.validate())
       .then(() => beforeChangePage(currentPage))
       .then((newState) => {
         if (newState) {
