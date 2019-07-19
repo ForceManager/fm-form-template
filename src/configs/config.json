@@ -412,29 +412,34 @@
           "className": "work-performed",
           "fields": [
             {
-              "label": "Service incomplete",
-              "name": "serviceIncomplete",
-              "type": "checkbox"
-            },
-            {
-              "label": "Customer confirmation of the work completed",
-              "name": "confirmationWorkCompleted",
-              "type": "checkbox"
-            },
-            {
-              "label": "Training and instruction received",
-              "name": "trainingReceived",
-              "type": "checkbox"
-            },
-            {
-              "label": "Spare requested",
-              "name": "spareRequested",
-              "type": "checkbox"
-            },
-            {
-              "label": "Modification/Format requested and/or required",
-              "name": "modificationRequested",
-              "type": "checkbox"
+              "label": "Status",
+              "name": "status",
+              "type": "checkboxGroup",
+              "validation": "oneOfAll",
+              "attrs": {
+                "options": [
+                  {
+                    "label": "Service incomplete",
+                    "value": "serviceIncomplete"
+                  },
+                  {
+                    "label": "Customer confirmation of the work completed",
+                    "value": "confirmationWorkCompleted"
+                  },
+                  {
+                    "label": "Training and instruction received",
+                    "value": "trainingReceived"
+                  },
+                  {
+                    "label": "Spare requested",
+                    "value": "spareRequested"
+                  },
+                  {
+                    "label": "Modification/Format requested and/or required",
+                    "value": "modificationRequested"
+                  }
+                ]
+              }
             },
             {
               "label": "Description of work performed",
@@ -514,7 +519,8 @@
               "label": "Arrive",
               "name": "arriveToMarchesini",
               "type": "dateTimePicker",
-              "isRequired": true
+              "isRequired": true,
+              "validation": "biggerEndThanDepart"
             }
           ]
         }
