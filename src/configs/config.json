@@ -288,8 +288,22 @@
               "attrs": {
                 "isSearchable": false,
                 "relatedEntity": ["contacts", "accounts", "this"],
-                "options": []
+                "options": [{ "label": "Other", "value": "other" }]
               }
+            },
+            {
+              "label": "Contact name",
+              "name": "otherContactName",
+              "type": "text",
+              "isRequired": true,
+              "isVisible": false
+            },
+            {
+              "label": "Contact email",
+              "name": "otherContactEmail",
+              "type": "text",
+              "isRequired": true,
+              "isVisible": false
             },
             {
               "label": "Date from",
