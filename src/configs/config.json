@@ -52,7 +52,8 @@
               "label": "Date to",
               "name": "dateTo",
               "type": "datePicker",
-              "isRequired": true
+              "isRequired": true,
+              "validation": "biggerThanDateFrom"
             },
             {
               "label": "Service Engineer",
@@ -132,7 +133,8 @@
                       "label": "Hour: To",
                       "name": "hourTo",
                       "type": "timePicker",
-                      "isRequired": true
+                      "isRequired": true,
+                      "validation": "biggerThanHourFrom"
                     }
                   ]
                 }
@@ -229,6 +231,12 @@
               "name": "dateServiceEngineerSignature",
               "type": "text",
               "isReadOnly": true
+            },
+            {
+              "label": "Send email",
+              "name": "sendEmail",
+              "type": "checkbox",
+              "isRequired": true
             }
           ]
         },
@@ -291,7 +299,8 @@
               "label": "Date to",
               "name": "dateTo",
               "type": "datePicker",
-              "isRequired": true
+              "isRequired": true,
+              "validation": "biggerThanDateFrom"
             },
             {
               "label": "Service Engineer",
@@ -371,7 +380,8 @@
                       "label": "Hour: To",
                       "name": "hourTo",
                       "type": "timePicker",
-                      "isRequired": true
+                      "isRequired": true,
+                      "validation": "biggerThanHourFrom"
                     }
                   ]
                 }

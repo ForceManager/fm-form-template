@@ -4,6 +4,7 @@ import { bridge } from 'fm-bridge';
 // import FormValidator from '../FormValidator';
 import FormSummary from '../FormSummary';
 import config from '../../configs/config.json';
+import customValidations from '../../configs/customValidations';
 import CONSTANTS from '../../constants';
 
 import './style.scss';
@@ -58,9 +59,11 @@ class FormsEdit extends PureComponent {
       const { currentPage } = this.state;
       const pageSchema = schema[currentPage];
       let allValid = true;
+      let parentIndex;
 
       function validateFields(fields, values) {
         let errors = {};
+        console.log('fields', fields);
         fields.forEach((element) => {
           if (element.type === 'multiplier') {
             if (!errors[element.name]) errors[element.name] = [];
@@ -70,15 +73,17 @@ class FormsEdit extends PureComponent {
               );
             } else {
               const multiplierValues = values[element.name] ? values[element.name] : [];
-              errors[element.name] = multiplierValues.map((values) =>
-                validateFields(element.schema[0].fields, values),
-              );
+              errors[element.name] = multiplierValues.map((values, index) => {
+                parentIndex = index;
+                return validateFields(element.schema[0].fields, values);
+              });
             }
           } else {
             if (element.isRequired && (!values || !values[element.name])) {
               allValid = false;
               errors[element.name] = 'This field is requiered';
-            } else if (element.validation) {
+            }
+            if (element.validation) {
               function allFalse(obj) {
                 for (var i in obj) {
                   if (obj[i] === true) return false;
@@ -97,6 +102,19 @@ class FormsEdit extends PureComponent {
                   }
                   break;
                 default:
+                  if (customValidations[element.validation]) {
+                    let validationResult = customValidations[element.validation]({
+                      formData,
+                      field: element,
+                      schema,
+                      currentPage,
+                      parentIndex,
+                    });
+                    if (validationResult) {
+                      allValid = validationResult.allValid;
+                      errors[element.name] = validationResult.error;
+                    }
+                  }
                   break;
               }
             }
