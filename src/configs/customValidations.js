@@ -4,6 +4,8 @@ const customValidations = {
   onFinish,
   biggerThanDateFrom,
   biggerThanHourFrom,
+  biggerThanDepart,
+  biggerThanEndDepart,
 };
 
 function onFinish(data) {
@@ -37,6 +39,34 @@ function biggerThanHourFrom(data) {
     moment(timeAllocationTable.hourFrom, 'HH:mm A') > moment(timeAllocationTable.hourTo, 'HH:mm A')
   ) {
     result = { allValid: false, error: 'Hour should be bigger than "Hour from"' };
+  }
+  return result;
+}
+
+function biggerThanDepart(data) {
+  let result;
+  const generalInformation = data.formData.formObject.generalInformation;
+  if (
+    generalInformation.departFromMarchesini &&
+    generalInformation.arriveToCustomer &&
+    moment(generalInformation.departFromMarchesini, 'MM/DD/YYYY HH:mm A') >
+      moment(generalInformation.arriveToCustomer, 'MM/DD/YYYY HH:mm A')
+  ) {
+    result = { allValid: false, error: 'Should be later than "Depart"' };
+  }
+  return result;
+}
+
+function biggerThanEndDepart(data) {
+  let result;
+  const generalInformationEnd = data.formData.formObject.generalInformationEnd;
+  if (
+    generalInformationEnd.departFromCustomer &&
+    generalInformationEnd.arriveToMarchesini &&
+    moment(generalInformationEnd.departFromCustomer, 'MM/DD/YYYY HH:mm A') >
+      moment(generalInformationEnd.arriveToMarchesini, 'MM/DD/YYYY HH:mm A')
+  ) {
+    result = { allValid: false, error: 'Should be later than "Depart"' };
   }
   return result;
 }

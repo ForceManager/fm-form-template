@@ -89,7 +89,8 @@
               "label": "Arrive to customer",
               "name": "arriveToCustomer",
               "type": "dateTimePicker",
-              "isRequired": true
+              "isRequired": true,
+              "validation": "biggerThanDepart"
             }
           ]
         },
@@ -255,7 +256,8 @@
               "label": "Arrive",
               "name": "arriveToMarchesini",
               "type": "dateTimePicker",
-              "isRequired": true
+              "isRequired": true,
+              "validation": "biggerEndThanDepart"
             }
           ]
         }
@@ -336,7 +338,8 @@
               "label": "Arrive to customer",
               "name": "arriveToCustomer",
               "type": "dateTimePicker",
-              "isRequired": true
+              "isRequired": true,
+              "validation": "biggerThanDepart"
             }
           ]
         },
@@ -473,6 +476,12 @@
               "name": "dateServiceEngineerSignature",
               "type": "text",
               "isReadOnly": true
+            },
+            {
+              "label": "Send email",
+              "name": "sendEmail",
+              "type": "checkbox",
+              "isRequired": true
             }
           ]
         },

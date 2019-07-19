@@ -53,6 +53,10 @@
             div[class*="postComponent"] {
               display: none !important;
             }
+            div[class*="error"] {
+              width: 120px;
+              margin-left: -100px;
+            }
           }
           &.field-textarea {
             > div::before  {
