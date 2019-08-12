@@ -44,6 +44,7 @@ class FormSummary extends PureComponent {
           Field = Input;
           break;
       }
+      console.log(key, field.label, fieldValue, options, multiplierSchema, customFields);
       return (
         <Field
           key={key}
@@ -55,6 +56,7 @@ class FormSummary extends PureComponent {
           options={options}
           schema={multiplierSchema}
           customFields={customFields}
+          className={`field-${field.type}`}
         />
       );
     });

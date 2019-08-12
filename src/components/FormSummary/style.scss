@@ -44,6 +44,18 @@
     color: #3c4248;
     margin-bottom: 10px;
   }
+  .field-multiplier {
+    div[class*="_item"] {
+      border-bottom: 1px solid #f0f3f5;
+      padding-bottom: 20px;
+      margin-bottom: 10px;
+      &:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+      }
+    }
+  }
 }
 
 

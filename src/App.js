@@ -465,7 +465,13 @@ class App extends PureComponent {
         />
       );
     } else if (formSchema && mode === 'edition' && formData.endState) {
-      return <FormSummary schema={formSchema} values={formData.formObject} />;
+      return (
+        <FormSummary
+          schema={formSchema}
+          values={formData.formObject}
+          customFields={this.customFields}
+        />
+      );
     } else {
       return;
     }

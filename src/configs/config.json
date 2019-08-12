@@ -256,7 +256,6 @@
               "label": "Arrive",
               "name": "arriveToMarchesini",
               "type": "dateTimePicker",
-              "isRequired": true,
               "validation": "biggerEndThanDepart"
             }
           ]
@@ -519,7 +518,6 @@
               "label": "Arrive",
               "name": "arriveToMarchesini",
               "type": "dateTimePicker",
-              "isRequired": true,
               "validation": "biggerEndThanDepart"
             }
           ]
