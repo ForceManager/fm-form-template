@@ -287,6 +287,25 @@ class FormsEdit extends PureComponent {
         <FormSummary schema={schema} values={formData.formObject} customFields={customFields} />
       );
     }
+    if (currentPage === 4) {
+      return (
+        <div className="signature-content-container">
+          <FormSummary schema={schema} values={formData.formObject} customFields={customFields} />
+          <Form
+            schema={[schema[currentPage]]}
+            currentPage={currentPage}
+            onChange={this.onFormChange}
+            onFocus={this.onFieldFocus}
+            values={formData.formObject[schema[currentPage].name] || {}}
+            customFields={customFields}
+            errors={errors}
+            onClose={this.onClose}
+            isReadOnly={isSignedForm}
+            className="form-signature"
+          />
+        </div>
+      );
+    }
     return (
       <Form
         schema={[schema[currentPage]]}

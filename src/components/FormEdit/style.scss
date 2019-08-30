@@ -149,6 +149,33 @@
         }
       }
     }
+    .signature-content-container{
+      display: flex;
+      flex-direction: column;
+      overflow: scroll;
+      .summary {
+        height: auto;
+        overflow: unset;
+        display: block;
+        > div:nth-child(5) {
+          > div:nth-child(2) {
+            display: none;
+          }
+        }
+        > div:nth-child(6),
+        > div:nth-child(7) {
+          display: none;
+        }
+      }
+      .form-signature {
+        padding: 0 15px;
+        .form-page.signatures {
+          > div[class*="header"] {
+            display: none;
+          }
+        }
+      }
+    }
   }
   .forms-pager-bar {
     position: absolute;

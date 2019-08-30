@@ -251,12 +251,20 @@
               "name": "departFromCustomer",
               "type": "dateTimePicker",
               "isRequired": true
-            },
+            }
+          ]
+        },
+        {
+          "title": "General information End",
+          "name": "generalInformationEnd2",
+          "className": "general-info-end-2",
+          "fields": [
             {
               "label": "Arrive",
               "name": "arriveToMarchesini",
               "type": "dateTimePicker",
-              "validation": "biggerEndThanDepart"
+              "isRequired": true,
+              "validation": "biggerThanEndDepart"
             }
           ]
         }
@@ -513,12 +521,20 @@
               "name": "departFromCustomer",
               "type": "dateTimePicker",
               "isRequired": true
-            },
+            }
+          ]
+        },
+        {
+          "title": "General information End",
+          "name": "generalInformationEnd2",
+          "className": "general-info-end-2",
+          "fields": [
             {
               "label": "Arrive",
               "name": "arriveToMarchesini",
               "type": "dateTimePicker",
-              "validation": "biggerEndThanDepart"
+              "isRequired": true,
+              "validation": "biggerThanEndDepart"
             }
           ]
         }

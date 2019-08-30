@@ -60,11 +60,12 @@ function biggerThanDepart(data) {
 function biggerThanEndDepart(data) {
   let result;
   const generalInformationEnd = data.formData.formObject.generalInformationEnd;
+  const generalInformationEnd2 = data.formData.formObject.generalInformationEnd2;
   if (
     generalInformationEnd.departFromCustomer &&
-    generalInformationEnd.arriveToMarchesini &&
+    generalInformationEnd2.arriveToMarchesini &&
     moment(generalInformationEnd.departFromCustomer, 'MM/DD/YYYY HH:mm A') >
-      moment(generalInformationEnd.arriveToMarchesini, 'MM/DD/YYYY HH:mm A')
+      moment(generalInformationEnd2.arriveToMarchesini, 'MM/DD/YYYY HH:mm A')
   ) {
     result = { allValid: false, error: 'Should be later than "Depart"' };
   }
