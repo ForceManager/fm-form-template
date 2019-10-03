@@ -20,7 +20,6 @@ class FormsEdit extends PureComponent {
   componentDidMount() {
     const { formData } = this.props;
 
-    console.log('componentDidMount', formData.idState);
     if (formData.idState === CONSTANTS.STATE.SIGNED) {
       this.setState({ currentPage: 5 });
     }
@@ -63,7 +62,6 @@ class FormsEdit extends PureComponent {
 
       function validateFields(fields, values) {
         let errors = {};
-        console.log('fields', fields);
         fields.forEach((element) => {
           if (element.type === 'multiplier') {
             if (!errors[element.name]) errors[element.name] = [];
@@ -277,35 +275,15 @@ class FormsEdit extends PureComponent {
     return <div className="forms-pager-number">{`${currentPage + 1} / ${totalPages}`}</div>;
   }
 
-  renderContent() {
+  renderSummary() {
     const { schema, formData, customFields } = this.props;
-    const { currentPage, totalPages, errors } = this.state;
-    const isSignedForm = formData.idState === CONSTANTS.STATE.SIGNED && currentPage !== 5;
+    return <FormSummary schema={schema} values={formData.formObject} customFields={customFields} />;
+  }
 
-    if (currentPage === totalPages) {
-      return (
-        <FormSummary schema={schema} values={formData.formObject} customFields={customFields} />
-      );
-    }
-    if (currentPage === 4) {
-      return (
-        <div className="signature-content-container">
-          <FormSummary schema={schema} values={formData.formObject} customFields={customFields} />
-          <Form
-            schema={[schema[currentPage]]}
-            currentPage={currentPage}
-            onChange={this.onFormChange}
-            onFocus={this.onFieldFocus}
-            values={formData.formObject[schema[currentPage].name] || {}}
-            customFields={customFields}
-            errors={errors}
-            onClose={this.onClose}
-            isReadOnly={isSignedForm}
-            className="form-signature"
-          />
-        </div>
-      );
-    }
+  renderForm(className) {
+    const { schema, formData, customFields } = this.props;
+    const { currentPage, errors } = this.state;
+    const isSignedForm = formData.idState === CONSTANTS.STATE.SIGNED && currentPage < 5;
     return (
       <Form
         schema={[schema[currentPage]]}
@@ -317,8 +295,31 @@ class FormsEdit extends PureComponent {
         errors={errors}
         onClose={this.onClose}
         isReadOnly={isSignedForm}
+        className={className}
       />
     );
+  }
+
+  renderContent() {
+    const { formData } = this.props;
+    const { currentPage, totalPages } = this.state;
+    const isSignedForm = formData.idState === CONSTANTS.STATE.SIGNED && currentPage < 5;
+
+    if (currentPage === totalPages) {
+      return this.renderSummary();
+    }
+    if (isSignedForm && currentPage === 4) {
+      return <div className="signature-content-container signed">{this.renderSummary()}</div>;
+    }
+    if (currentPage === 4) {
+      return (
+        <div className="signature-content-container">
+          {this.renderSummary()}
+          {this.renderForm('form-signature')}
+        </div>
+      );
+    }
+    return this.renderForm('');
   }
 
   render() {

@@ -44,7 +44,6 @@ class FormSummary extends PureComponent {
           Field = Input;
           break;
       }
-      console.log(key, field.label, fieldValue, options, multiplierSchema, customFields);
       return (
         <Field
           key={key}

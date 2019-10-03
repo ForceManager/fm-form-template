@@ -39,6 +39,9 @@ const materialTheme = createMuiTheme({
         '&:after': {
           borderBottom: '1px solid #FF8C00',
         },
+        '&.Mui-disabled:before': {
+          borderBottomStyle: 'solid',
+        },
       },
     },
     PrivateTabIndicator: {

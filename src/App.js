@@ -42,11 +42,9 @@ class App extends PureComponent {
         res.forEach((el) => {
           states[el.value] = el.label;
         });
-        console.log('tblEstadosForms', states);
       })
       .then(() => bridge.getFormInitData())
       .then((res) => {
-        console.log('getFormInitData', res);
         let newState;
         if (res.mode === 'creation') {
           bridge.setTitle('Form creation');
@@ -121,7 +119,6 @@ class App extends PureComponent {
         sections.forEach((section, sectionIndex) => {
           section.className = [section.className, 'form-page'];
           section.isExpandable = false;
-          console.log('fields', section.name, JSON.parse(JSON.stringify(section.fields)));
           section.fields = mapFields(section.fields, currentPath[sectionIndex].fields);
         });
       };
@@ -130,7 +127,6 @@ class App extends PureComponent {
         fields.forEach((field, fieldIndex) => {
           // if (!field.isFullWidth) field.isFullWidth = true;
           // if (field.type !== 'checkbox' && !field.labelMode) field.labelMode = 'vertical';
-          console.log('field', field.name, !field.isVisible, field.isVisible !== false);
           if (field.isVisible !== false) {
             if (!field.attrs) field.attrs = {};
             field.attrs['className'] = `field-${field.type}`;
@@ -140,6 +136,7 @@ class App extends PureComponent {
                 break;
               case 'select':
                 // field.isSearchable = false;
+                field.isFullWidth = true;
                 if (field.attrs && field.attrs.table && field.attrs.table !== '') {
                   schemaPromises.push(
                     bridge
@@ -337,8 +334,6 @@ class App extends PureComponent {
     const { formData, formSchema, selectedForm } = this.state;
     const sectionName = formSchema[currentPage].name;
 
-    // console.log('onFormChange', values, field, currentPage);
-
     if (field.type === 'checkbox') {
       if (formData.formObject[sectionName][field.name]) {
         values[field.name] = false;
@@ -389,7 +384,6 @@ class App extends PureComponent {
   //     customActions
   //       .onChangePage(data)
   //       .then((newSate) => {
-  //         console.log('newSate', newSate);
   //         if (newSate) {
   //           this.setState({ ...newSate });
   //         }
@@ -405,7 +399,6 @@ class App extends PureComponent {
         customActions
           .beforeChangePage(data)
           .then((newSate) => {
-            console.log('newSate', newSate);
             if (newSate) {
               this.setState({ ...newSate });
               resolve(newSate);
@@ -435,8 +428,6 @@ class App extends PureComponent {
 
   renderContent() {
     const { mode, selectedForm, formData, formSchema, imagesView } = this.state;
-
-    console.log('this.state', this.state);
 
     if (mode === 'creation' && !selectedForm) {
       return (

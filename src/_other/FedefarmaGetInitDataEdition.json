@@ -1170,7 +1170,7 @@
       "fieldId": "Z_CampoExtra3",
       "valueListName": "Z_tblTipoFormulario",
       "entity": "FORMSTEMPLATE",
-      "readOnly": "false",
+      "isReadOnly": "false",
       "dataType": "relatedValueList",
       "description": "Campo Extra Tipo Formulario",
       "tabId": "-1"

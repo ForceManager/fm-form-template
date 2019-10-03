@@ -53,6 +53,7 @@ class DateTimePicker extends PureComponent {
 
   render() {
     const { value } = this.state;
+    const { readOnly, isReadOnly } = this.props;
 
     return (
       <MaterialDateTimePicker
@@ -65,6 +66,7 @@ class DateTimePicker extends PureComponent {
         onAccept={this.onAccept}
         onClose={this.onClose}
         value={value}
+        disabled={isReadOnly || readOnly}
       />
     );
   }

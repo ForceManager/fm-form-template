@@ -53,10 +53,12 @@ class TimePicker extends PureComponent {
 
   render() {
     const { value } = this.state;
+    const { readOnly, isReadOnly } = this.props;
 
     return (
       <MaterialTimePicker
         {...this.props}
+        fe
         format="hh:mm A"
         minutesStep={30}
         invalidDateMessage={null}
@@ -65,6 +67,7 @@ class TimePicker extends PureComponent {
         onAccept={this.onAccept}
         onClose={this.onClose}
         value={value}
+        disabled={isReadOnly || readOnly}
       />
     );
   }

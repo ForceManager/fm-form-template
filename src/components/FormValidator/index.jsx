@@ -28,7 +28,6 @@ class FormValidator extends PureComponent {
     const { errors } = this.state;
     const { schema, values, customFields } = this.props;
 
-    // console.log('FormValidator values', values);
     return (
       <Form
         onChange={this.onFormChange}

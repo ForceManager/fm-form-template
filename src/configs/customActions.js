@@ -136,7 +136,6 @@ function beforeChangePage(data) {
           idState: CONSTANTS.STATE.SIGNED,
         },
       };
-      console.log('onChangePage newState', newState);
       resolve(newState);
     } else {
       resolve();
