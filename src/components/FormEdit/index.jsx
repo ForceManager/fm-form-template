@@ -296,6 +296,7 @@ class FormsEdit extends PureComponent {
         onClose={this.onClose}
         isReadOnly={isSignedForm}
         className={className}
+        useNativeForm={false}
       />
     );
   }

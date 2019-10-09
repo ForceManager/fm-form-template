@@ -37,7 +37,7 @@ class App extends PureComponent {
     let states = {};
     bridge
       .showLoading()
-      .then(() => bridge.getValueList('tblEstadosForms'))
+      .then(() => bridge.getFormStates())
       .then((res) => {
         res.forEach((el) => {
           states[el.value] = el.label;
@@ -52,14 +52,14 @@ class App extends PureComponent {
             formData: {
               formObject: {
                 fechaCreacion: moment().format('MM/DD/YYYY hh:mm A'),
-                userCreacion: res.user.id,
+                userCreacion: res.userData.id,
               },
               idFormType: null,
               idState: CONSTANTS.STATE.DRAFT,
               endState: 0,
             },
-            company: res.company,
-            user: res.user,
+            account: res.account,
+            userData: res.userData,
             entityForm: res.entityForm,
             mode: res.mode,
             isReadonly: res.isReadonly || false,
@@ -86,8 +86,8 @@ class App extends PureComponent {
               listObject: res.entityForm.fullObject.listObject,
               detailObject: res.entityForm.fullObject.detailObject,
             },
-            company: res.company,
-            user: res.user,
+            account: res.account,
+            userData: res.userData,
             entityForm: res.entityForm,
             mode: res.mode,
             isReadonly: res.isReadonly || false,
@@ -104,7 +104,7 @@ class App extends PureComponent {
   }
 
   componentDidUpdate() {
-    const { selectedForm, formSchema, formData, company, mode } = this.state;
+    const { selectedForm, formSchema, formData, account, mode } = this.state;
 
     if (selectedForm && !formSchema) {
       let defaultValues;
@@ -157,7 +157,7 @@ class App extends PureComponent {
                   const id =
                     field.attrs.relatedEntity[1] === 'accounts' &&
                     field.attrs.relatedEntity[2] === 'this'
-                      ? company.id
+                      ? account.id
                       : field.attrs.relatedEntity[2];
                   schemaPromises.push(
                     bridge

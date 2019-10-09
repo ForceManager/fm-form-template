@@ -58,7 +58,6 @@ class TimePicker extends PureComponent {
     return (
       <MaterialTimePicker
         {...this.props}
-        fe
         format="hh:mm A"
         minutesStep={30}
         invalidDateMessage={null}
