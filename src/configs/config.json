@@ -114,7 +114,7 @@
                       "type": "select",
                       "isRequired": true,
                       "attrs": {
-                        "table": "Z_tblActivities_Standard_Service",
+                        "table": "Z_tbltipoMaterial",
                         "options": []
                       }
                     },
@@ -384,7 +384,7 @@
                       "type": "select",
                       "isRequired": true,
                       "attrs": {
-                        "table": "Z_tblActivities_New_Machine",
+                        "table": "Z_tbltipoMaterial",
                         "options": []
                       }
                     },

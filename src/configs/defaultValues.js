@@ -38,15 +38,15 @@ function getDefaultValues(state, selectedForm) {
     const defaultValues = {
       generalInformation: {
         customer: {
-          label: state.company.nombre,
-          value: state.company.id,
+          label: state.account.name,
+          value: state.account.id,
         },
-        serviceEngineer: { label: state.user.name, value: state.user.userId },
+        serviceEngineer: { label: state.user.name, value: state.user.id },
       },
       workPerformed: {
         customer: {
-          label: state.company.nombre,
-          value: state.company.id,
+          label: state.account.name,
+          value: state.account.id,
         },
       },
     };

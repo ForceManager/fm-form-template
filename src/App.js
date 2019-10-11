@@ -13,9 +13,10 @@ import Textarea from './components/Textarea';
 import Checkbox from './components/Checkbox';
 import utils from './utils';
 import config from './configs/config.json';
-import getDefaultValues from './configs/getDefaultValues';
+import getDefaultValues from './configs/defaultValues';
 import customActions from './configs/customActions';
 import CONSTANTS from './constants';
+import localBridge from './configs/localBridge';
 
 import './App.scss';
 
@@ -37,13 +38,15 @@ class App extends PureComponent {
     let states = {};
     bridge
       .showLoading()
-      .then(() => bridge.getFormStates())
+      .then(() => localBridge.getFormStates())
+      // .then(() => bridge.getFormStates())
       .then((res) => {
         res.forEach((el) => {
           states[el.value] = el.label;
         });
       })
-      .then(() => bridge.getFormInitData())
+      .then(() => localBridge.getFormInitData())
+      // .then(() => bridge.getFormInitData())
       .then((res) => {
         let newState;
         if (res.mode === 'creation') {
@@ -52,14 +55,14 @@ class App extends PureComponent {
             formData: {
               formObject: {
                 fechaCreacion: moment().format('MM/DD/YYYY hh:mm A'),
-                userCreacion: res.userData.id,
+                userCreacion: res.user.id,
               },
               idFormType: null,
               idState: CONSTANTS.STATE.DRAFT,
               endState: 0,
             },
             account: res.account,
-            userData: res.userData,
+            user: res.user,
             entityForm: res.entityForm,
             mode: res.mode,
             isReadonly: res.isReadonly || false,
@@ -87,7 +90,7 @@ class App extends PureComponent {
               detailObject: res.entityForm.fullObject.detailObject,
             },
             account: res.account,
-            userData: res.userData,
+            user: res.user,
             entityForm: res.entityForm,
             mode: res.mode,
             isReadonly: res.isReadonly || false,

@@ -9,7 +9,7 @@ class DateTimePicker extends PureComponent {
 
   reset = false;
 
-  componentWillMount() {
+  componentDidMount() {
     const { value } = this.props;
 
     if (value) {
@@ -55,6 +55,9 @@ class DateTimePicker extends PureComponent {
     const { value } = this.state;
     const { readOnly, isReadOnly } = this.props;
 
+    if (!value) {
+      return null;
+    }
     return (
       <MaterialDateTimePicker
         {...this.props}

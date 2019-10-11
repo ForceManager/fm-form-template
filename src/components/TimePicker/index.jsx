@@ -9,7 +9,7 @@ class TimePicker extends PureComponent {
 
   reset = false;
 
-  componentWillMount() {
+  componentDidMount() {
     const { value } = this.props;
 
     if (value) {
@@ -55,6 +55,9 @@ class TimePicker extends PureComponent {
     const { value } = this.state;
     const { readOnly, isReadOnly } = this.props;
 
+    if (!value) {
+      return null;
+    }
     return (
       <MaterialTimePicker
         {...this.props}
