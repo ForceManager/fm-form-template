@@ -61,6 +61,22 @@ Runs the development enviroment with the context and BrigeBackend listening for 
 
 ### 7) Code
 
+Forms are React projects structured to modyfy just some files.
+
+#### config.json
+
+JOSN file to define the structure of the Froms, pages, fields, origin of the lists data, validations, requireds, etc.
+
+#### defaultValues.js
+
+This file is have a getDefaultValues function that is called at the begining and sets the initial values of the fields. Recives the entire state of App.js and the selected form and return a new state whith the initial values.
+
+#### customActions.js
+
+#### customValidations.js
+
+In this file you can define any custom validation you want to define for a field creating a function and settinf the name of this function in the validation attribute of the file in the config.json file.
+
 ### 8) Build
 
 ```
