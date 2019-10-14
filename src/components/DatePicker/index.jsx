@@ -1,77 +1,56 @@
-import React, { PureComponent } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DatePicker as MaterialDatePicker } from '@material-ui/pickers';
 import moment from 'moment';
 
 import './style.scss';
 
-class DatePicker extends PureComponent {
-  state = { value: null, prevValue: null, reset: false };
+function DatePicker({ value: valueProp, readOnly, isReadOnly, onChange, ...props }) {
+  const initialValue = valueProp ? moment(valueProp, 'MM/DD/YYYY') : null;
+  const [value, setValue] = useState(initialValue);
+  const [prevValue, setPrevValue] = useState(null);
+  let reset = false;
 
-  reset = false;
-
-  componentDidMount() {
-    const { value } = this.props;
-
-    if (value) {
-      this.setState({ value: moment(value, 'MM/DD/YYYY') });
+  useEffect(() => {
+    if (!valueProp) {
+      setValue(null);
     }
-  }
+  }, [valueProp]);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (!this.props.value && prevProps.value) {
-      this.setState({ value: null });
-    }
-  }
-
-  onOpen = () => {
-    const { value } = this.state;
-
-    this.setState({ prevValue: value });
+  const handleOnOpen = () => {
+    setPrevValue(value);
   };
 
-  onChange = (date) => {
-    const { prevValue } = this.state;
-
-    if (this.reset) {
-      this.setState({ value: prevValue });
-      this.reset = false;
+  const handleOnChange = (date) => {
+    if (reset) {
+      setValue(prevValue);
+      reset = false;
     } else {
-      this.setState({ value: date });
+      setValue(date);
     }
   };
 
-  onAccept = (date) => {
-    const { onChange } = this.props;
-
-    this.setState({ value: date });
+  const handleOnAccept = (date) => {
+    setValue(date);
     onChange(moment(date).format('MM/DD/YYYY'));
   };
 
-  onClose = () => {
-    this.reset = true;
+  const handleOnClose = () => {
+    reset = true;
   };
 
-  render() {
-    const { value } = this.state;
-    const { readOnly, isReadOnly } = this.props;
-
-    if (!value) {
-      return null;
-    }
-    return (
-      <MaterialDatePicker
-        {...this.props}
-        format="MM/DD/YYYY"
-        invalidDateMessage={null}
-        onOpen={this.onOpen}
-        onChange={this.onChange}
-        onAccept={this.onAccept}
-        onClose={this.onClose}
-        value={value}
-        disabled={isReadOnly || readOnly}
-      />
-    );
-  }
+  return (
+    <MaterialDatePicker
+      {...props}
+      format="MM/DD/YYYY"
+      invalidDateMessage={null}
+      onOpen={handleOnOpen}
+      onChange={handleOnChange}
+      onAccept={handleOnAccept}
+      onClose={handleOnClose}
+      value={value}
+      disabled={isReadOnly || readOnly}
+    />
+  );
 }
 
 export default DatePicker;
