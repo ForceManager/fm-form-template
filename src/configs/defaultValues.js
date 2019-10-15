@@ -1,4 +1,4 @@
-function getDefaultValues(state, selectedForm) {
+function getDefaultValues(selectedForm, formData, generalData) {
   return new Promise((resolve, reject) => {
     // // WITH PROMISES
     // const getAccountName = Promise.resolve({
@@ -38,15 +38,15 @@ function getDefaultValues(state, selectedForm) {
     const defaultValues = {
       generalInformation: {
         customer: {
-          label: state.account.name,
-          value: state.account.id,
+          label: generalData.account.name,
+          value: generalData.account.id,
         },
-        serviceEngineer: { label: state.user.name, value: state.user.id },
+        serviceEngineer: { label: generalData.user.name, value: generalData.user.id },
       },
       workPerformed: {
         customer: {
-          label: state.account.name,
-          value: state.account.id,
+          label: generalData.account.name,
+          value: generalData.account.id,
         },
       },
     };
