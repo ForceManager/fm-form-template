@@ -4,7 +4,7 @@
   height: 100%;
   width: 100%;
   .form-container {
-    height: calc(100vh - 40px);
+    height: calc(100vh - 80px);
     overflow: hidden;
     box-sizing: border-box;
     position: relative;
@@ -209,8 +209,8 @@
     }
   }
   .forms-pager-bar {
-    position: absolute;
-    bottom: 0;
+    position: sticky;
+    bottom: 40px;
     width: 100vw;
     display: flex;
     box-sizing: border-box;

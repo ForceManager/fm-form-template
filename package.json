@@ -2,6 +2,7 @@
   "name": "form-hoi-poi",
   "version": "0.1.1-beta.1",
   "private": true,
+  "license": "MIT",
   "dependencies": {
     "@date-io/moment": "^1.3.6",
     "@material-ui/core": "^4.0.2",
@@ -9,14 +10,19 @@
     "fm-bridge": "^0.0.1-beta.10",
     "hoi-poi-ui": "^0.0.1-alpha.86",
     "moment": "^2.24.0",
-    "node-sass": "^4.12.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1",
     "validator": "^10.11.0"
   },
+  "devDependencies": {
+    "concurrently": "^5.0.0",
+    "node-sass": "^4.12.0",
+    "react-scripts": "3.0.1"
+  },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently --kill-others  \"npm run react-start\" \"npm run fm-cli-start\"",
+    "react-start": "react-scripts start",
+    "fm-cli-start": "fm-cli start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

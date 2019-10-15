@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Icon, Toast, toast } from 'hoi-poi-ui';
 import { bridge } from 'fm-bridge';
 // import FormValidator from '../FormValidator';
@@ -9,53 +9,54 @@ import CONSTANTS from '../../constants';
 
 import './style.scss';
 
-class FormsEdit extends PureComponent {
-  state = { currentPage: 0, showSummary: false, errors: {} };
+function FormEdit({
+  schema,
+  onChange,
+  onFocus,
+  formData,
+  customFields,
+  setImagesView,
+  imagesView,
+  overrrides,
+  onChangePage,
+  beforeChangePage,
+  ...props
+}) {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages] = useState(schema.length);
+  const [errors, setErrors] = useState({});
 
-  constructor(props) {
-    super(props);
-    this.state.totalPages = props.schema.length;
-  }
-
-  componentDidMount() {
-    const { formData } = this.props;
-
+  useEffect(() => {
+    console.log('useEffect 1');
     if (formData.idState === CONSTANTS.STATE.SIGNED) {
-      this.setState({ currentPage: 5 });
+      setCurrentPage(5);
     }
-  }
+  }, [formData.idState, setCurrentPage]);
 
-  componentDidUpdate(prevProps, prevState) {
-    const { currentPage, totalPages } = this.state;
-    const { schema, setImagesView, imagesView } = this.props;
+  useEffect(() => {
+    console.log('useEffect 2');
     const pageSchema = schema[currentPage];
-
-    if (this.state.currentPage !== prevState.currentPage) {
-      // onChangePage(currentPage);
-      if ((pageSchema && pageSchema.imagesView && !imagesView) || currentPage === totalPages) {
-        bridge
-          .showCameraImages()
-          .then(() => {
-            setImagesView(true);
-          })
-          .catch((err) => {
-            console.warn(err);
-          });
-      } else if (!pageSchema || (imagesView && !pageSchema.imagesView)) {
-        bridge
-          .hideCameraImages()
-          .then(() => setImagesView(false))
-          .catch((err) => {
-            console.warn(err);
-          });
-      }
+    if ((pageSchema && pageSchema.imagesView && !imagesView) || currentPage === totalPages) {
+      bridge
+        .showCameraImages()
+        .then(() => {
+          setImagesView(true);
+        })
+        .catch((err) => {
+          console.warn(err);
+        });
+    } else if (!pageSchema || (imagesView && !pageSchema.imagesView)) {
+      bridge
+        .hideCameraImages()
+        .then(() => setImagesView(false))
+        .catch((err) => {
+          console.warn(err);
+        });
     }
-  }
+  }, [imagesView, schema, setImagesView, currentPage, totalPages]);
 
-  validate = () => {
+  const validate = () => {
     return new Promise((resolve, reject) => {
-      const { schema, formData } = this.props;
-      const { currentPage } = this.state;
       const pageSchema = schema[currentPage];
       let allValid = true;
       let parentIndex;
@@ -124,25 +125,22 @@ class FormsEdit extends PureComponent {
       let errors = validateFields(pageSchema.fields, formData.formObject[schema[currentPage].name]);
 
       if (allValid) {
-        this.setState({ errors: {} });
+        setErrors({});
         resolve();
       } else {
-        this.setState({ errors });
+        setErrors(errors);
         reject({ type: 'invalid' });
       }
     });
   };
 
-  onClickPrev = (event) => {
-    const { formData } = this.props;
-    const { currentPage } = this.state;
-
+  const handleOnClickPrev = (event) => {
     if (currentPage > 0) {
       bridge
         .showLoading()
         .then(() => bridge.saveData(formData))
         .then(() => {
-          this.setState({ currentPage: currentPage - 1 });
+          setCurrentPage(currentPage - 1);
           bridge.hideLoading();
         })
         .catch((err) => {
@@ -160,13 +158,10 @@ class FormsEdit extends PureComponent {
     }
   };
 
-  onClickNext = (event) => {
-    const { formData, beforeChangePage } = this.props;
-    const { currentPage } = this.state;
-
+  const handleOnClickNext = (event) => {
     bridge
       .showLoading()
-      .then(() => this.validate())
+      .then(() => validate())
       .then(() => beforeChangePage(currentPage))
       .then((newState) => {
         if (newState) {
@@ -176,7 +171,7 @@ class FormsEdit extends PureComponent {
         }
       })
       .then(() => {
-        this.setState({ currentPage: currentPage + 1 });
+        setCurrentPage(currentPage + 1);
         bridge.hideLoading();
       })
       .catch((err) => {
@@ -193,28 +188,19 @@ class FormsEdit extends PureComponent {
       });
   };
 
-  onFormChange = (values, field) => {
-    const { onChange } = this.props;
-    const { currentPage } = this.state;
-
+  const handleOnFormChange = (values, field) => {
     onChange(values, field, currentPage);
   };
 
-  onFieldFocus = (values, field) => {
-    const { onFocus } = this.props;
-    const { currentPage } = this.state;
-
+  const handleOnFieldFocus = (values, field) => {
     onFocus(values, field, currentPage);
   };
 
-  onClose = (...props) => {
-    const { onClose } = this.props;
-    onClose({ ...props });
+  const handleOnClose = () => {
+    // onClose({ ...props });
   };
 
-  onClickFinish = () => {
-    const { formData } = this.props;
-
+  const handleOnClickFinish = () => {
     formData.idState = CONSTANTS.STATE.FINISHED;
     formData.endState = 1;
     Object.keys(config.listObject).forEach((key) => {
@@ -240,102 +226,89 @@ class FormsEdit extends PureComponent {
       });
   };
 
-  renderPrev() {
-    const { currentPage } = this.state;
-
+  const renderPrev = () => {
     if (currentPage === 0) return <div className="forms-pager-prev" />;
     return (
-      <div className="forms-pager-prev" onClick={this.onClickPrev}>
+      <div className="forms-pager-prev" onClick={handleOnClickPrev}>
         <Icon name="chevron" />
       </div>
     );
-  }
+  };
 
-  renderNext() {
-    const { totalPages, currentPage } = this.state;
-
+  const renderNext = () => {
     if (currentPage === totalPages) return <div className="forms-pager-next" />;
     return (
-      <div className="forms-pager-next" onClick={this.onClickNext}>
+      <div className="forms-pager-next" onClick={handleOnClickNext}>
         <Icon name="chevron" />
       </div>
     );
-  }
+  };
 
-  renderPageNumber() {
-    const { totalPages, currentPage } = this.state;
-
+  const renderPageNumber = () => {
     if (currentPage === totalPages) {
       return (
-        <div className="forms-pager-finish" onClick={this.onClickFinish}>
+        <div className="forms-pager-finish" onClick={handleOnClickFinish}>
           FINISH
         </div>
       );
     }
     return <div className="forms-pager-number">{`${currentPage + 1} / ${totalPages}`}</div>;
-  }
+  };
 
-  renderSummary() {
-    const { schema, formData, customFields } = this.props;
+  const renderSummary = () => {
     return <FormSummary schema={schema} values={formData.formObject} customFields={customFields} />;
-  }
+  };
 
-  renderForm(className) {
-    const { schema, formData, customFields } = this.props;
-    const { currentPage, errors } = this.state;
+  const renderForm = (className) => {
     const isSignedForm = formData.idState === CONSTANTS.STATE.SIGNED && currentPage < 5;
     return (
       <Form
         schema={[schema[currentPage]]}
         currentPage={currentPage}
-        onChange={this.onFormChange}
-        onFocus={this.onFieldFocus}
+        onChange={handleOnFormChange}
+        onFocus={handleOnFieldFocus}
         values={formData.formObject[schema[currentPage].name] || {}}
         customFields={customFields}
         errors={errors}
-        onClose={this.onClose}
+        onClose={handleOnClose}
         isReadOnly={isSignedForm}
         className={className}
         useNativeForm={false}
       />
     );
-  }
+  };
 
-  renderContent() {
-    const { formData } = this.props;
-    const { currentPage, totalPages } = this.state;
+  const renderContent = () => {
     const isSignedForm = formData.idState === CONSTANTS.STATE.SIGNED && currentPage < 5;
 
     if (currentPage === totalPages) {
-      return this.renderSummary();
+      return renderSummary();
     }
     if (isSignedForm && currentPage === 4) {
-      return <div className="signature-content-container signed">{this.renderSummary()}</div>;
+      return <div className="signature-content-container signed">{renderSummary()}</div>;
     }
     if (currentPage === 4) {
       return (
         <div className="signature-content-container">
-          {this.renderSummary()}
-          {this.renderForm('form-signature')}
+          {renderSummary()}
+          {renderForm('form-signature')}
         </div>
       );
     }
-    return this.renderForm('');
-  }
+    return renderForm('');
+  };
 
-  render() {
-    return (
-      <div className="forms-pager">
-        <div className="form-container">{this.renderContent()}</div>
-        <div className="forms-pager-bar">
-          {this.renderPrev()}
-          {this.renderPageNumber()}
-          {this.renderNext()}
-        </div>
-        <Toast />
+  return (
+    <div className="forms-pager">
+      <div className="form-container">{renderContent()}</div>
+      <div className="forms-pager-bar">
+        {renderPrev()}
+        {renderPageNumber()}
+        {renderNext()}
       </div>
-    );
-  }
+      <Toast />
+    </div>
+  );
 }
 
-export default FormsEdit;
+export default FormEdit;

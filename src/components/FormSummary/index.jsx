@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { useEffect } from 'react';
 import { Multiplier, Section, Input, CheckboxGroup } from 'hoi-poi-ui';
 import Signature from '../../components/Signature';
 import Checkbox from '../../components/Checkbox';
@@ -6,14 +6,12 @@ import { bridge } from 'fm-bridge';
 
 import './style.scss';
 
-class FormSummary extends PureComponent {
-  state = {};
-  componentDidMount() {
+function FormSummary({ schema, values, customFields }) {
+  useEffect(() => {
     bridge.showCameraImages();
-  }
+  }, []);
 
-  renderSectionContent(section, index) {
-    const { schema, values, customFields } = this.props;
+  const renderSectionContent = (section, index) => {
     const sectionFields = schema[index].fields;
     const sectionValues = values[section.name];
 
@@ -59,23 +57,19 @@ class FormSummary extends PureComponent {
         />
       );
     });
-  }
+  };
 
-  renderSections() {
-    const { schema } = this.props;
-
+  const renderSections = () => {
     return schema.map((section, index) => {
       return (
         <Section key={section.name} title={section.title}>
-          {this.renderSectionContent(section, index)}
+          {renderSectionContent(section, index)}
         </Section>
       );
     });
-  }
+  };
 
-  render() {
-    return <div className="summary">{this.renderSections()}</div>;
-  }
+  return <div className="summary">{renderSections()}</div>;
 }
 
 export default FormSummary;

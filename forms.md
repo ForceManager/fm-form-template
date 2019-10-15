@@ -21,13 +21,17 @@ yarn add global forcemanager-cli
 
 - Go to the folder where you want to create the project.
 
-- `fm-cli create <new-project-name>`
+`fm-cli create <new-project-name>`
 
-- Select Tyoe: Form. A empty project will be created in the specified <new-project-name> directory.
+- Select Type: Form.
 
-- `cd <new-project-name>`
+An empty project will be created in the specified <new-project-name> directory.
 
-- `yarn istall` or `npm istall`
+- Go to project directory and install dependencies.
+
+`cd <new-project-name>`
+
+`yarn istall` or `npm istall`
 
 ### 5) Start Dev mode
 
@@ -61,15 +65,15 @@ Runs the development enviroment with the context and BrigeBackend listening for 
 
 ### 7) Code
 
-Forms are React projects structured to modyfy just some files.
+Forms are React projects structured to modify just some files.
 
 #### config.json
 
-JOSN file to define the structure of the Froms, pages, fields, origin of the lists data, validations, requireds, etc.
+JOSN file to define the structure of the Forms, pages, fields, origin of the lists data, validations, requireds, etc.
 
 #### defaultValues.js
 
-This file is have a getDefaultValues function that is called at the begining and sets the initial values of the fields. Recives the entire state of App.js and the selected form and return a new state whith the initial values.
+This file is has a getDefaultValues function that is called at the begining and sets the initial values of the fields. Recives the entire state of App.js and the selected form and return a new state whith the initial values.
 
 #### customActions.js
 
@@ -94,7 +98,7 @@ PUBLIC_URL constant is defined in .env file.
 fm-cli deploy
 ```
 
-To deploy the code to the standar ForceManager server form fragments https://fmfragments.s3.amazonaws.com/fmfragments/code/{GUID}
+To deploy the code to the standard ForceManager server form fragments https://fmfragments.s3.amazonaws.com/fmfragments/code/{GUID}
 Not working yet.
 
 ### Manually

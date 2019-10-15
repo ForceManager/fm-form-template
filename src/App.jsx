@@ -473,7 +473,7 @@ class App extends PureComponent {
 
   render() {
     return (
-      <div className="fom-container">
+      <div className="form-container">
         {this.renderContent()}
         <Toast />
       </div>
