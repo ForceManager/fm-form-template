@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Icon, Toast, toast } from 'hoi-poi-ui';
 import { bridge } from 'fm-bridge';
-// import FormValidator from '../FormValidator';
+import utils from '../../utils';
 import FormSummary from '../FormSummary';
 import config from '../../configs/config.json';
-import customValidations from '../../configs/customValidations';
 import CONSTANTS from '../../constants';
 
 import './style.scss';
@@ -58,71 +57,13 @@ function FormEdit({
   const validate = () => {
     return new Promise((resolve, reject) => {
       const pageSchema = schema[currentPage];
-      let allValid = true;
-      let parentIndex;
-
-      function validateFields(fields, values) {
-        let errors = {};
-        fields.forEach((element) => {
-          if (element.type === 'multiplier') {
-            if (!errors[element.name]) errors[element.name] = [];
-            if (!values) {
-              errors[element.name] = element.schema[0].fields.map((field) =>
-                validateFields(element.schema[0].fields, values),
-              );
-            } else {
-              const multiplierValues = values[element.name] ? values[element.name] : [];
-              errors[element.name] = multiplierValues.map((values, index) => {
-                parentIndex = index;
-                return validateFields(element.schema[0].fields, values);
-              });
-            }
-          } else {
-            if (element.isRequired && (!values || !values[element.name])) {
-              allValid = false;
-              errors[element.name] = 'This field is requiered';
-            }
-            if (element.validation) {
-              function allFalse(obj) {
-                for (var i in obj) {
-                  if (obj[i] === true) return false;
-                }
-                return true;
-              }
-              switch (element.validation) {
-                case 'oneOfAll':
-                  if (
-                    !values ||
-                    !values[element.name] ||
-                    (values[element.name] && allFalse(values[element.name]))
-                  ) {
-                    allValid = false;
-                    errors[element.name] = 'Select at least one option';
-                  }
-                  break;
-                default:
-                  if (customValidations[element.validation]) {
-                    let validationResult = customValidations[element.validation]({
-                      formData,
-                      field: element,
-                      schema,
-                      currentPage,
-                      parentIndex,
-                    });
-                    if (validationResult) {
-                      allValid = validationResult.allValid;
-                      errors[element.name] = validationResult.error;
-                    }
-                  }
-                  break;
-              }
-            }
-          }
-        });
-        return errors;
-      }
-
-      let errors = validateFields(pageSchema.fields, formData.formObject[schema[currentPage].name]);
+      const { errors, allValid } = utils.validateFields(
+        pageSchema.fields,
+        formData.formObject[schema[currentPage].name],
+        formData,
+        schema,
+        currentPage,
+      );
 
       if (allValid) {
         setErrors({});
