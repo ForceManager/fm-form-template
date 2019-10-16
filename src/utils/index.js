@@ -3,7 +3,7 @@ import { bridge } from 'fm-bridge';
 import config from '../configs/config.json';
 import getDefaultValues from '../configs/defaultValues';
 import CONSTANTS from '../constants';
-import customValidations from '../configs/customValidations';
+import validations from '../configs/validations';
 
 const utils = {
   formatEntityList: function(entity, data) {
@@ -259,22 +259,34 @@ const utils = {
       }
     });
   },
-  validateFields: function(fields, values, formData, schema, currentPage) {
+  validateFields: function({ fields, values, formData, schema, currentPage, parentIndex }) {
     let errors = {};
     let allValid = true;
-    let parentIndex;
     fields.forEach((element) => {
       if (element.type === 'multiplier') {
         if (!errors[element.name]) errors[element.name] = [];
         if (!values) {
           errors[element.name] = element.schema[0].fields.map((field) =>
-            utils.validateFields(element.schema[0].fields, values),
+            utils.validateFields({
+              fields: element.schema[0].fields,
+              values,
+              formData,
+              schema,
+              currentPage,
+            }),
           );
         } else {
           const multiplierValues = values[element.name] ? values[element.name] : [];
           errors[element.name] = multiplierValues.map((values, index) => {
             parentIndex = index;
-            return utils.validateFields(element.schema[0].fields, values);
+            return utils.validateFields({
+              fields: element.schema[0].fields,
+              values,
+              formData,
+              schema,
+              currentPage,
+              parentIndex,
+            });
           });
         }
       } else {
@@ -301,8 +313,8 @@ const utils = {
               }
               break;
             default:
-              if (customValidations[element.validation]) {
-                let validationResult = customValidations[element.validation]({
+              if (validations[element.validation]) {
+                let validationResult = validations[element.validation]({
                   formData,
                   field: element,
                   schema,

@@ -20,7 +20,7 @@
               "name": "customer",
               "type": "select",
               "defaultValue": "accountName",
-              "customActions": {
+              "actions": {
                 "onChange": "onChangeCustomer"
               },
               "isReadOnly": true

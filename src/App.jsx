@@ -14,7 +14,7 @@ import Textarea from './components/Textarea';
 import Checkbox from './components/Checkbox';
 import utils from './utils';
 import config from './configs/config.json';
-import customActions from './configs/customActions';
+import actions from './configs/actions';
 
 import './App.scss';
 
@@ -33,7 +33,6 @@ function App({}) {
   const [imagesView, setImagesView] = useState(false);
 
   useEffect(() => {
-    console.log('useEffect 1');
     let states = {};
     bridge
       .showLoading()
@@ -59,7 +58,6 @@ function App({}) {
   }, []);
 
   useEffect(() => {
-    console.log('useEffect 2');
     if (selectedForm && !formSchema) {
       bridge
         .showLoading()
@@ -79,7 +77,7 @@ function App({}) {
           }
         });
     }
-  }, [selectedForm, formSchema, formData]);
+  }, [selectedForm, generalData, formSchema, formData]);
 
   const handleSetImagesView = (value) => {
     setImagesView(value);
@@ -122,48 +120,55 @@ function App({}) {
       }
     }
 
-    let newState = {
-      formData: {
-        ...formData,
-        formObject: {
-          ...formData.formObject,
-          [sectionName]: values,
-        },
+    const newFormData = {
+      ...formData,
+      formObject: {
+        ...formData.formObject,
+        [sectionName]: values,
       },
     };
 
     //newState = executeActions(newState);
     if (
-      customActions.onChange &&
-      customActions.onChange[selectedForm.value][sectionName] &&
-      customActions.onChange[selectedForm.value][sectionName][field.name]
+      actions.onChange &&
+      actions.onChange[selectedForm.value][sectionName] &&
+      actions.onChange[selectedForm.value][sectionName][field.name]
     ) {
-      let data = {
-        state: { ...this.state, ...newState },
+      const data = {
+        formData: { ...formData, ...newFormData },
+        generalData,
+        formSchema,
         values,
         field,
         currentPage,
       };
-      customActions.onChange[selectedForm.value][sectionName][field.name](data)
+      actions.onChange[selectedForm.value][sectionName][field.name](data)
         .then((res) => {
-          this.setState({
-            ...newState,
-            ...res,
-          });
+          if (res.formData) {
+            setFormData({ ...newFormData, ...res.formData });
+          } else {
+            setFormData({ ...newFormData });
+          }
+          if (res.generalData) {
+            setGeneralData({ ...generalData, ...res.generalData });
+          }
+          if (res.formSchema) {
+            setFormSchema({ ...formSchema, ...res.formSchema });
+          }
         })
         .catch((err) => {
           console.warn(err);
-          this.setState({ ...newState });
+          setFormData(newFormData);
         });
     } else {
-      this.setState({ ...newState });
+      setFormData(newFormData);
     }
   };
 
   const handleOnChangePage = (currentPage) => {
-    // if (customActions.onChangePage) {
+    // if (actions.onChangePage) {
     //   let data = { state: this.state, currentPage };
-    //   customActions
+    //   actions
     //     .onChangePage(data)
     //     .then((newSate) => {
     //       if (newSate) {
@@ -176,17 +181,26 @@ function App({}) {
 
   const handleBeforeChangePage = (currentPage) => {
     return new Promise((resolve, reject) => {
-      if (customActions.beforeChangePage) {
-        let data = { state: this.state, currentPage };
-        customActions
+      if (actions.beforeChangePage) {
+        const data = {
+          formData,
+          generalData,
+          formSchema,
+          currentPage,
+        };
+        actions
           .beforeChangePage(data)
-          .then((newSate) => {
-            if (newSate) {
-              this.setState({ ...newSate });
-              resolve(newSate);
-            } else {
-              resolve();
+          .then((res) => {
+            if (res && res.formData) {
+              setFormData({ ...formData, ...res.formData });
             }
+            if (res && res.generalData) {
+              setGeneralData({ ...generalData, ...res.generalData });
+            }
+            if (res && res.formSchema) {
+              setFormSchema({ ...formSchema, ...res.formSchema });
+            }
+            resolve();
           })
           .catch((err) => reject(err));
       } else {

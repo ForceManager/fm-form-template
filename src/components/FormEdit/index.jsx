@@ -26,14 +26,12 @@ function FormEdit({
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    console.log('useEffect 1');
     if (formData.idState === CONSTANTS.STATE.SIGNED) {
       setCurrentPage(5);
     }
   }, [formData.idState, setCurrentPage]);
 
   useEffect(() => {
-    console.log('useEffect 2');
     const pageSchema = schema[currentPage];
     if ((pageSchema && pageSchema.imagesView && !imagesView) || currentPage === totalPages) {
       bridge
@@ -57,13 +55,13 @@ function FormEdit({
   const validate = () => {
     return new Promise((resolve, reject) => {
       const pageSchema = schema[currentPage];
-      const { errors, allValid } = utils.validateFields(
-        pageSchema.fields,
-        formData.formObject[schema[currentPage].name],
+      const { errors, allValid } = utils.validateFields({
+        fields: pageSchema.fields,
+        values: formData.formObject[schema[currentPage].name],
         formData,
         schema,
         currentPage,
-      );
+      });
 
       if (allValid) {
         setErrors({});

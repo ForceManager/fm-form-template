@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-const customValidations = {
+const validations = {
   onFinish,
   biggerThanDateFrom,
   biggerThanHourFrom,
@@ -72,4 +72,4 @@ function biggerThanEndDepart(data) {
   return result;
 }
 
-export default customValidations;
+export default validations;
