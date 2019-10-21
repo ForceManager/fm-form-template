@@ -1,7 +1,29 @@
 import moment from 'moment';
 
+const date = '/^(0[1-9]|1[0-2])/(0[1-9]|1d|2d|3[01])/(19|20)d{2}$/';
+const url = 'https?://(www.)?[-a-zA-Z0-9@:%._+~#=]{2,256}.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)';
+const word = '[A-Za-z]+';
+const number = '/^[0-9]';
+const decimalNumber = '/^[0-9]+,?[0-9]*$/';
+const email =
+  '1/^(([^<>()[]\\.,;:s@"]+(.[^<>()[]\\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/';
+const nif = '/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i';
+const nie = '/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i';
+
 const validations = {
+  date,
+  url,
+  word,
+  number,
+  decimalNumber,
   onFinish,
+  email,
+  nif,
+  nie,
+  maxNumber,
+  minNumber,
+  maxLength,
+  minLength,
   biggerThanDateFrom,
   biggerThanHourFrom,
   biggerThanDepart,
@@ -13,6 +35,20 @@ function onFinish(data) {
     resolve();
     // reject({ type: 'validationError', msg: 'validationError'});
   });
+}
+
+function maxNumber(data) {}
+
+function minNumber(data) {}
+
+function maxLength(data) {}
+
+function minLength(data) {}
+
+function validate(value, validation) {
+  if (!value.test(validation)) {
+    return;
+  }
 }
 
 function biggerThanDateFrom(data) {

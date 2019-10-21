@@ -20,7 +20,7 @@
     "react-scripts": "3.0.1"
   },
   "scripts": {
-    "start": "concurrently --kill-others  \"npm run react-start\" \"npm run fm-cli-start\"",
+    "start": "BROWSER=none concurrently --kill-others  \"npm run react-start\" \"npm run fm-cli-start\"",
     "react-start": "react-scripts start",
     "fm-cli-start": "fm-cli start",
     "build": "react-scripts build",

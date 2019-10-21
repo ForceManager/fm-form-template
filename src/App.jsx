@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Toast, toast } from 'hoi-poi-ui';
 
 import { bridge } from 'fm-bridge';
-import localBridge from './configs/localBridge';
+// import localBridge from './configs/localBridge';
 import FormSelector from './components/FormSelector';
 import FormEdit from './components/FormEdit';
 import FormSummary from './components/FormSummary';
@@ -16,7 +16,7 @@ import utils from './utils';
 import config from './configs/config.json';
 import actions from './configs/actions';
 
-import './App.scss';
+import './app.scss';
 
 function App({}) {
   const initialSelectedForm =
@@ -36,15 +36,15 @@ function App({}) {
     let states = {};
     bridge
       .showLoading()
-      .then(localBridge.getFormStates)
-      // .then(() => bridge.getFormStates())
+      // .then(localBridge.getFormStates)
+      .then(() => bridge.getFormStates())
       .then((res) => {
         res.forEach((el) => {
           states[el.value] = el.label;
         });
       })
-      .then(localBridge.getFormInitData)
-      // .then(() => bridge.getFormInitData())
+      // .then(localBridge.getFormInitData)
+      .then(() => bridge.getFormInitData())
       .then((res) => {
         const initData = utils.formatInitData(res, states);
         setFormData(initData.formData);
@@ -79,10 +79,6 @@ function App({}) {
     }
   }, [selectedForm, generalData, formSchema, formData]);
 
-  const handleSetImagesView = (value) => {
-    setImagesView(value);
-  };
-
   const handleOnFieldFocus = (values, field, currentPage) => {
     const sectionName = formSchema[currentPage].name;
 
@@ -106,8 +102,6 @@ function App({}) {
         });
     }
   };
-
-  const handleOnSelectorChange = (value) => setSelectedForm(value);
 
   const handleOnFormChange = (values, field, currentPage) => {
     const sectionName = formSchema[currentPage].name;
@@ -222,47 +216,41 @@ function App({}) {
     checkbox: Checkbox,
   };
 
-  const renderContent = () => {
-    if (generalData && generalData.mode === 'creation' && !selectedForm) {
-      return (
+  const showSelector = generalData && generalData.mode === 'creation' && !selectedForm;
+  const showEdit =
+    formSchema &&
+    generalData &&
+    ((generalData.mode === 'creation' && selectedForm) ||
+      (generalData.mode === 'edition' && formData.endState));
+  const showSummary =
+    formSchema && generalData && generalData.mode === 'edition' && formData.endState;
+
+  return (
+    <div className="form-container">
+      {showSelector && (
         <FormSelector
           schema={config.formSchema}
           selectedForm={selectedForm}
-          onChange={handleOnSelectorChange}
+          onChange={setSelectedForm}
         />
-      );
-    } else if (
-      formSchema &&
-      generalData &&
-      ((generalData.mode === 'creation' && selectedForm) ||
-        (generalData.mode === 'edition' && !formData.endState))
-    ) {
-      return (
+      )}
+      {showEdit && (
         <FormEdit
           schema={formSchema}
           onChange={handleOnFormChange}
           onFocus={handleOnFieldFocus}
           formData={formData}
           customFields={customFields}
-          setImagesView={handleSetImagesView}
+          setImagesView={setImagesView}
           imagesView={imagesView}
           overrrides={overrides}
           onChangePage={handleOnChangePage}
           beforeChangePage={handleBeforeChangePage}
         />
-      );
-    } else if (formSchema && generalData && generalData.mode === 'edition' && formData.endState) {
-      return (
+      )}
+      {showSummary && (
         <FormSummary schema={formSchema} values={formData.formObject} customFields={customFields} />
-      );
-    } else {
-      return;
-    }
-  };
-
-  return (
-    <div className="form-container">
-      {renderContent()}
+      )}
       <Toast />
     </div>
   );

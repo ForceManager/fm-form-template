@@ -53,7 +53,7 @@
               "name": "dateTo",
               "type": "datePicker",
               "isRequired": true,
-              "validation": "biggerThanDateFrom"
+              "validations": ["biggerThanDateFrom"]
             },
             {
               "label": "Service Engineer",
@@ -90,7 +90,7 @@
               "name": "arriveToCustomer",
               "type": "dateTimePicker",
               "isRequired": true,
-              "validation": "biggerThanDepart"
+              "validations": ["biggerThanDepart"]
             }
           ]
         },
@@ -135,7 +135,7 @@
                       "name": "hourTo",
                       "type": "timePicker",
                       "isRequired": true,
-                      "validation": "biggerThanHourFrom"
+                      "validations": ["biggerThanHourFrom"]
                     }
                   ]
                 }
@@ -152,7 +152,7 @@
               "label": "Status",
               "name": "status",
               "type": "checkboxGroup",
-              "validation": "oneOfAll",
+              "validations": ["oneOfAll"],
               "attrs": {
                 "options": [
                   {
@@ -264,7 +264,7 @@
               "name": "arriveToMarchesini",
               "type": "dateTimePicker",
               "isRequired": true,
-              "validation": "biggerThanEndDepart"
+              "validations": ["biggerThanEndDepart"]
             }
           ]
         }
@@ -323,7 +323,7 @@
               "name": "dateTo",
               "type": "datePicker",
               "isRequired": true,
-              "validation": "biggerThanDateFrom"
+              "validations": ["biggerThanDateFrom"]
             },
             {
               "label": "Service Engineer",
@@ -360,7 +360,7 @@
               "name": "arriveToCustomer",
               "type": "dateTimePicker",
               "isRequired": true,
-              "validation": "biggerThanDepart"
+              "validations": ["biggerThanDepart"]
             }
           ]
         },
@@ -405,7 +405,7 @@
                       "name": "hourTo",
                       "type": "timePicker",
                       "isRequired": true,
-                      "validation": "biggerThanHourFrom"
+                      "validations": ["biggerThanHourFrom"]
                     }
                   ]
                 }
@@ -422,7 +422,7 @@
               "label": "Status",
               "name": "status",
               "type": "checkboxGroup",
-              "validation": "oneOfAll",
+              "validations": ["oneOfAll"],
               "attrs": {
                 "options": [
                   {
@@ -534,7 +534,7 @@
               "name": "arriveToMarchesini",
               "type": "dateTimePicker",
               "isRequired": true,
-              "validation": "biggerThanEndDepart"
+              "validations": ["biggerThanEndDepart"]
             }
           ]
         }

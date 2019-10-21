@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { DatePicker as MaterialDatePicker } from '@material-ui/pickers';
 import moment from 'moment';
 
 import './style.scss';
 
-function DatePicker({ value: valueProp, readOnly, isReadOnly, onChange, ...props }) {
-  const initialValue = valueProp ? moment(valueProp, 'MM/DD/YYYY') : null;
-  const [value, setValue] = useState(initialValue);
+function DatePicker({
+  value: valueProp,
+  readOnly,
+  isReadOnly,
+  onChange,
+  format: formatProp,
+  ...props
+}) {
+  const format = formatProp || 'MM/DD/YYYY';
+  const [value, setValue] = useState(valueProp ? moment(valueProp, format) : null);
   const [prevValue, setPrevValue] = useState(null);
   let reset = false;
 
@@ -16,23 +23,29 @@ function DatePicker({ value: valueProp, readOnly, isReadOnly, onChange, ...props
     }
   }, [valueProp]);
 
-  const handleOnOpen = () => {
+  const handleOnOpen = useCallback(() => {
     setPrevValue(value);
-  };
+  }, [value]);
 
-  const handleOnChange = (date) => {
-    if (reset) {
-      setValue(prevValue);
-      reset = false;
-    } else {
+  const handleOnChange = useCallback(
+    (date) => {
+      if (reset) {
+        setValue(prevValue);
+        reset = false;
+      } else {
+        setValue(date);
+      }
+    },
+    [prevValue],
+  );
+
+  const handleOnAccept = useCallback(
+    (date) => {
       setValue(date);
-    }
-  };
-
-  const handleOnAccept = (date) => {
-    setValue(date);
-    onChange(moment(date).format('MM/DD/YYYY'));
-  };
+      onChange(moment(date).format(format));
+    },
+    [format, onChange],
+  );
 
   const handleOnClose = () => {
     reset = true;
@@ -41,7 +54,7 @@ function DatePicker({ value: valueProp, readOnly, isReadOnly, onChange, ...props
   return (
     <MaterialDatePicker
       {...props}
-      format="MM/DD/YYYY"
+      format={format}
       invalidDateMessage={null}
       onOpen={handleOnOpen}
       onChange={handleOnChange}

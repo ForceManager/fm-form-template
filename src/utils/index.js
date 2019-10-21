@@ -95,10 +95,9 @@ const utils = {
       };
       const mapFields = (fields, currentPath) => {
         const newFields = [];
-        fields.forEach((field, fieldIndex) => {
-          // if (!field.isFullWidth) field.isFullWidth = true;
-          // if (field.type !== 'checkbox' && !field.labelMode) field.labelMode = 'vertical';
-          if (field.isVisible !== false) {
+        fields
+          .filter((field) => field.isVisible !== false)
+          .forEach((field, fieldIndex) => {
             if (!field.attrs) field.attrs = {};
             field.attrs['className'] = `field-${field.type}`;
             switch (field.type) {
@@ -165,8 +164,7 @@ const utils = {
               default:
             }
             newFields.push(field);
-          }
-        });
+          });
         return newFields;
       };
 

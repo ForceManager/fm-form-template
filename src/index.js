@@ -4,7 +4,6 @@ import { HoiPoiProvider } from 'hoi-poi-ui';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { ThemeProvider } from '@material-ui/styles';
 import MomentUtils from '@date-io/moment';
-import './index.scss';
 import App from './App';
 import materialTheme from './configs/materialTheme';
 

@@ -9,12 +9,6 @@
           "name": "generalInformation",
           "className": "general-info-start",
           "fields": {
-            "formNo": {
-              "label": "Form No.",
-              "name": "formNo",
-              "type": "text",
-              "isReadOnly": true
-            },
             "customer": {
               "label": "Customer.",
               "name": "customer",
