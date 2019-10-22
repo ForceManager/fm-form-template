@@ -31,7 +31,7 @@ An empty project will be created in the specified <new-project-name> directory.
 
 `cd <new-project-name>`
 
-`yarn istall` or `npm istall`
+`yarn` or `npm install`
 
 ### 5) Start Dev mode
 
@@ -39,17 +39,11 @@ An empty project will be created in the specified <new-project-name> directory.
 yarn start
 ```
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Runs the app in the development mode with the context and BrigeBackend listening for Bridge calls.<br>
+Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
 
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
-
-```
-fm-cli start
-```
-
-Runs the development enviroment with the context and BrigeBackend listening for Bridge calls.
 
 ### 7) Get development API keys
 
@@ -95,7 +89,7 @@ PUBLIC_URL constant is defined in .env file.
 #### Via CLI (Not working yet)
 
 ```
-fm-cli deploy
+yarn deploy
 ```
 
 To deploy the code to the standard ForceManager server form fragments https://fmfragments.s3.amazonaws.com/fmfragments/code/{GUID}

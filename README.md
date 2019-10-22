@@ -1,4 +1,4 @@
-## Form Hoi-Poi Template
+## ForceManager Form Template
 
 Form in React with Hoi-Poi components for Android and iOS.
 This new kind of form uses Bridge library to allow communication between the Form and ForceManager.
@@ -7,28 +7,26 @@ This new kind of form uses Bridge library to allow communication between the For
 
 In the project directory, you can run:
 
-### `npm start`
+### `yarn start`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Runs the app in the development mode with the context and brigeBackend listening for bridge calls.<br>
+Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
 
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### `fm-cli start`
-
-Runs the development enviroment with the context and brigeBackend listening for bridge calls.
-
-### `npm run build`
+### `yarn build`
 
 Builds the app for production to the `build` folder.<br>
-PUBLIC_URL constant is defined in .env file
 
-### `fm-cli deploy`
+### `yarn build-sandbox`
 
-To deploy the code to https://fmfragments.s3.amazonaws.com/fmfragments/code/{GUID}
-Not working yet.
+Builds the app for sandbox to the `build` folder.<br>
 
-## `Manual Deploy`
+### `yarn deploy`
 
-Copy files to any Server/FTP you can access with https.
+Build and deploy the project for production to the standard ForceManager fragments hosting.
+
+### `yarn deploy-sandbox`
+
+Build and deploy the project for sandbox to the standard ForceManager fragments hosting.
