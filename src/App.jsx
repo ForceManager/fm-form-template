@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Toast, toast } from 'hoi-poi-ui';
-
 import { bridge } from 'fm-bridge';
-// import localBridge from './configs/localBridge';
 import FormSelector from './components/FormSelector';
 import FormEdit from './components/FormEdit';
 import FormSummary from './components/FormSummary';
@@ -18,7 +16,16 @@ import actions from './configs/actions';
 
 import './app.scss';
 
-function App({}) {
+const customFields = {
+  datePicker: DatePicker,
+  timePicker: TimePicker,
+  dateTimePicker: DateTimePicker,
+  signature: Signature,
+  textarea: Textarea,
+  checkbox: Checkbox,
+};
+
+function App() {
   const initialSelectedForm =
     Object.keys(config.formSchema).length > 1
       ? null
@@ -36,14 +43,12 @@ function App({}) {
     let states = {};
     bridge
       .showLoading()
-      // .then(localBridge.getFormStates)
       .then(() => bridge.getFormStates())
       .then((res) => {
         res.forEach((el) => {
           states[el.value] = el.label;
         });
       })
-      // .then(localBridge.getFormInitData)
       .then(() => bridge.getFormInitData())
       .then((res) => {
         const initData = utils.formatInitData(res, states);
@@ -58,31 +63,30 @@ function App({}) {
   }, []);
 
   useEffect(() => {
-    if (selectedForm && !formSchema) {
-      bridge
-        .showLoading()
-        .then(() => utils.generateForm(selectedForm, formData, generalData))
-        .then((res) => {
-          setFormSchema(res.formSchema);
-          if (res.formData) {
-            setFormData(res.formData);
-          }
-          bridge.hideLoading();
-        })
-        .catch((err) => {
-          console.warn(err);
-          bridge.hideLoading();
-          if (err.toast) {
-            toast(err.toast);
-          }
-        });
-    }
+    if (!selectedForm || formSchema) return;
+    bridge
+      .showLoading()
+      .then(() => utils.generateForm(selectedForm, formData, generalData))
+      .then((res) => {
+        setFormSchema(res.formSchema);
+        if (res.formData) {
+          setFormData(res.formData);
+        }
+        bridge.hideLoading();
+      })
+      .catch((err) => {
+        console.warn(err);
+        bridge.hideLoading();
+        if (err.toast) {
+          toast(err.toast);
+        }
+      });
   }, [selectedForm, generalData, formSchema, formData]);
 
-  const handleOnFieldFocus = (values, field, currentPage) => {
-    const sectionName = formSchema[currentPage].name;
-
-    if (field.subType === 'date') {
+  const handleOnFieldFocus = useCallback(
+    (values, field, currentPage) => {
+      const sectionName = formSchema[currentPage].name;
+      if (field.subType !== 'date') return;
       bridge
         .openDatePicker()
         .then((res) => {
@@ -100,121 +104,105 @@ function App({}) {
         .catch((err) => {
           console.warn(err);
         });
-    }
-  };
+    },
+    [formData, formSchema],
+  );
 
-  const handleOnFormChange = (values, field, currentPage) => {
-    const sectionName = formSchema[currentPage].name;
+  const handleOnFormChange = useCallback(
+    (values, field, currentPage) => {
+      const sectionName = formSchema[currentPage].name;
 
-    if (field.type === 'checkbox') {
-      if (formData.formObject[sectionName][field.name]) {
-        values[field.name] = false;
-      } else {
-        values[field.name] = true;
+      if (field.type === 'checkbox') {
+        if (formData.formObject[sectionName][field.name]) {
+          values[field.name] = false;
+        } else {
+          values[field.name] = true;
+        }
       }
-    }
 
-    const newFormData = {
-      ...formData,
-      formObject: {
-        ...formData.formObject,
-        [sectionName]: values,
-      },
-    };
-
-    //newState = executeActions(newState);
-    if (
-      actions.onChange &&
-      actions.onChange[selectedForm.value][sectionName] &&
-      actions.onChange[selectedForm.value][sectionName][field.name]
-    ) {
-      const data = {
-        formData: { ...formData, ...newFormData },
-        generalData,
-        formSchema,
-        values,
-        field,
-        currentPage,
+      const newFormData = {
+        ...formData,
+        formObject: {
+          ...formData.formObject,
+          [sectionName]: values,
+        },
       };
-      actions.onChange[selectedForm.value][sectionName][field.name](data)
-        .then((res) => {
-          if (res.formData) {
-            setFormData({ ...newFormData, ...res.formData });
-          } else {
-            setFormData({ ...newFormData });
-          }
-          if (res.generalData) {
-            setGeneralData({ ...generalData, ...res.generalData });
-          }
-          if (res.formSchema) {
-            setFormSchema({ ...formSchema, ...res.formSchema });
-          }
-        })
-        .catch((err) => {
-          console.warn(err);
-          setFormData(newFormData);
-        });
-    } else {
-      setFormData(newFormData);
-    }
-  };
 
-  const handleOnChangePage = (currentPage) => {
-    // if (actions.onChangePage) {
-    //   let data = { state: this.state, currentPage };
-    //   actions
-    //     .onChangePage(data)
-    //     .then((newSate) => {
-    //       if (newSate) {
-    //         this.setState({ ...newSate });
-    //       }
-    //     })
-    //     .catch((err) => console.warn(err));
-    // }
-  };
-
-  const handleBeforeChangePage = (currentPage) => {
-    return new Promise((resolve, reject) => {
-      if (actions.beforeChangePage) {
+      //newState = executeActions(newState);
+      if (
+        actions.onChange &&
+        actions.onChange[selectedForm.value][sectionName] &&
+        actions.onChange[selectedForm.value][sectionName][field.name]
+      ) {
         const data = {
-          formData,
+          formData: { ...formData, ...newFormData },
           generalData,
           formSchema,
+          values,
+          field,
           currentPage,
         };
-        actions
-          .beforeChangePage(data)
+        actions.onChange[selectedForm.value][sectionName][field.name](data)
           .then((res) => {
-            if (res && res.formData) {
-              setFormData({ ...formData, ...res.formData });
+            if (res.formData) {
+              setFormData({ ...newFormData, ...res.formData });
+            } else {
+              setFormData({ ...newFormData });
             }
-            if (res && res.generalData) {
+            if (res.generalData) {
               setGeneralData({ ...generalData, ...res.generalData });
             }
-            if (res && res.formSchema) {
+            if (res.formSchema) {
               setFormSchema({ ...formSchema, ...res.formSchema });
             }
-            resolve();
           })
-          .catch((err) => reject(err));
+          .catch((err) => {
+            console.warn(err);
+            setFormData(newFormData);
+          });
       } else {
-        resolve();
+        setFormData(newFormData);
       }
-    });
-  };
+    },
+    [formData, formSchema, generalData, selectedForm],
+  );
 
-  const overrides = {
-    Select: { menu: {} },
-  };
+  const handleBeforeChangePage = useCallback(
+    (currentPage) => {
+      return new Promise((resolve, reject) => {
+        if (!actions.beforeChangePage) {
+          resolve();
+        } else {
+          const data = {
+            formData,
+            generalData,
+            formSchema,
+            currentPage,
+          };
+          actions
+            .beforeChangePage(data)
+            .then((res) => {
+              if (res && res.formData) {
+                setFormData({ ...formData, ...res.formData });
+              }
+              if (res && res.generalData) {
+                setGeneralData({ ...generalData, ...res.generalData });
+              }
+              if (res && res.formSchema) {
+                setFormSchema({ ...formSchema, ...res.formSchema });
+              }
+              resolve();
+            })
+            .catch((err) => reject(err));
+        }
+      });
+    },
+    [formData, formSchema, generalData],
+  );
 
-  const customFields = {
-    datePicker: DatePicker,
-    timePicker: TimePicker,
-    dateTimePicker: DateTimePicker,
-    signature: Signature,
-    textarea: Textarea,
-    checkbox: Checkbox,
-  };
+  // const overrides = {
+  //   Select: { menu: {} },
+  // };
 
   const showSelector = generalData && generalData.mode === 'creation' && !selectedForm;
   const showEdit =
@@ -243,8 +231,7 @@ function App({}) {
           customFields={customFields}
           setImagesView={setImagesView}
           imagesView={imagesView}
-          overrrides={overrides}
-          onChangePage={handleOnChangePage}
+          // overrrides={overrides}
           beforeChangePage={handleBeforeChangePage}
         />
       )}

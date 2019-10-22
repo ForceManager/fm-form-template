@@ -8,22 +8,25 @@
     "@material-ui/core": "^4.0.2",
     "@material-ui/pickers": "^3.1.0",
     "fm-bridge": "^0.0.1-beta.10",
-    "hoi-poi-ui": "^0.0.1-alpha.86",
+    "hoi-poi-ui": "^0.0.1-alpha.89",
     "moment": "^2.24.0",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "validator": "^10.11.0"
+    "react-dom": "^16.8.6"
   },
   "devDependencies": {
     "concurrently": "^5.0.0",
+    "cross-env": "^6.0.3",
     "node-sass": "^4.12.0",
     "react-scripts": "3.0.1"
   },
   "scripts": {
-    "start": "BROWSER=none concurrently --kill-others  \"npm run react-start\" \"npm run fm-cli-start\"",
+    "start": "cross-env BROWSER=none concurrently --kill-others  \"yarn run react-start\" \"yarn run fm-cli-start\"",
     "react-start": "react-scripts start",
     "fm-cli-start": "fm-cli start",
-    "build": "react-scripts build",
+    "build": "fm-cli set_public_url && react-scripts build",
+    "build-sandbox": "fm-cli set_public_url_sandbox && react-scripts build",
+    "deploy": "yarn run build && fm-cli deploy",
+    "deploy-sandbox": "yarn run build-sandbox && fm-cli deploy",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

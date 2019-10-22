@@ -45,11 +45,11 @@ function maxLength(data) {}
 
 function minLength(data) {}
 
-function validate(value, validation) {
-  if (!value.test(validation)) {
-    return;
-  }
-}
+// function validate(value, validation) {
+//   if (!value.test(validation)) {
+//     return;
+//   }
+// }
 
 function biggerThanDateFrom(data) {
   let result;

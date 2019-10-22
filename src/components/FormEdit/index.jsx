@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Form, Icon, Toast, toast } from 'hoi-poi-ui';
 import { bridge } from 'fm-bridge';
 import utils from '../../utils';
@@ -17,7 +17,6 @@ function FormEdit({
   setImagesView,
   imagesView,
   overrrides,
-  onChangePage,
   beforeChangePage,
   ...props
 }) {
@@ -52,7 +51,7 @@ function FormEdit({
     }
   }, [imagesView, schema, setImagesView, currentPage, totalPages]);
 
-  const validate = () => {
+  const validate = useCallback(() => {
     return new Promise((resolve, reject) => {
       const pageSchema = schema[currentPage];
       const { errors, allValid } = utils.validateFields({
@@ -71,15 +70,50 @@ function FormEdit({
         reject({ type: 'invalid' });
       }
     });
-  };
+  }, [currentPage, formData, schema]);
 
-  const handleOnClickPrev = (event) => {
-    if (currentPage > 0) {
+  const handleOnClickPrev = useCallback(
+    (event) => {
+      if (currentPage > 0) {
+        bridge
+          .showLoading()
+          .then(() => bridge.saveData(formData))
+          .then(() => {
+            setCurrentPage(currentPage - 1);
+            bridge.hideLoading();
+          })
+          .catch((err) => {
+            if (err.type === 'invalid') {
+            } else {
+              console.warn(err);
+              toast({
+                type: 'error',
+                text: 'The form could not be saved',
+                title: 'Error',
+              });
+            }
+            bridge.hideLoading();
+          });
+      }
+    },
+    [currentPage, formData],
+  );
+
+  const handleOnClickNext = useCallback(
+    (event) => {
       bridge
         .showLoading()
-        .then(() => bridge.saveData(formData))
+        .then(() => validate())
+        .then(() => beforeChangePage(currentPage))
+        .then((newState) => {
+          if (newState) {
+            return bridge.saveData(newState.formData);
+          } else {
+            return bridge.saveData(formData);
+          }
+        })
         .then(() => {
-          setCurrentPage(currentPage - 1);
+          setCurrentPage(currentPage + 1);
           bridge.hideLoading();
         })
         .catch((err) => {
@@ -94,52 +128,29 @@ function FormEdit({
           }
           bridge.hideLoading();
         });
-    }
-  };
+    },
+    [beforeChangePage, currentPage, formData, validate],
+  );
 
-  const handleOnClickNext = (event) => {
-    bridge
-      .showLoading()
-      .then(() => validate())
-      .then(() => beforeChangePage(currentPage))
-      .then((newState) => {
-        if (newState) {
-          return bridge.saveData(newState.formData);
-        } else {
-          return bridge.saveData(formData);
-        }
-      })
-      .then(() => {
-        setCurrentPage(currentPage + 1);
-        bridge.hideLoading();
-      })
-      .catch((err) => {
-        if (err.type === 'invalid') {
-        } else {
-          console.warn(err);
-          toast({
-            type: 'error',
-            text: 'The form could not be saved',
-            title: 'Error',
-          });
-        }
-        bridge.hideLoading();
-      });
-  };
+  const handleOnFormChange = useCallback(
+    (values, field) => {
+      onChange(values, field, currentPage);
+    },
+    [currentPage, onChange],
+  );
 
-  const handleOnFormChange = (values, field) => {
-    onChange(values, field, currentPage);
-  };
+  const handleOnFieldFocus = useCallback(
+    (values, field) => {
+      onFocus(values, field, currentPage);
+    },
+    [currentPage, onFocus],
+  );
 
-  const handleOnFieldFocus = (values, field) => {
-    onFocus(values, field, currentPage);
-  };
-
-  const handleOnClose = () => {
+  const handleOnClose = useCallback(() => {
     // onClose({ ...props });
-  };
+  }, []);
 
-  const handleOnClickFinish = () => {
+  const handleOnClickFinish = useCallback(() => {
     formData.idState = CONSTANTS.STATE.FINISHED;
     formData.endState = 1;
     Object.keys(config.listObject).forEach((key) => {
@@ -163,7 +174,7 @@ function FormEdit({
           title: 'Error',
         });
       });
-  };
+  }, [formData]);
 
   const renderPrev = () => {
     if (currentPage === 0) return <div className="forms-pager-prev" />;
