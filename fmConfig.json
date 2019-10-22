@@ -1,6 +1,5 @@
 {
-  "guid": 200,
-  "name": "forms-fedefarma",
+  "name": "forms-template",
   "type": "form",
-  "distFolder": "dist"
+  "distFolder": "build"
 }
