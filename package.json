@@ -20,7 +20,7 @@
     "react-scripts": "3.2.0"
   },
   "scripts": {
-    "start": "cross-env BROWSER=none concurrently --kill-others  \"yarn run react-start\" \"yarn run fm-cli-start\"",
+    "start": "cross-env BROWSER=none concurrently --kill-others  \"yarn run react-start\" \"yarn run fm-start\"",
     "react-start": "react-scripts start",
     "fm-start": "fm start",
     "build": "fm set_public_url && react-scripts build",
