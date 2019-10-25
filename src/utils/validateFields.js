@@ -1,72 +1,67 @@
 import validations from '../configs/validations';
 
-const validateFields = ({ fields, values, formData, schema, currentPage, parentIndex }) => {
-  let errors = {};
+const validateFields = (fields, values, formData, schema, currentPage) => {
+  const pageSchema = schema[currentPage];
   let allValid = true;
-  fields.forEach((element) => {
-    if (element.type === 'multiplier') {
-      if (!errors[element.name]) errors[element.name] = [];
-      if (!values) {
-        errors[element.name] = element.schema[0].fields.map((field) =>
-          validateFields({
-            fields: element.schema[0].fields,
-            values,
-            formData,
-            schema,
-            currentPage,
-          }),
-        );
-      } else {
-        const multiplierValues = values[element.name] ? values[element.name] : [];
-        errors[element.name] = multiplierValues.map((values, index) => {
-          parentIndex = index;
-          return validateFields({
-            fields: element.schema[0].fields,
-            values,
-            formData,
-            schema,
-            currentPage,
-            parentIndex,
+  let parentIndex;
+
+  function validate(fields, values) {
+    let errors = {};
+    console.log('fields', fields);
+    fields.forEach((element) => {
+      if (element.type === 'multiplier') {
+        if (!errors[element.name]) errors[element.name] = [];
+        if (!values) {
+          errors[element.name] = element.schema[0].fields.map((field) =>
+            validate(element.schema[0].fields, values),
+          );
+        } else {
+          const multiplierValues = values[element.name] ? values[element.name] : [];
+          errors[element.name] = multiplierValues.map((values, index) => {
+            parentIndex = index;
+            return validate(element.schema[0].fields, values);
           });
-        });
-      }
-    } else {
-      if (element.isRequired && (!values || !values[element.name])) {
-        allValid = false;
-        errors[element.name] = 'This field is requiered';
-      }
-      if (element.validation) {
-        switch (element.validation) {
-          case 'oneOfAll':
-            if (
-              !values ||
-              !values[element.name] ||
-              (values[element.name] && allFalse(values[element.name]))
-            ) {
-              allValid = false;
-              errors[element.name] = 'Select at least one option';
-            }
-            break;
-          default:
-            if (validations[element.validation]) {
-              let validationResult = validations[element.validation]({
-                formData,
-                field: element,
-                schema,
-                currentPage,
-                parentIndex,
-              });
-              if (validationResult) {
-                allValid = validationResult.allValid;
-                errors[element.name] = validationResult.error;
+        }
+      } else {
+        if (element.isRequired && (!values || !values[element.name])) {
+          allValid = false;
+          errors[element.name] = 'This field is requiered';
+        }
+        if (element.validation) {
+          switch (element.validation) {
+            case 'oneOfAll':
+              if (
+                !values ||
+                !values[element.name] ||
+                (values[element.name] && allFalse(values[element.name]))
+              ) {
+                allValid = false;
+                errors[element.name] = 'Select at least one option';
               }
-            }
-            break;
+              break;
+            default:
+              if (validations[element.validation]) {
+                let validationResult = validations[element.validation]({
+                  formData,
+                  field: element,
+                  schema,
+                  currentPage,
+                  parentIndex,
+                });
+                if (validationResult) {
+                  allValid = validationResult.allValid;
+                  errors[element.name] = validationResult.error;
+                }
+              }
+              break;
+          }
         }
       }
-    }
-  });
-  return { errors, allValid };
+    });
+    return errors;
+  }
+
+  return { errors: validate(fields, values), allValid };
 };
 
 function allFalse(obj) {

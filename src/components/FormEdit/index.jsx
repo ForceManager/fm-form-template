@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Form, Icon, Toast, toast } from 'hoi-poi-ui';
 import { bridge } from 'fm-bridge';
 import utils from '../../utils';
@@ -54,13 +54,15 @@ function FormEdit({
   const validate = useCallback(() => {
     return new Promise((resolve, reject) => {
       const pageSchema = schema[currentPage];
-      const { errors, allValid } = utils.validateFields({
-        fields: pageSchema.fields,
-        values: formData.formObject[schema[currentPage].name],
+      const { errors, allValid } = utils.validateFields(
+        pageSchema.fields,
+        formData.formObject[schema[currentPage].name],
         formData,
         schema,
         currentPage,
-      });
+      );
+      console.log('errors', errors);
+      console.log('allValid', allValid);
 
       if (allValid) {
         setErrors({});
@@ -176,25 +178,25 @@ function FormEdit({
       });
   }, [formData]);
 
-  const renderPrev = () => {
+  const renderPrev = useMemo(() => {
     if (currentPage === 0) return <div className="forms-pager-prev" />;
     return (
       <div className="forms-pager-prev" onClick={handleOnClickPrev}>
         <Icon name="chevron" />
       </div>
     );
-  };
+  }, [currentPage, handleOnClickPrev]);
 
-  const renderNext = () => {
+  const renderNext = useMemo(() => {
     if (currentPage === totalPages) return <div className="forms-pager-next" />;
     return (
       <div className="forms-pager-next" onClick={handleOnClickNext}>
         <Icon name="chevron" />
       </div>
     );
-  };
+  }, [currentPage, handleOnClickNext, totalPages]);
 
-  const renderPageNumber = () => {
+  const renderPageNumber = useMemo(() => {
     if (currentPage === totalPages) {
       return (
         <div className="forms-pager-finish" onClick={handleOnClickFinish}>
@@ -203,58 +205,58 @@ function FormEdit({
       );
     }
     return <div className="forms-pager-number">{`${currentPage + 1} / ${totalPages}`}</div>;
-  };
+  }, [currentPage, handleOnClickFinish, totalPages]);
 
-  const renderSummary = () => {
+  const renderSummary = useMemo(() => {
     return <FormSummary schema={schema} values={formData.formObject} customFields={customFields} />;
-  };
+  }, [customFields, formData.formObject, schema]);
 
-  const renderForm = (className) => {
-    const isSignedForm = formData.idState === CONSTANTS.STATE.SIGNED && currentPage < 5;
-    return (
-      <Form
-        schema={[schema[currentPage]]}
-        currentPage={currentPage}
-        onChange={handleOnFormChange}
-        onFocus={handleOnFieldFocus}
-        values={formData.formObject[schema[currentPage].name] || {}}
-        customFields={customFields}
-        errors={errors}
-        onClose={handleOnClose}
-        isReadOnly={isSignedForm}
-        className={className}
-        useNativeForm={false}
-      />
-    );
-  };
-
-  const renderContent = () => {
-    const isSignedForm = formData.idState === CONSTANTS.STATE.SIGNED && currentPage < 5;
-
-    if (currentPage === totalPages) {
-      return renderSummary();
-    }
-    if (isSignedForm && currentPage === 4) {
-      return <div className="signature-content-container signed">{renderSummary()}</div>;
-    }
-    if (currentPage === 4) {
+  const renderForm = useMemo(
+    (className) => {
+      const isSignedForm = formData.idState === CONSTANTS.STATE.SIGNED && currentPage < 5;
       return (
-        <div className="signature-content-container">
-          {renderSummary()}
-          {renderForm('form-signature')}
-        </div>
+        <Form
+          schema={[schema[currentPage]]}
+          currentPage={currentPage}
+          onChange={handleOnFormChange}
+          onFocus={handleOnFieldFocus}
+          values={formData.formObject[schema[currentPage].name] || {}}
+          customFields={customFields}
+          errors={errors}
+          onClose={handleOnClose}
+          isReadOnly={isSignedForm}
+          className={className}
+          useNativeForm={false}
+        />
       );
+    },
+    [
+      currentPage,
+      customFields,
+      errors,
+      formData.formObject,
+      formData.idState,
+      handleOnClose,
+      handleOnFieldFocus,
+      handleOnFormChange,
+      schema,
+    ],
+  );
+
+  const renderContent = useMemo(() => {
+    if (currentPage === totalPages) {
+      return renderSummary;
     }
-    return renderForm('');
-  };
+    return renderForm;
+  }, [currentPage, renderForm, renderSummary, totalPages]);
 
   return (
     <div className="forms-pager">
-      <div className="form-container">{renderContent()}</div>
+      <div className="form-container">{renderContent}</div>
       <div className="forms-pager-bar">
-        {renderPrev()}
-        {renderPageNumber()}
-        {renderNext()}
+        {renderPrev}
+        {renderPageNumber}
+        {renderNext}
       </div>
       <Toast />
     </div>

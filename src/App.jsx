@@ -63,7 +63,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!selectedForm || formSchema) return;
+    if (!selectedForm || !formData || !generalData || formSchema) return;
     bridge
       .showLoading()
       .then(() => utils.generateForm(selectedForm, formData, generalData))
@@ -72,6 +72,14 @@ function App() {
         if (res.formData) {
           setFormData(res.formData);
         }
+        const data = {
+          formData,
+          generalData,
+          formSchema,
+        };
+        return actions.onFormReady(data);
+      })
+      .then(() => {
         bridge.hideLoading();
       })
       .catch((err) => {
@@ -128,7 +136,6 @@ function App() {
         },
       };
 
-      //newState = executeActions(newState);
       if (
         actions.onChange &&
         actions.onChange[selectedForm.value][sectionName] &&
@@ -144,15 +151,15 @@ function App() {
         };
         actions.onChange[selectedForm.value][sectionName][field.name](data)
           .then((res) => {
-            if (res.formData) {
+            if (res && res.formData) {
               setFormData({ ...newFormData, ...res.formData });
             } else {
               setFormData({ ...newFormData });
             }
-            if (res.generalData) {
+            if (res && res.generalData) {
               setGeneralData({ ...generalData, ...res.generalData });
             }
-            if (res.formSchema) {
+            if (res && res.formSchema) {
               setFormSchema({ ...formSchema, ...res.formSchema });
             }
           })
@@ -200,10 +207,6 @@ function App() {
     [formData, formSchema, generalData],
   );
 
-  // const overrides = {
-  //   Select: { menu: {} },
-  // };
-
   const showSelector = generalData && generalData.mode === 'creation' && !selectedForm;
   const showEdit =
     formSchema &&
@@ -231,7 +234,6 @@ function App() {
           customFields={customFields}
           setImagesView={setImagesView}
           imagesView={imagesView}
-          // overrrides={overrides}
           beforeChangePage={handleBeforeChangePage}
         />
       )}
