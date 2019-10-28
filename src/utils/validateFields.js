@@ -6,7 +6,6 @@ const validateFields = (fields, values, formData, schema, currentPage) => {
 
   function validate(fields, values) {
     let errors = {};
-    console.log('fields', fields);
     fields.forEach((element) => {
       if (element.type === 'multiplier') {
         if (!errors[element.name]) errors[element.name] = [];
@@ -22,38 +21,24 @@ const validateFields = (fields, values, formData, schema, currentPage) => {
           });
         }
       } else {
-        if (element.isRequired && (!values || !values[element.name])) {
-          allValid = false;
-          errors[element.name] = 'This field is requiered';
-        }
-        if (element.validation) {
-          switch (element.validation) {
-            case 'oneOfAll':
-              if (
-                !values ||
-                !values[element.name] ||
-                (values[element.name] && allFalse(values[element.name]))
-              ) {
-                allValid = false;
-                errors[element.name] = 'Select at least one option';
+        if (element.validations) {
+          element.validations.forEach((validation) => {
+            if (!errors[element.name]) {
+              let validationResult = validations[validation]({
+                formData,
+                field: element,
+                values: values || null,
+                value: (values && values[element.name]) || null,
+                schema,
+                currentPage,
+                parentIndex,
+              });
+              if (validationResult) {
+                allValid = allValid && validationResult.valid;
+                errors[element.name] = validationResult.error;
               }
-              break;
-            default:
-              if (validations[element.validation]) {
-                let validationResult = validations[element.validation]({
-                  formData,
-                  field: element,
-                  schema,
-                  currentPage,
-                  parentIndex,
-                });
-                if (validationResult) {
-                  allValid = validationResult.allValid;
-                  errors[element.name] = validationResult.error;
-                }
-              }
-              break;
-          }
+            }
+          });
         }
       }
     });

@@ -11,6 +11,7 @@ const nif = '/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i';
 const nie = '/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i';
 
 const validations = {
+  required,
   date,
   url,
   word,
@@ -29,6 +30,14 @@ const validations = {
   biggerThanDepart,
   biggerThanEndDepart,
 };
+
+function required(data) {
+  let result;
+  if (!data.value) {
+    result = { valid: false, error: 'This field is requiered' };
+  }
+  return result;
+}
 
 function onFinish(data) {
   return new Promise((resolve, reject) => {
