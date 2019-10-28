@@ -61,8 +61,6 @@ function FormEdit({
         schema,
         currentPage,
       );
-      console.log('errors', errors);
-      console.log('allValid', allValid);
 
       if (allValid) {
         setErrors({});
@@ -208,42 +206,43 @@ function FormEdit({
   }, [currentPage, handleOnClickFinish, totalPages]);
 
   const renderSummary = useMemo(() => {
+    console.log('renderSummary', currentPage, totalPages, schema);
     return <FormSummary schema={schema} values={formData.formObject} customFields={customFields} />;
   }, [customFields, formData.formObject, schema]);
 
-  const renderForm = useMemo(
-    (className) => {
-      const isSignedForm = formData.idState === CONSTANTS.STATE.SIGNED && currentPage < 5;
-      return (
-        <Form
-          schema={[schema[currentPage]]}
-          currentPage={currentPage}
-          onChange={handleOnFormChange}
-          onFocus={handleOnFieldFocus}
-          values={formData.formObject[schema[currentPage].name] || {}}
-          customFields={customFields}
-          errors={errors}
-          onClose={handleOnClose}
-          isReadOnly={isSignedForm}
-          className={className}
-          useNativeForm={false}
-        />
-      );
-    },
-    [
-      currentPage,
-      customFields,
-      errors,
-      formData.formObject,
-      formData.idState,
-      handleOnClose,
-      handleOnFieldFocus,
-      handleOnFormChange,
-      schema,
-    ],
-  );
+  const renderForm = useMemo(() => {
+    console.log('renderForm', currentPage, totalPages);
+    const isSignedForm = formData.idState === CONSTANTS.STATE.SIGNED;
+    if (!schema[currentPage]) return null;
+
+    return (
+      <Form
+        schema={[schema[currentPage]]}
+        currentPage={currentPage}
+        onChange={handleOnFormChange}
+        onFocus={handleOnFieldFocus}
+        values={formData.formObject[schema[currentPage].name] || {}}
+        customFields={customFields}
+        errors={errors}
+        onClose={handleOnClose}
+        isReadOnly={isSignedForm}
+        useNativeForm={false}
+      />
+    );
+  }, [
+    currentPage,
+    customFields,
+    errors,
+    formData.formObject,
+    formData.idState,
+    handleOnClose,
+    handleOnFieldFocus,
+    handleOnFormChange,
+    schema,
+  ]);
 
   const renderContent = useMemo(() => {
+    console.log('renderContent', currentPage, totalPages);
     if (currentPage === totalPages) {
       return renderSummary;
     }

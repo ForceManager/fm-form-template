@@ -1,7 +1,6 @@
 import validations from '../configs/validations';
 
 const validateFields = (fields, values, formData, schema, currentPage) => {
-  const pageSchema = schema[currentPage];
   let allValid = true;
   let parentIndex;
 
