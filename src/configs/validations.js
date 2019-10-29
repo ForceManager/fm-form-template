@@ -12,6 +12,7 @@ const nie = '/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i';
 
 const validations = {
   required,
+  min,
   date,
   url,
   word,
@@ -35,6 +36,22 @@ function required(data) {
   let result;
   if (!data.value) {
     result = { valid: false, error: 'This field is requiered' };
+  }
+  return result;
+}
+
+function min(data) {
+  let result;
+  if (!data.params) return result;
+  function countCheked() {
+    let trues = 0;
+    Object.keys(data.value).forEach((key) => {
+      if (data.value[key]) trues++;
+    });
+    return trues;
+  }
+  if (data.field.type === 'checkboxGroup' && (!data.value || countCheked() < +data.params)) {
+    result = { valid: false, error: `You should check at least ${data.params}` };
   }
   return result;
 }
