@@ -64,7 +64,6 @@ function FormSummary({ schema, values, customFields }) {
 
   const renderSections = useMemo(() => {
     if (!schema) return null;
-    console.log('schema', schema);
     return Object.keys(schema).map((key) => {
       const section = schema[key];
       return (
@@ -73,7 +72,7 @@ function FormSummary({ schema, values, customFields }) {
         </Section>
       );
     });
-  }, [schema]);
+  }, [schema, renderSectionContent]);
 
   return <div className="summary">{renderSections}</div>;
 }

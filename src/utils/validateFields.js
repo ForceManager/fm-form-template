@@ -48,11 +48,4 @@ const validateFields = (fields, values, formData, schema, currentPage) => {
   return { errors: validate(fields, values), allValid };
 };
 
-function allFalse(obj) {
-  for (var i in obj) {
-    if (obj[i] === true) return false;
-  }
-  return true;
-}
-
 export default validateFields;

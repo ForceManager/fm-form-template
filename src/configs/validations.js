@@ -69,7 +69,7 @@ function biggerThanDateFrom(data) {
     moment(generalInformation.dateFrom, 'MM/DD/YYYY') >
       moment(generalInformation.dateTo, 'MM/DD/YYYY')
   ) {
-    result = { allValid: false, error: 'Date should be bigger than "Date from"' };
+    result = { valid: false, error: 'Date should be bigger than "Date from"' };
   }
   return result;
 }
@@ -83,7 +83,7 @@ function biggerThanHourFrom(data) {
     timeAllocationTable.hourTo &&
     moment(timeAllocationTable.hourFrom, 'HH:mm A') > moment(timeAllocationTable.hourTo, 'HH:mm A')
   ) {
-    result = { allValid: false, error: 'Hour should be bigger than "Hour from"' };
+    result = { valid: false, error: 'Hour should be bigger than "Hour from"' };
   }
   return result;
 }
@@ -97,7 +97,7 @@ function biggerThanDepart(data) {
     moment(generalInformation.departFromMarchesini, 'MM/DD/YYYY HH:mm A') >
       moment(generalInformation.arriveToCustomer, 'MM/DD/YYYY HH:mm A')
   ) {
-    result = { allValid: false, error: 'Should be later than "Depart"' };
+    result = { valid: false, error: 'Should be later than "Depart"' };
   }
   return result;
 }
@@ -112,7 +112,7 @@ function biggerThanEndDepart(data) {
     moment(generalInformationEnd.departFromCustomer, 'MM/DD/YYYY HH:mm A') >
       moment(generalInformationEnd2.arriveToMarchesini, 'MM/DD/YYYY HH:mm A')
   ) {
-    result = { allValid: false, error: 'Should be later than "Depart"' };
+    result = { valid: false, error: 'Should be later than "Depart"' };
   }
   return result;
 }

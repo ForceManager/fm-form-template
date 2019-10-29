@@ -30,14 +30,29 @@ function App() {
     Object.keys(config.formSchema).length > 1
       ? null
       : {
-          name: config.formSchema[Object.keys(config.formSchema)[0]].title,
-          value: Object.keys(config.formSchema)[0],
-        };
+        name: config.formSchema[Object.keys(config.formSchema)[0]].title,
+        value: Object.keys(config.formSchema)[0],
+      };
   const [selectedForm, setSelectedForm] = useState(initialSelectedForm);
-  const [generalData, setGeneralData] = useState();
-  const [formData, setFormData] = useState();
+  const [generalData, setGeneralData] = useState(null);
+  const [formData, setFormData] = useState(null);
   const [formSchema, setFormSchema] = useState(null);
   const [imagesView, setImagesView] = useState(false);
+
+  const setActions = useCallback(
+    (data) => {
+      if (data && data.formData) {
+        setFormData({ ...formData, ...data.formData });
+      }
+      if (data && data.generalData) {
+        setGeneralData({ ...generalData, ...data.generalData });
+      }
+      if (data && data.formSchema) {
+        setFormSchema({ ...formSchema, ...data.formSchema });
+      }
+    },
+    [formData, generalData, formSchema, setFormData, setGeneralData, setFormSchema],
+  );
 
   useEffect(() => {
     let states = {};
@@ -72,14 +87,18 @@ function App() {
         if (res.formData) {
           setFormData(res.formData);
         }
+        if (!actions || !actions.onFormReady) {
+          return Promise.resolve({});
+        }
         const data = {
-          formData,
+          formData: res.formData,
           generalData,
-          formSchema,
+          formSchema: res.formSchema,
         };
         return actions.onFormReady(data);
       })
-      .then(() => {
+      .then((res) => {
+        setActions(res);
         bridge.hideLoading();
       })
       .catch((err) => {
@@ -89,7 +108,7 @@ function App() {
           toast(err.toast);
         }
       });
-  }, [selectedForm, generalData, formSchema, formData]);
+  }, [selectedForm, generalData, formSchema, formData, setActions]);
 
   const handleOnFieldFocus = useCallback(
     (values, field, currentPage) => {
@@ -189,22 +208,14 @@ function App() {
           actions
             .beforeChangePage(data)
             .then((res) => {
-              if (res && res.formData) {
-                setFormData({ ...formData, ...res.formData });
-              }
-              if (res && res.generalData) {
-                setGeneralData({ ...generalData, ...res.generalData });
-              }
-              if (res && res.formSchema) {
-                setFormSchema({ ...formSchema, ...res.formSchema });
-              }
+              setActions(res);
               resolve();
             })
             .catch((err) => reject(err));
         }
       });
     },
-    [formData, formSchema, generalData],
+    [formData, formSchema, generalData, setActions],
   );
 
   const showSelector = generalData && generalData.mode === 'creation' && !selectedForm;

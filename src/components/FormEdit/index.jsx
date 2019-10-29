@@ -206,12 +206,10 @@ function FormEdit({
   }, [currentPage, handleOnClickFinish, totalPages]);
 
   const renderSummary = useMemo(() => {
-    console.log('renderSummary', currentPage, totalPages, schema);
     return <FormSummary schema={schema} values={formData.formObject} customFields={customFields} />;
   }, [customFields, formData.formObject, schema]);
 
   const renderForm = useMemo(() => {
-    console.log('renderForm', currentPage, totalPages);
     const isSignedForm = formData.idState === CONSTANTS.STATE.SIGNED;
     if (!schema[currentPage]) return null;
 
@@ -242,7 +240,6 @@ function FormEdit({
   ]);
 
   const renderContent = useMemo(() => {
-    console.log('renderContent', currentPage, totalPages);
     if (currentPage === totalPages) {
       return renderSummary;
     }

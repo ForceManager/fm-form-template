@@ -20,7 +20,7 @@
               "label": "Contact",
               "name": "contact",
               "type": "select",
-              "isRequired": true,
+              "validations": ["required"],
               "isSearchable": false,
               "attrs": {
                 "isSearchable": false,
@@ -32,28 +32,27 @@
               "label": "Contact name",
               "name": "otherContactName",
               "type": "text",
-              "isRequired": true,
+              "validations": ["required"],
               "isVisible": false
             },
             {
               "label": "Contact email",
               "name": "otherContactEmail",
               "type": "text",
-              "isRequired": true,
+              "validations": ["required"],
               "isVisible": false
             },
             {
               "label": "Date from",
               "name": "dateFrom",
               "type": "datePicker",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Date to",
               "name": "dateTo",
               "type": "datePicker",
-              "isRequired": true,
-              "validations": ["biggerThanDateFrom"]
+              "validations": ["required", "biggerThanDateFrom"]
             },
             {
               "label": "Service Engineer",
@@ -65,32 +64,31 @@
               "label": "Machine type",
               "name": "machineType",
               "type": "text",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": " Serial No. ",
               "name": "serialNo",
               "type": "text",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Machine hours",
               "name": "machineHours",
               "type": "text",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Depart",
               "name": "departFromMarchesini",
               "type": "dateTimePicker",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Arrive to customer",
               "name": "arriveToCustomer",
               "type": "dateTimePicker",
-              "isRequired": true,
-              "validations": ["biggerThanDepart"]
+              "validations": ["required", "biggerThanDepart"]
             }
           ]
         },
@@ -112,7 +110,7 @@
                       "label": "Activity",
                       "name": "activity",
                       "type": "select",
-                      "isRequired": true,
+                      "validations": ["required"],
                       "attrs": {
                         "table": "Z_tbltipoMaterial",
                         "options": []
@@ -122,20 +120,19 @@
                       "label": "Day",
                       "name": "day",
                       "type": "datePicker",
-                      "isRequired": true
+                      "validations": ["required"]
                     },
                     {
                       "label": "Hour: From",
                       "name": "hourFrom",
                       "type": "timePicker",
-                      "isRequired": true
+                      "validations": ["required"]
                     },
                     {
                       "label": "Hour: To",
                       "name": "hourTo",
                       "type": "timePicker",
-                      "isRequired": true,
-                      "validations": ["biggerThanHourFrom"]
+                      "validations": ["required", "biggerThanHourFrom"]
                     }
                   ]
                 }
@@ -182,13 +179,13 @@
               "label": "Description of work performed",
               "name": "description",
               "type": "textarea",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Recommendations",
               "name": "recommendations",
               "type": "textarea",
-              "isRequired": true
+              "validations": ["required"]
             }
           ]
         },
@@ -207,13 +204,13 @@
               "label": "Customer’s name",
               "name": "customerName",
               "type": "text",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Customer’s signature",
               "name": "customerSignature",
               "type": "signature",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Date of the Customer’s signature",
@@ -225,7 +222,7 @@
               "label": "Service engineer’s signature.",
               "name": "serviceEngineerSignature",
               "type": "signature",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Date of the Service engineer’s signature",
@@ -237,7 +234,7 @@
               "label": "Send email",
               "name": "sendEmail",
               "type": "checkbox",
-              "isRequired": true
+              "validations": ["required"]
             }
           ]
         },
@@ -250,7 +247,7 @@
               "label": "Depart from customer",
               "name": "departFromCustomer",
               "type": "dateTimePicker",
-              "isRequired": true
+              "validations": ["required"]
             }
           ]
         },
@@ -263,8 +260,7 @@
               "label": "Arrive",
               "name": "arriveToMarchesini",
               "type": "dateTimePicker",
-              "isRequired": true,
-              "validations": ["biggerThanEndDepart"]
+              "validations": ["required", "biggerThanEndDepart"]
             }
           ]
         }
@@ -290,7 +286,7 @@
               "label": "Contact",
               "name": "contact",
               "type": "select",
-              "isRequired": true,
+              "validations": ["required"],
               "isSearchable": false,
               "attrs": {
                 "isSearchable": false,
@@ -302,28 +298,27 @@
               "label": "Contact name",
               "name": "otherContactName",
               "type": "text",
-              "isRequired": true,
+              "validations": ["required"],
               "isVisible": false
             },
             {
               "label": "Contact email",
               "name": "otherContactEmail",
               "type": "text",
-              "isRequired": true,
+              "validations": ["required"],
               "isVisible": false
             },
             {
               "label": "Date from",
               "name": "dateFrom",
               "type": "datePicker",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Date to",
               "name": "dateTo",
               "type": "datePicker",
-              "isRequired": true,
-              "validations": ["biggerThanDateFrom"]
+              "validations": ["required", "biggerThanDateFrom"]
             },
             {
               "label": "Service Engineer",
@@ -335,32 +330,31 @@
               "label": "Machine type",
               "name": "machineType",
               "type": "text",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": " Serial No. ",
               "name": "serialNo",
               "type": "text",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Machine hours",
               "name": "machineHours",
               "type": "text",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Depart",
               "name": "departFromMarchesini",
               "type": "dateTimePicker",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Arrive to customer",
               "name": "arriveToCustomer",
               "type": "dateTimePicker",
-              "isRequired": true,
-              "validations": ["biggerThanDepart"]
+              "validations": ["required", "biggerThanDepart"]
             }
           ]
         },
@@ -382,7 +376,7 @@
                       "label": "Activity",
                       "name": "activity",
                       "type": "select",
-                      "isRequired": true,
+                      "validations": ["required"],
                       "attrs": {
                         "table": "Z_tbltipoMaterial",
                         "options": []
@@ -392,20 +386,19 @@
                       "label": "Day",
                       "name": "day",
                       "type": "datePicker",
-                      "isRequired": true
+                      "validations": ["required"]
                     },
                     {
                       "label": "Hour: From",
                       "name": "hourFrom",
                       "type": "timePicker",
-                      "isRequired": true
+                      "validations": ["required"]
                     },
                     {
                       "label": "Hour: To",
                       "name": "hourTo",
                       "type": "timePicker",
-                      "isRequired": true,
-                      "validations": ["biggerThanHourFrom"]
+                      "validations": ["required", "biggerThanHourFrom"]
                     }
                   ]
                 }
@@ -452,13 +445,13 @@
               "label": "Description of work performed",
               "name": "description",
               "type": "textarea",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Recommendations",
               "name": "recommendations",
               "type": "textarea",
-              "isRequired": true
+              "validations": ["required"]
             }
           ]
         },
@@ -477,13 +470,13 @@
               "label": "Customer’s name",
               "name": "customerName",
               "type": "text",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Customer’s signature",
               "name": "customerSignature",
               "type": "signature",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Date of the Customer’s signature",
@@ -495,7 +488,7 @@
               "label": "Service engineer’s signature",
               "name": "serviceEngineerSignature",
               "type": "signature",
-              "isRequired": true
+              "validations": ["required"]
             },
             {
               "label": "Date of the Service engineer’s signature",
@@ -507,7 +500,7 @@
               "label": "Send email",
               "name": "sendEmail",
               "type": "checkbox",
-              "isRequired": true
+              "validations": ["required"]
             }
           ]
         },
@@ -520,7 +513,7 @@
               "label": "Depart from customer",
               "name": "departFromCustomer",
               "type": "dateTimePicker",
-              "isRequired": true
+              "validations": ["required"]
             }
           ]
         },
@@ -533,8 +526,7 @@
               "label": "Arrive",
               "name": "arriveToMarchesini",
               "type": "dateTimePicker",
-              "isRequired": true,
-              "validations": ["biggerThanEndDepart"]
+              "validations": ["required", "biggerThanEndDepart"]
             }
           ]
         }
