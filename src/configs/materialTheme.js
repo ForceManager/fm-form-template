@@ -30,6 +30,7 @@ const materialTheme = createMuiTheme({
     MuiInput: {
       underline: {
         '&:before': {
+          right: -15,
           transition: 'border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
           borderBottom: '1px solid #dce3eb',
         },
@@ -37,6 +38,7 @@ const materialTheme = createMuiTheme({
           borderBottom: '1px solid #dce3eb',
         },
         '&:after': {
+          right: -15,
           borderBottom: '1px solid #FF8C00',
         },
         '&.Mui-disabled:before': {

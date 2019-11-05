@@ -169,6 +169,13 @@
             }
           }
         }
+        .field-datePicker,
+        .field-timePicker,
+        .field-dateTimePicker {
+          & > div[class*="formControl"] {
+            overflow: hidden;
+          }
+        }
       }
     }
     .signature-content-container{

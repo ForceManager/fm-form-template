@@ -10,7 +10,7 @@ const formatInitData = (data, states) => {
     initData = {
       formData: {
         formObject: {
-          fechaCreacion: moment().format('MM/DD/YYYY hh:mm A'),
+          fechaCreacion: moment().format(CONSTANTS.FORMATS.DATE_TIME),
           userCreacion: data.user.id,
         },
         idFormType: null,
@@ -20,11 +20,9 @@ const formatInitData = (data, states) => {
       generalData: {
         account: data.account,
         user: data.user,
-        entityForm: data.entityForm,
         mode: data.mode,
         isReadonly: data.isReadonly || false,
         idPreSelectedFormType: data.idPreSelectedFormType,
-        entityFormExtraFields: data.entityFormExtraFields,
         imei: data.imei,
         states,
       },
@@ -32,7 +30,7 @@ const formatInitData = (data, states) => {
   } else if (data.mode === 'edition') {
     bridge.setTitle('Form edition');
     let selectedFormValue = Object.keys(config.formSchema).find(
-      (key) => data.idFormType === config.formSchema[key].id,
+      (key) => data.form.idFormType === config.formSchema[key].id,
     );
     let selectedForm = {
       label: config.formSchema[selectedFormValue].title,
@@ -40,17 +38,11 @@ const formatInitData = (data, states) => {
     };
     initData = {
       formData: {
-        formObject: data.entityForm.fullObject.formObject,
-        idFormType: data.idFormType,
-        idState: data.entityForm.idState,
-        endState: data.entityForm.fullObject.endState,
-        listObject: data.entityForm.fullObject.listObject,
-        detailObject: data.entityForm.fullObject.detailObject,
+        ...data.form,
       },
       generalData: {
         account: data.account,
         user: data.user,
-        entityForm: data.entityForm,
         mode: data.mode,
         isReadonly: data.isReadonly || false,
         selectedForm,

@@ -5,7 +5,6 @@ import CONSTANTS from '../constants';
 import formatEntityList from './formatEntityList';
 
 const generateForm = (selectedForm, formData, generalData) => {
-  console.log('generateForm');
   return new Promise((resolve, reject) => {
     let defaultValues;
     let schemaPromises = [];

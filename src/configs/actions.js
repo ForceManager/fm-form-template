@@ -79,7 +79,7 @@ function setDateCustomerSignature(data) {
         ...data.formData.formObject,
         signatures: {
           ...data.formData.formObject.signatures,
-          dateCustomerSignature: moment().format('DD/MM/YYYY'),
+          dateCustomerSignature: moment().format(CONSTANTS.FORMATS.DATE),
         },
       },
     };
@@ -95,7 +95,7 @@ function setDateServiceEngineerSignature(data) {
         ...data.formData.formObject,
         signatures: {
           ...data.formData.formObject.signatures,
-          dateServiceEngineerSignature: moment().format('DD/MM/YYYY'),
+          dateServiceEngineerSignature: moment().format(CONSTANTS.FORMATS.DATE),
         },
       },
     };

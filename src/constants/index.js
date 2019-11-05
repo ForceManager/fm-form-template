@@ -21,6 +21,11 @@ const CONSTANTS = {
       12: { en: 'User' },
     },
   },
+  FORMATS: {
+    DATE: 'DD/MM/YYYY',
+    TIME: 'HH:mm A',
+    DATE_TIME: 'DD/MM/YYYY HH:mm A',
+  },
 };
 
 export default CONSTANTS;

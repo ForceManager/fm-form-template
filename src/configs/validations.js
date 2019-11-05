@@ -1,36 +1,33 @@
 import moment from 'moment';
 
-const date = '/^(0[1-9]|1[0-2])/(0[1-9]|1d|2d|3[01])/(19|20)d{2}$/';
-const url = 'https?://(www.)?[-a-zA-Z0-9@:%._+~#=]{2,256}.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)';
-const word = '[A-Za-z]+';
-const number = '/^[0-9]';
-const decimalNumber = '/^[0-9]+,?[0-9]*$/';
-const email =
-  '1/^(([^<>()[]\\.,;:s@"]+(.[^<>()[]\\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/';
-const nif = '/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i';
-const nie = '/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i';
-
 const validations = {
   required,
   min,
-  date,
-  url,
-  word,
-  number,
-  decimalNumber,
-  onFinish,
-  email,
-  nif,
-  nie,
-  maxNumber,
-  minNumber,
+  max,
   maxLength,
   minLength,
+  number,
+  url,
+  email,
+  // date,
+  // word,
+  // decimalNumber,
+  // nif,
+  // nie,
   biggerThanDateFrom,
   biggerThanHourFrom,
   biggerThanDepart,
   biggerThanEndDepart,
 };
+
+const urlRegex = '';
+const emailRegex =
+  "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+// const date = '/^(0[1-9]|1[0-2])/(0[1-9]|1d|2d|3[01])/(19|20)d{2}$/';
+// const number = '/^[0-9]';
+// const decimalNumber = '/^[0-9]+,?[0-9]*$/';
+// const nif = '/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i';
+// const nie = '/^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i';
 
 function required(data) {
   let result;
@@ -40,42 +37,117 @@ function required(data) {
   return result;
 }
 
+function countCheked(value) {
+  let trues = 0;
+  Object.keys(value).forEach((key) => {
+    if (value[key]) trues++;
+  });
+  return trues;
+}
+
 function min(data) {
   let result;
-  if (!data.params) return result;
-  function countCheked() {
-    let trues = 0;
-    Object.keys(data.value).forEach((key) => {
-      if (data.value[key]) trues++;
-    });
-    return trues;
+  if (!data.params) {
+    console.warn('Invalid min validation');
+    return result;
   }
-  if (data.field.type === 'checkboxGroup' && (!data.value || countCheked() < +data.params)) {
+  if (data.field.type === 'text' && data.value && data.value.length < +data.params) {
+    result = { valid: false, error: `You can check ${data.params} maximum` };
+  }
+  if (
+    data.field.type === 'checkboxGroup' &&
+    (!data.value || countCheked(data.value) < +data.params)
+  ) {
     result = { valid: false, error: `You should check at least ${data.params}` };
   }
   return result;
 }
 
-function onFinish(data) {
-  return new Promise((resolve, reject) => {
-    resolve();
-    // reject({ type: 'validationError', msg: 'validationError'});
-  });
+function max(data) {
+  let result;
+  if (!data.params) {
+    console.warn('Invalid max validation');
+    return result;
+  }
+  if (data.field.type === 'text' && data.value && data.value.length > +data.params) {
+    result = { valid: false, error: `You can check ${data.params} maximum` };
+  }
+  if (
+    data.field.type === 'checkboxGroup' &&
+    (!data.value || countCheked(data.value) > +data.params)
+  ) {
+    result = { valid: false, error: `You can check ${data.params} maximum` };
+  }
+  return result;
 }
 
-function maxNumber(data) {}
+function minLength(data) {
+  let result;
+  if (!data.params || (data.field.type !== 'text' && data.field.type !== 'textarea')) {
+    console.warn('Invalid minLength validation');
+    return result;
+  }
+  if (data.value && data.value.length < +data.params) {
+    result = { valid: false, error: `Min length is ${data.params} characters` };
+  }
+  return result;
+}
 
-function minNumber(data) {}
+function maxLength(data) {
+  let result;
+  if (!data.params || (data.field.type !== 'text' && data.field.type !== 'textarea')) {
+    console.warn('Invalid maxLength validation');
+    return result;
+  }
+  if (data.value && data.value.length > +data.params) {
+    result = { valid: false, error: `Max length is ${data.params} characters` };
+  }
+  return result;
+}
 
-function maxLength(data) {}
+function number(data) {
+  let result;
+  if (data.field.type !== 'text') {
+    console.warn('Invalid number validation');
+    return result;
+  }
+  if (data.value === null || isNaN(data.value)) {
+    result = { valid: false, error: `The value is not a number` };
+  }
+  return result;
+}
 
-function minLength(data) {}
+function url(data) {
+  // console.log('url', data);
+  let result;
+  if (data.field.type !== 'text') {
+    console.warn('Invalid url validation');
+    return result;
+  }
+  if (data.value && !new RegExp(urlRegex).test(data.value)) {
+    console.log('urlRegex', !new RegExp(urlRegex).test(data.value));
+    result = { valid: false, error: `Invalid url` };
+  }
+  return result;
+}
 
-// function validate(value, validation) {
-//   if (!value.test(validation)) {
-//     return;
-//   }
-// }
+function email(data) {
+  // console.log('email', data);
+  let result;
+  if (data.field.type !== 'text') {
+    console.warn('Invalid email validation');
+    return result;
+  }
+  if (data.value && !new RegExp(emailRegex).test(data.value)) {
+    console.log('emailRegex', !new RegExp(emailRegex).test(data.value));
+    result = { valid: false, error: `Invalid email` };
+  }
+  return result;
+}
+
+//####################################################################################//
+//                                 Custom Validations                                 //
+//####################################################################################//
 
 function biggerThanDateFrom(data) {
   let result;

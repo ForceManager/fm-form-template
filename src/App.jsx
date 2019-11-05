@@ -30,9 +30,9 @@ function App() {
     Object.keys(config.formSchema).length > 1
       ? null
       : {
-        name: config.formSchema[Object.keys(config.formSchema)[0]].title,
-        value: Object.keys(config.formSchema)[0],
-      };
+          name: config.formSchema[Object.keys(config.formSchema)[0]].title,
+          value: Object.keys(config.formSchema)[0],
+        };
   const [selectedForm, setSelectedForm] = useState(initialSelectedForm);
   const [generalData, setGeneralData] = useState(null);
   const [formData, setFormData] = useState(null);
@@ -67,6 +67,7 @@ function App() {
       .then(() => bridge.getFormInitData())
       .then((res) => {
         const initData = utils.formatInitData(res, states);
+        console.log('initData', initData);
         setFormData(initData.formData);
         setGeneralData(initData.generalData);
         bridge.hideLoading();
@@ -76,6 +77,19 @@ function App() {
         bridge.hideLoading();
       });
   }, []);
+
+  useEffect(() => {
+    if (selectedForm || !generalData) return;
+    if (generalData.mode === 'edition') {
+      const selectedForm = Object.keys(config.formSchema).find(
+        (key) => config.formSchema[key].id === formData.idFormType,
+      );
+      setSelectedForm({
+        name: config.formSchema[selectedForm].title,
+        value: selectedForm,
+      });
+    }
+  }, [selectedForm, generalData, formData, setSelectedForm]);
 
   useEffect(() => {
     if (!selectedForm || !formData || !generalData || formSchema) return;
@@ -223,9 +237,9 @@ function App() {
     formSchema &&
     generalData &&
     ((generalData.mode === 'creation' && selectedForm) ||
-      (generalData.mode === 'edition' && formData.endState));
+      (generalData.mode === 'edition' && formData && !formData.endState));
   const showSummary =
-    formSchema && generalData && generalData.mode === 'edition' && formData.endState;
+    formSchema && generalData && generalData.mode === 'edition' && formData && formData.endState;
 
   return (
     <div className="form-container">
