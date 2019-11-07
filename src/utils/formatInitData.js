@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { bridge } from 'fm-bridge';
-import config from '../configs/config.json';
+// import config from '../configs/config.json';
 import CONSTANTS from '../constants';
 
 const formatInitData = (data, states) => {
@@ -13,9 +13,10 @@ const formatInitData = (data, states) => {
           fechaCreacion: moment().format(CONSTANTS.FORMATS.DATE_TIME),
           userCreacion: data.user.id,
         },
-        idFormType: null,
+        idFormType: data.form.idFormType,
         idState: CONSTANTS.STATE.DRAFT,
-        endState: 0,
+        endState: 1,
+        selectedForm: null,
       },
       generalData: {
         account: data.account,
@@ -29,13 +30,14 @@ const formatInitData = (data, states) => {
     };
   } else if (data.mode === 'edition') {
     bridge.setTitle('Form edition');
-    let selectedFormValue = Object.keys(config.formSchema).find(
-      (key) => data.form.idFormType === config.formSchema[key].id,
-    );
-    let selectedForm = {
-      label: config.formSchema[selectedFormValue].title,
-      value: selectedFormValue,
-    };
+    // debugger;
+    // let selectedFormValue = Object.keys(config.formSchema).find(
+    //   (key) => data.form.idFormType === config.formSchema[key].id,
+    // );
+    // let selectedForm = {
+    //   label: config.formSchema[data.selectedForm].title,
+    //   value: selectedForm,
+    // };
     initData = {
       formData: {
         ...data.form,
@@ -45,7 +47,6 @@ const formatInitData = (data, states) => {
         user: data.user,
         mode: data.mode,
         isReadonly: data.isReadonly || false,
-        selectedForm,
         states,
       },
     };

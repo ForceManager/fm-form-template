@@ -30,7 +30,7 @@ function App() {
     Object.keys(config.formSchema).length > 1
       ? null
       : {
-          name: config.formSchema[Object.keys(config.formSchema)[0]].title,
+          label: config.formSchema[Object.keys(config.formSchema)[0]].title,
           value: Object.keys(config.formSchema)[0],
         };
   const [selectedForm, setSelectedForm] = useState(initialSelectedForm);
@@ -67,7 +67,6 @@ function App() {
       .then(() => bridge.getFormInitData())
       .then((res) => {
         const initData = utils.formatInitData(res, states);
-        console.log('initData', initData);
         setFormData(initData.formData);
         setGeneralData(initData.generalData);
         bridge.hideLoading();
@@ -85,7 +84,7 @@ function App() {
         (key) => config.formSchema[key].id === formData.idFormType,
       );
       setSelectedForm({
-        name: config.formSchema[selectedForm].title,
+        label: config.formSchema[selectedForm].title,
         value: selectedForm,
       });
     }
@@ -238,8 +237,13 @@ function App() {
     generalData &&
     ((generalData.mode === 'creation' && selectedForm) ||
       (generalData.mode === 'edition' && formData && !formData.endState));
-  const showSummary =
-    formSchema && generalData && generalData.mode === 'edition' && formData && formData.endState;
+  const showSummary = !!(
+    formSchema &&
+    generalData &&
+    generalData.mode === 'edition' &&
+    formData &&
+    formData.endState
+  );
 
   return (
     <div className="form-container">

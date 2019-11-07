@@ -54,6 +54,15 @@
         padding-bottom: 0;
         margin-bottom: 0;
       }
+      span[class*="_Label-"] {
+        flex: .5;
+      }
+      div[class*="formControl"] {
+        flex: 1;
+      }
+      .MuiInput-underline:before {
+        right: -5px;
+      }
     }
   }
 }

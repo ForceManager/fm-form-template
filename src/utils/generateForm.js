@@ -159,7 +159,6 @@ const generateForm = (selectedForm, formData, generalData) => {
             },
             listObject: newListObject,
             detailObject: newDetailObject,
-            idFormType: config.formSchema[selectedForm.value].id,
           };
           resolve({ formSchema: newFormSchema, formData: newFormData });
         })
