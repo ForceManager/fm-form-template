@@ -1,8 +1,10 @@
 import { bridge } from 'fm-bridge';
 import config from '../configs/config.json';
 import getDefaultValues from '../configs/defaultValues';
-import CONSTANTS from '../constants';
 import formatEntityList from './formatEntityList';
+import setListObject from '../configs/setListObject';
+import setDetailObject from '../configs/setDetailObject';
+import actions from '../configs/actions';
 
 const generateForm = (selectedForm, formData, generalData) => {
   return new Promise((resolve, reject) => {
@@ -64,10 +66,21 @@ const generateForm = (selectedForm, formData, generalData) => {
                       id,
                     )
                     .then((res) => {
-                      field.attrs.options = [
-                        ...field.attrs.options,
-                        ...formatEntityList(field.attrs.relatedEntity[0], res),
-                      ];
+                      if (
+                        field.attrs.relatedEntity[3] &&
+                        actions.formatEntityList &&
+                        actions.formatEntityList[field.attrs.relatedEntity[3]]
+                      ) {
+                        field.attrs.options = [
+                          ...field.attrs.options,
+                          ...actions.formatEntityList[field.attrs.relatedEntity[3]](res),
+                        ];
+                      } else {
+                        field.attrs.options = [
+                          ...field.attrs.options,
+                          ...formatEntityList(field.attrs.relatedEntity[0], res),
+                        ];
+                      }
                     })
                     .catch((err) => {
                       reject({
@@ -95,46 +108,6 @@ const generateForm = (selectedForm, formData, generalData) => {
       return newFields;
     };
 
-    function setListObject() {
-      return new Promise((resolve, reject) => {
-        Object.keys(newListObject).forEach((key) => {
-          switch (newListObject[key]) {
-            case 'selectedForm':
-              newListObject[key] = selectedForm.label;
-              break;
-            case 'state':
-              newListObject[key] = CONSTANTS.LITERALS.STATE[formData.idState]['en'];
-              break;
-            case 'creationDate':
-              newListObject[key] = formData.formObject.fechaCreacion;
-              break;
-            default:
-          }
-        });
-        resolve();
-      });
-    }
-
-    function setDetailObject() {
-      return new Promise((resolve, reject) => {
-        newDetailObject.detailValues.forEach((element) => {
-          switch (element.value) {
-            case 'selectedForm':
-              element.value = selectedForm.label;
-              break;
-            case 'state':
-              element.value = CONSTANTS.LITERALS.STATE[formData.idState]['en'];
-              break;
-            case 'creationDate':
-              element.value = formData.formObject.fechaCreacion;
-              break;
-            default:
-          }
-        });
-        resolve();
-      });
-    }
-
     if (generalData.mode === 'creation') {
       mapSections(newFormSchema, newFormSchema);
 
@@ -147,10 +120,24 @@ const generateForm = (selectedForm, formData, generalData) => {
         })
         .then((res) => {
           defaultValues = res;
-          return setListObject();
+          return setListObject({
+            selectedForm,
+            formData,
+            generalData,
+            listObject: newListObject,
+          });
         })
-        .then(() => setDetailObject())
-        .then(() => {
+        .then((res) => {
+          newListObject = { ...newListObject, ...res };
+          return setDetailObject({
+            selectedForm,
+            formData,
+            generalData,
+            detailObject: newDetailObject,
+          });
+        })
+        .then((res) => {
+          newDetailObject = { ...newDetailObject, ...res };
           const newFormData = {
             ...formData,
             formObject: {

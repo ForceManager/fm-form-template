@@ -60,11 +60,9 @@ function App() {
       .showLoading()
       .then(() => bridge.getFormStates())
       .then((res) => {
-        res.forEach((el) => {
-          states[el.value] = el.label;
-        });
+        states = res;
+        return bridge.getFormInitData();
       })
-      .then(() => bridge.getFormInitData())
       .then((res) => {
         const initData = utils.formatInitData(res, states);
         setFormData(initData.formData);

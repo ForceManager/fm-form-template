@@ -69,9 +69,6 @@
           &.field-datePicker,
           &.field-timePicker,
           &.field-dateTimePicker {
-            & div[class*="formControl"] {
-              overflow: hidden;
-            }
             &[class*="errored"] {
               & div[class*="formControl"]::before {
                 border-bottom: 1px solid #f04540;
@@ -128,6 +125,21 @@
               position: absolute;
               right: 15px;
             }
+            .field-datePicker,
+            .field-timePicker,
+            .field-dateTimePicker {
+              div[class*="_postComponent-"] {
+                position: absolute;
+                right: 0;
+              }
+              &[class*="errored"] {
+                & div[class*="formControl"]::before {
+                  border-bottom: 1px solid #f04540;
+                  transform: scaleX(1);
+                  z-index: 1;
+                }
+              }
+            }
           }
           span[class*="postCloseComponent"] {
             width: 10px;
@@ -182,13 +194,6 @@
                 }
               }
             }
-          }
-        }
-        .field-datePicker,
-        .field-timePicker,
-        .field-dateTimePicker {
-          & > div[class*="formControl"] {
-            overflow: hidden;
           }
         }
       }

@@ -3,8 +3,7 @@ import { Form, Icon, Toast, toast } from 'hoi-poi-ui';
 import { bridge } from 'fm-bridge';
 import utils from '../../utils';
 import FormSummary from '../FormSummary';
-import config from '../../configs/config.json';
-import CONSTANTS from '../../constants';
+// import config from '../../configs/config.json';
 
 import './style.scss';
 
@@ -12,12 +11,15 @@ function FormEdit({
   schema,
   onChange,
   onFocus,
+  generalData,
   formData,
   customFields,
   setImagesView,
   imagesView,
   overrrides,
   beforeChangePage,
+  beforeFinish,
+  setFormData,
   ...props
 }) {
   const [currentPage, setCurrentPage] = useState(0);
@@ -25,10 +27,9 @@ function FormEdit({
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (formData.idState === CONSTANTS.STATE.SIGNED) {
-      setCurrentPage(5);
-    }
-  }, [formData.idState, setCurrentPage]);
+    const startPage = schema.findIndex((page) => !formData.formObject[page.name]);
+    setCurrentPage(startPage);
+  }, []);
 
   useEffect(() => {
     const pageSchema = schema[currentPage];
@@ -151,21 +152,14 @@ function FormEdit({
   }, []);
 
   const handleOnClickFinish = useCallback(() => {
-    formData.idState = CONSTANTS.STATE.FINISHED;
-    formData.endState = 1;
-    Object.keys(config.listObject).forEach((key) => {
-      if (config.listObject[key] === 'state') {
-        formData.listObject[key] = 'Closed';
-      }
-    });
-    config.detailObject.detailValues.forEach((el, i) => {
-      if (el.value === 'state') {
-        formData.detailObject.detailValues[i].value = 'Closed';
-      }
-    });
+    // beforeFinish()
+    //   .then(() =>
     bridge
       .saveData(formData)
-      .then(() => bridge.finishActivity())
+      .then(() => {
+        debugger;
+        bridge.finishActivity();
+      })
       .catch((err) => {
         console.warn(err);
         toast({
@@ -174,7 +168,7 @@ function FormEdit({
           title: 'Error',
         });
       });
-  }, [formData]);
+  }, [beforeFinish]);
 
   const renderPrev = useMemo(() => {
     if (currentPage === 0) return <div className="forms-pager-prev" />;
@@ -210,7 +204,8 @@ function FormEdit({
   }, [customFields, formData.formObject, schema]);
 
   const renderForm = useMemo(() => {
-    const isSignedForm = formData.idState === CONSTANTS.STATE.SIGNED;
+    // TODO set isReadOnly segun config
+    const isReadOnly = false;
     if (!schema[currentPage]) return null;
 
     return (
@@ -223,7 +218,7 @@ function FormEdit({
         customFields={customFields}
         errors={errors}
         onClose={handleOnClose}
-        isReadOnly={isSignedForm}
+        isReadOnly={isReadOnly}
         useNativeForm={false}
       />
     );
@@ -232,7 +227,6 @@ function FormEdit({
     customFields,
     errors,
     formData.formObject,
-    formData.idState,
     handleOnClose,
     handleOnFieldFocus,
     handleOnFormChange,

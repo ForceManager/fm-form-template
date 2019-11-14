@@ -4,6 +4,7 @@ import { bridge } from 'fm-bridge';
 import CONSTANTS from '../constants';
 
 const formatInitData = (data, states) => {
+  console.log('formatInitData', data, states);
   let initData;
   if (data.mode === 'creation') {
     bridge.setTitle('Form creation');
@@ -14,8 +15,8 @@ const formatInitData = (data, states) => {
           userCreacion: data.user.id,
         },
         idFormType: data.form.idFormType,
-        idState: CONSTANTS.STATE.DRAFT,
-        endState: 1,
+        idState: states[0].id,
+        endState: 0,
         selectedForm: null,
       },
       generalData: {
@@ -30,7 +31,6 @@ const formatInitData = (data, states) => {
     };
   } else if (data.mode === 'edition') {
     bridge.setTitle('Form edition');
-    // debugger;
     // let selectedFormValue = Object.keys(config.formSchema).find(
     //   (key) => data.form.idFormType === config.formSchema[key].id,
     // );

@@ -1,23 +1,12 @@
 import moment from 'moment';
-import CONSTANTS from '../constants';
-import config from '../configs/config.json';
+// import CONSTANTS from '../constants';
+// import config from '../configs/config.json';
 
 const actions = {
   onChange: {
-    standardService: {
-      generalInformation: {
-        contact: onChangeContact,
-        // dateFrom: setDateToMin,
-      },
-      signatures: {
-        customerSignature: setDateCustomerSignature,
-        serviceEngineerSignature: setDateServiceEngineerSignature,
-      },
-    },
-    newMachine: {
-      generalInformation: {
-        contact: onChangeContact,
-        // dateFrom: setDateToMin,
+    horarios: {
+      timeAllocationTable: {
+        timeAllocationTable: onChangeMultiplier,
       },
       signatures: {
         customerSignature: setDateCustomerSignature,
@@ -25,51 +14,32 @@ const actions = {
       },
     },
   },
+  onFormReady,
   beforeChangePage,
+  beforeFinish,
+  formatEntityList: {
+    formatUsers,
+  },
 };
 
-function onChangeContact(data) {
-  return new Promise((resolve) => {
-    let formSchema = data.formSchema;
-    let generalInformation = formSchema[0].fields;
-    if (
-      data.formData.formObject.generalInformation.contact &&
-      data.formData.formObject.generalInformation.contact.value === 'other'
-    ) {
-      let otherContactName = {
-        ...config.formSchema[data.selectedForm.value].schema[0].fields[2],
-      };
-      let otherContactEmail = {
-        ...config.formSchema[data.selectedForm.value].schema[0].fields[3],
-      };
-      generalInformation.splice(2, 0, otherContactName, otherContactEmail);
-    } else {
-      if (generalInformation[2].name === 'otherContactName') {
-        generalInformation.splice(2, 2);
-      }
-    }
-    resolve({ formSchema });
-  });
+function onChangeMultiplier(data) {
+  console.log('onChangeMultiplier', data);
+  let formSchema = { ...data.formSchema };
+  const usedValues = data.values.timeAllocationTable.map(
+    (value) => value && value.day && value.day.value,
+  );
+  const filteredOptions = data.formSchema[1].fields[0].schema[0].fields[0].attrs.options.reduce(
+    (obj, option) => {
+      let newOption = { ...option };
+      newOption.isDisabled = usedValues.includes(newOption.value);
+      obj.push(newOption);
+      return obj;
+    },
+    [],
+  );
+  formSchema[1].fields[0].schema[0].fields[0].attrs.options = filteredOptions;
+  return Promise.resolve({ formSchema });
 }
-
-// function setDateToMin(data) {
-//   return new Promise((resolve) => {
-//     let fields = data.formSchema[data.currentPage].fields.map((el) => {
-//       if (el.name === 'dateTo') {
-//         el['attrs']['minDate'] = data.values[data.field.name];
-//       }
-//       return el;
-//     });
-//     let formSchema = {
-//       ...data.formSchema,
-//       [data.currentPage]: {
-//         ...data.formSchema[data.currentPage],
-//         fields,
-//       },
-//     };
-//     resolve({ formSchema });
-//   });
-// }
 
 function setDateCustomerSignature(data) {
   return new Promise((resolve) => {
@@ -79,7 +49,7 @@ function setDateCustomerSignature(data) {
         ...data.formData.formObject,
         signatures: {
           ...data.formData.formObject.signatures,
-          dateCustomerSignature: moment().format(CONSTANTS.FORMATS.DATE),
+          dateCustomerSignature: moment().format('DD/MM/YYYY'),
         },
       },
     };
@@ -95,7 +65,7 @@ function setDateServiceEngineerSignature(data) {
         ...data.formData.formObject,
         signatures: {
           ...data.formData.formObject.signatures,
-          dateServiceEngineerSignature: moment().format(CONSTANTS.FORMATS.DATE),
+          dateServiceEngineerSignature: moment().format('DD/MM/YYYY'),
         },
       },
     };
@@ -103,27 +73,42 @@ function setDateServiceEngineerSignature(data) {
   });
 }
 
+function onFormReady(data) {
+  return new Promise((resolve) => {
+    let formSchema = { ...data.formSchema };
+    const filteredOptions = data.formSchema[0].fields[0].schema[0].fields[0].attrs.options.reduce(
+      (obj, option) => {
+        let newOption = { ...option };
+        newOption.isDisabled = [6, 7].includes(newOption.value);
+        obj.push(newOption);
+        return obj;
+      },
+      [],
+    );
+    formSchema[0].fields[0].schema[0].fields[0].attrs.options = filteredOptions;
+    resolve({ formSchema });
+  });
+}
+
 function beforeChangePage(data) {
   return new Promise((resolve) => {
-    if (data.currentPage === 4) {
-      const detailValues = [...data.formData.detailObject.detailValues];
-      detailValues[3].value = CONSTANTS.LITERALS.STATE[CONSTANTS.STATE.SIGNED]['en'];
-      const formData = {
-        ...data.formData,
-        listObject: {
-          ...data.formData.listObject,
-          pos21: CONSTANTS.LITERALS.STATE[CONSTANTS.STATE.SIGNED]['en'],
-        },
-        detailObject: {
-          ...data.formData.detailObject,
-          detailValues,
-        },
-        idState: CONSTANTS.STATE.SIGNED,
-      };
-      resolve({ formData });
-    } else {
-      resolve();
-    }
+    resolve();
+  });
+}
+
+function beforeFinish(data) {
+  return new Promise((resolve) => {
+    resolve();
+  });
+}
+
+function formatUsers(data) {
+  console.log('formatUsers', data);
+  return data.map((el) => {
+    return {
+      value: el.id,
+      label: el.id,
+    };
   });
 }
 
