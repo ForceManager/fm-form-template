@@ -6,6 +6,165 @@
       "id": 1,
       "schema": [
         {
+          "title": "General information Start",
+          "name": "generalInformation",
+          "className": "general-info-start",
+          "readOnlyOnState": 2,
+          "fields": [
+            {
+              "label": "User:",
+              "name": "user",
+              "type": "select",
+              "validations": ["required"],
+              "attrs": {
+                "getEntity": ["users"],
+                "formatEntity": "formatUsers",
+                "options": []
+              }
+            },
+            {
+              "label": "Opportunity 328",
+              "name": "opportunity",
+              "type": "select",
+              "validations": ["required"],
+              "attrs": {
+                "getEntity": ["opportunities", "", "328"],
+                "options": []
+              }
+            },
+            {
+              "label": "Customer",
+              "name": "customer",
+              "type": "select",
+              "isReadOnly": true
+            },
+            {
+              "label": "Contact",
+              "name": "contact",
+              "type": "select",
+              "validations": ["required"],
+              "isSearchable": false,
+              "attrs": {
+                "isSearchable": false,
+                "getEntity": ["contacts", "accountId", "this"],
+                "options": [{ "label": "Other", "value": "other" }]
+              }
+            },
+            {
+              "label": "Contact name",
+              "name": "otherContactName",
+              "type": "text",
+              "validations": ["required"],
+              "isVisible": false
+            },
+            {
+              "label": "Contact email",
+              "name": "otherContactEmail",
+              "type": "text",
+              "validations": ["required"],
+              "isVisible": false
+            },
+            {
+              "label": "Date from",
+              "name": "dateFrom",
+              "type": "datePicker",
+              "validations": ["required"]
+            },
+            {
+              "label": "Date to",
+              "name": "dateTo",
+              "type": "datePicker",
+              "validations": ["required"],
+              "validation": "biggerThanDateFrom"
+            },
+            {
+              "label": "Service Engineer",
+              "name": "serviceEngineer",
+              "type": "select",
+              "isReadOnly": true
+            },
+            {
+              "label": "Machine type",
+              "name": "machineType",
+              "type": "text",
+              "validations": ["required"]
+            },
+            {
+              "label": " Serial No. ",
+              "name": "serialNo",
+              "type": "text",
+              "validations": ["required"]
+            },
+            {
+              "label": "Machine hours",
+              "name": "machineHours",
+              "type": "text",
+              "validations": ["required"]
+            },
+            {
+              "label": "Depart",
+              "name": "departFromMarchesini",
+              "type": "dateTimePicker",
+              "validations": ["required"]
+            },
+            {
+              "label": "Arrive to customer",
+              "name": "arriveToCustomer",
+              "type": "dateTimePicker",
+              "validations": ["required", "biggerThanDepart"]
+            }
+          ]
+        },
+        {
+          "title": "Time Allocation Table",
+          "name": "timeAllocationTable",
+          "className": "time-allocation-table",
+          "readOnlyOnState": 2,
+          "fields": [
+            {
+              "name": "timeAllocationTable",
+              "type": "multiplier",
+              "buttonLabel": "ADD",
+              "buttonClassName": "time-allocation-add-button",
+              "schema": [
+                {
+                  "name": "timeAllocationTable",
+                  "fields": [
+                    {
+                      "label": "Activity",
+                      "name": "activity",
+                      "type": "select",
+                      "validations": ["required"],
+                      "attrs": {
+                        "table": "Z_tblActivities_Standard_Service",
+                        "options": []
+                      }
+                    },
+                    {
+                      "label": "Day",
+                      "name": "day",
+                      "type": "datePicker",
+                      "validations": ["required"]
+                    },
+                    {
+                      "label": "Hour: From",
+                      "name": "hourFrom",
+                      "type": "timePicker",
+                      "validations": ["required"]
+                    },
+                    {
+                      "label": "Hour: To",
+                      "name": "hourTo",
+                      "type": "timePicker",
+                      "validations": ["required", "biggerThanHourFrom"]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "title": "Work Performed",
           "name": "workPerformed",
           "className": "work-performed",

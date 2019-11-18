@@ -22,14 +22,11 @@ function FormEdit({
   setFormData,
   ...props
 }) {
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(
+    schema.findIndex((page) => !formData.formObject[page.name]),
+  );
   const [totalPages] = useState(schema.length);
   const [errors, setErrors] = useState({});
-
-  useEffect(() => {
-    const startPage = schema.findIndex((page) => !formData.formObject[page.name]);
-    setCurrentPage(startPage);
-  }, []);
 
   useEffect(() => {
     const pageSchema = schema[currentPage];
@@ -168,7 +165,7 @@ function FormEdit({
           title: 'Error',
         });
       });
-  }, [beforeFinish]);
+  }, [formData]);
 
   const renderPrev = useMemo(() => {
     if (currentPage === 0) return <div className="forms-pager-prev" />;

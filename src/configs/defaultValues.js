@@ -35,23 +35,22 @@ function getDefaultValues(selectedForm, formData, generalData) {
     // fomDefaultValues[selectedForm]();
 
     // WITHOUT PROMISES
-    // const defaultValues = {
-    //   generalInformation: {
-    //     customer: {
-    //       label: generalData.account.name,
-    //       value: generalData.account.id,
-    //     },
-    //     serviceEngineer: { label: generalData.user.name, value: generalData.user.id },
-    //   },
-    //   workPerformed: {
-    //     customer: {
-    //       label: generalData.account.name,
-    //       value: generalData.account.id,
-    //     },
-    //   },
-    // };
-    // resolve(defaultValues);
-    resolve();
+    const defaultValues = {
+      generalInformation: {
+        customer: {
+          label: generalData.account.name,
+          value: generalData.account.id,
+        },
+        serviceEngineer: { label: generalData.user.name, value: generalData.user.id },
+      },
+      workPerformed: {
+        customer: {
+          label: generalData.account.name,
+          value: generalData.account.id,
+        },
+      },
+    };
+    resolve(defaultValues);
   });
 }
 

@@ -2,6 +2,11 @@ import { createHoiPoiTheme } from 'hoi-poi-ui';
 
 const hoiPoiTheme = createHoiPoiTheme({
   overrides: {
+    Input: {
+      formControl: {
+        flex: 1,
+      },
+    },
     Section: {
       backgroundColor: 'red',
       root: {
@@ -11,12 +16,12 @@ const hoiPoiTheme = createHoiPoiTheme({
         Input: {
           postComponent: {
             position: 'absolute',
-            top: '10px',
-            left: '10px',
+            top: 10,
+            left: 10,
           },
           postCloseComponent: {
-            height: '15px',
-            width: '15px',
+            height: 15,
+            width: 15,
           },
         },
       },

@@ -1,4 +1,5 @@
 const formatEntityList = (entity, data) => {
+  data = Array.isArray(data) ? data : [data];
   return data.map((el) => {
     switch (entity) {
       case 'contacts':
@@ -13,6 +14,11 @@ const formatEntityList = (entity, data) => {
             el.name ||
             el.strNombre +
               (el.lastName || el.strApellidos ? ` ${el.lastName || el.strApellidos}` : ''),
+        };
+      case 'opportunities':
+        return {
+          value: el.id,
+          label: el.reference,
         };
       default:
         return el;

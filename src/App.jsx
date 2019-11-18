@@ -113,7 +113,7 @@ function App() {
         bridge.hideLoading();
       })
       .catch((err) => {
-        console.warn(err);
+        console.warn(err.error ? err.error : err);
         bridge.hideLoading();
         if (err.toast) {
           toast(err.toast);
@@ -165,7 +165,6 @@ function App() {
           [sectionName]: values,
         },
       };
-
       if (
         actions.onChange &&
         actions.onChange[selectedForm.value][sectionName] &&
