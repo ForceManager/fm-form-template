@@ -13,9 +13,7 @@
 
 ### 3) Install ForceManager CLI
 
-```
-yarn add global forcemanager-cli
-```
+`yarn add global forcemanager-cli` or `npm install -g forcemanager-cli`
 
 ### 4) Create new project
 
@@ -35,9 +33,7 @@ An empty project will be created in the specified <new-project-name> directory.
 
 ### 5) Start Dev mode
 
-```
-yarn start
-```
+`yarn start` or `npm start`
 
 Runs the app in the development mode with the context and BrigeBackend listening for Bridge calls.<br>
 Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
@@ -77,9 +73,7 @@ In this file you can define any custom validation you want to define for a field
 
 ### 8) Build
 
-```
-yarn build
-```
+`yarn build` or `npm build`
 
 Builds the app for production to the `build` folder.
 PUBLIC_URL constant is defined in .env file.
@@ -88,9 +82,7 @@ PUBLIC_URL constant is defined in .env file.
 
 #### Via CLI (Not working yet)
 
-```
-yarn deploy
-```
+`yarn deploy` or `npm deploy`
 
 To deploy the code to the standard ForceManager server form fragments https://fmfragments.s3.amazonaws.com/fmfragments/code/{GUID}
 Not working yet.

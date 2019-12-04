@@ -1634,6 +1634,16 @@ adjust-sourcemap-loader@2.0.0:
     object-path "0.11.4"
     regex-parser "2.2.10"
 
+ag-grid-community@^22.0.0:
+  version "22.0.0"
+  resolved "https://registry.yarnpkg.com/ag-grid-community/-/ag-grid-community-22.0.0.tgz#85e612804d6c8a455952b50539c9736b0f7f33b2"
+
+ag-grid-react@^22.0.0:
+  version "22.0.0"
+  resolved "https://registry.yarnpkg.com/ag-grid-react/-/ag-grid-react-22.0.0.tgz#ae943ba782aff6fa3bd4117dc23ce4d7c73bbd03"
+  dependencies:
+    prop-types "^15.6.2"
+
 ajv-errors@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ajv-errors/-/ajv-errors-1.0.1.tgz#f35986aceb91afadec4102fbd85014950cefa64d"
@@ -4505,10 +4515,12 @@ hmac-drbg@^1.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.1"
 
-hoi-poi-ui@^0.0.1-alpha.93:
-  version "0.0.1-alpha.94"
-  resolved "https://registry.yarnpkg.com/hoi-poi-ui/-/hoi-poi-ui-0.0.1-alpha.94.tgz#4d984a67b002ac4ae8c4602310627352f898e140"
+hoi-poi-ui@^0.0.1-alpha.101:
+  version "0.0.1-alpha.101"
+  resolved "https://registry.yarnpkg.com/hoi-poi-ui/-/hoi-poi-ui-0.0.1-alpha.101.tgz#8ca9547c53bf1eba650e633229b8188ff8efd802"
   dependencies:
+    ag-grid-community "^22.0.0"
+    ag-grid-react "^22.0.0"
     classnames "^2.2.6"
     deepmerge "^4.2.2"
     jss "^10.0.0"

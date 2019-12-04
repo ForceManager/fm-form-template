@@ -20,6 +20,11 @@ const formatEntityList = (entity, data) => {
           value: el.id,
           label: el.reference,
         };
+      case 'accounts':
+        return {
+          value: el.id,
+          label: el.name,
+        };
       default:
         return el;
     }
