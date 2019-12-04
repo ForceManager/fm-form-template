@@ -4096,9 +4096,9 @@ flush-write-stream@^1.0.0:
     inherits "^2.0.3"
     readable-stream "^2.3.6"
 
-fm-bridge@^0.0.1-beta.12:
-  version "0.0.1-beta.12"
-  resolved "https://registry.yarnpkg.com/fm-bridge/-/fm-bridge-0.0.1-beta.12.tgz#a5ade05e7b24eecbee24f9129636ba424ab93e7c"
+fm-bridge@^0.0.1-beta.14:
+  version "0.0.1-beta.14"
+  resolved "https://registry.yarnpkg.com/fm-bridge/-/fm-bridge-0.0.1-beta.14.tgz#57e6469c436f2000ec768cd4ba070e4dfa4946cb"
   dependencies:
     axios "^0.18.0"
     moment "^2.24.0"
