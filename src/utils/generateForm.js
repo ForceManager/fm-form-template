@@ -48,30 +48,37 @@ const generateForm = (selectedForm, formData, generalData) => {
                     }),
                 );
                 schemaPositions.push(currentPath[fieldIndex].attrs.options);
-              } else if (field.attrs && field.attrs.getEntity && field.attrs.getEntity !== '') {
+              } else if (
+                field.attrs &&
+                field.attrs.relatedEntity &&
+                field.attrs.relatedEntity !== ''
+              ) {
+                const id =
+                  field.attrs.relatedEntity[1] === 'accounts' &&
+                  field.attrs.relatedEntity[2] === 'this'
+                    ? generalData.account.id
+                    : field.attrs.relatedEntity[2];
                 schemaPromises.push(
                   bridge
                     .getRelatedEntity(
-                      field.attrs.getEntity[0],
-                      field.attrs.getEntity[1],
-                      field.attrs.getEntity[2],
+                      field.attrs.relatedEntity[0],
+                      field.attrs.relatedEntity[1],
+                      id,
                     )
                     .then((res) => {
-                      console.log('getRelatedEntity res', res);
                       if (
-                        res &&
-                        field.attrs.formatEntity &&
+                        field.attrs.relatedEntity[3] &&
                         actions.formatEntityList &&
-                        actions.formatEntityList[field.attrs.formatEntity]
+                        actions.formatEntityList[field.attrs.relatedEntity[3]]
                       ) {
                         field.attrs.options = [
                           ...field.attrs.options,
-                          ...actions.formatEntityList[field.attrs.formatEntity](res),
+                          ...actions.formatEntityList[field.attrs.relatedEntity[3]](res),
                         ];
-                      } else if (res) {
+                      } else {
                         field.attrs.options = [
                           ...field.attrs.options,
-                          ...formatEntityList(field.attrs.getEntity[0], res),
+                          ...formatEntityList(field.attrs.relatedEntity[0], res),
                         ];
                       }
                     })

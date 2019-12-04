@@ -6,26 +6,10 @@
       "id": 1,
       "schema": [
         {
-          "title": "Seleccionar el Usuario",
-          "name": "selecUser",
-          "className": "select-user",
-          "fields": [
-            {
-              "label": "Usuario:",
-              "name": "user",
-              "type": "select",
-              "validations": ["required"],
-              "attrs": {
-                "relatedEntity": ["users"],
-                "options": []
-              }
-            }
-          ]
-        },
-        {
           "title": "Time Allocation Table",
           "name": "timeAllocationTable",
           "className": "time-allocation-table",
+          "readOnlyOnState": 2,
           "fields": [
             {
               "name": "timeAllocationTable",
@@ -51,29 +35,48 @@
                       "label": "Hour: From",
                       "name": "hourFromM",
                       "type": "timePicker",
-                      "validations": ["smallerThanHourToM"]
+                      "validations": ["required", "smallerThanHourToM"]
                     },
                     {
                       "label": "Hour: To",
                       "name": "hourToM",
                       "type": "timePicker",
-                      "validations": ["biggerThanHourFromM"]
+                      "validations": ["required", "biggerThanHourFromM"]
                     },
                     {
                       "label": "Hour: From",
                       "name": "hourFromT",
                       "type": "timePicker",
-                      "validations": ["smallerThanHourToT"]
+                      "validations": ["required", "smallerThanHourToT"]
                     },
                     {
                       "label": "Hour: To",
                       "name": "hourToT",
                       "type": "timePicker",
-                      "validations": ["biggerThanHourFromT"]
+                      "validations": ["required", "biggerThanHourFromT"]
                     }
                   ]
                 }
               ]
+            }
+          ]
+        },
+        {
+          "title": "Signatures",
+          "name": "signatures",
+          "className": "signatures",
+          "fields": [
+            {
+              "label": "Customer’s signature",
+              "name": "customerSignature",
+              "type": "signature",
+              "validations": ["required"]
+            },
+            {
+              "label": "Date of the Customer’s signature",
+              "name": "dateCustomerSignature",
+              "type": "text",
+              "isReadOnly": true
             }
           ]
         }
@@ -89,11 +92,11 @@
     "pos23": ""
   },
   "detailObject": {
-    "detailTitle": "Detalles",
+    "detailTitle": "Detail",
     "detailValues": [
       {
         "type": "title",
-        "titleName": "Form",
+        "titleName": "Form data",
         "key": "",
         "value": "",
         "entityId": "",

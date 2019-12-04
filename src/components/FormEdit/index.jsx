@@ -22,11 +22,15 @@ function FormEdit({
   setFormData,
   ...props
 }) {
-  const [currentPage, setCurrentPage] = useState(
-    schema.findIndex((page) => !formData.formObject[page.name]),
-  );
+  const [currentPage, setCurrentPage] = useState(null);
   const [totalPages] = useState(schema.length);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (currentPage === null) {
+      setCurrentPage(schema.findIndex((page) => !formData.formObject[page.name]));
+    }
+  }, [currentPage, formData.formObject, schema]);
 
   useEffect(() => {
     const pageSchema = schema[currentPage];

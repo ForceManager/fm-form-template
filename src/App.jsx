@@ -39,7 +39,7 @@ function App() {
   const [formSchema, setFormSchema] = useState(null);
   const [imagesView, setImagesView] = useState(false);
 
-  const setActions = useCallback(
+  const setStates = useCallback(
     (data) => {
       if (data && data.formData) {
         setFormData({ ...formData, ...data.formData });
@@ -109,7 +109,7 @@ function App() {
         return actions.onFormReady(data);
       })
       .then((res) => {
-        setActions(res);
+        setStates(res);
         bridge.hideLoading();
       })
       .catch((err) => {
@@ -119,7 +119,7 @@ function App() {
           toast(err.toast);
         }
       });
-  }, [selectedForm, generalData, formSchema, formData, setActions]);
+  }, [selectedForm, generalData, formSchema, formData, setStates]);
 
   const handleOnFieldFocus = useCallback(
     (values, field, currentPage) => {
@@ -165,6 +165,7 @@ function App() {
           [sectionName]: values,
         },
       };
+
       if (
         actions.onChange &&
         actions.onChange[selectedForm.value][sectionName] &&
@@ -205,27 +206,34 @@ function App() {
 
   const handleBeforeChangePage = useCallback(
     (currentPage) => {
-      return new Promise((resolve, reject) => {
-        if (!actions.beforeChangePage) {
-          resolve();
-        } else {
-          const data = {
-            formData,
-            generalData,
-            formSchema,
-            currentPage,
-          };
-          actions
-            .beforeChangePage(data)
-            .then((res) => {
-              setActions(res);
-              resolve();
-            })
-            .catch((err) => reject(err));
-        }
+      return utils.beforeChangePage({
+        selectedForm,
+        formSchema,
+        formData,
+        generalData,
+        currentPage,
+        setFormData,
+        setGeneralData,
+        setFormSchema,
       });
     },
-    [formData, formSchema, generalData, setActions],
+    [formData, formSchema, generalData, selectedForm],
+  );
+
+  const handleBeforeFinish = useCallback(
+    (currentPage) => {
+      return utils.beforeFinish({
+        selectedForm,
+        formSchema,
+        formData,
+        generalData,
+        currentPage,
+        setFormData,
+        setGeneralData,
+        setFormSchema,
+      });
+    },
+    [formData, formSchema, generalData, selectedForm],
   );
 
   const showSelector = generalData && generalData.mode === 'creation' && !selectedForm;
@@ -256,11 +264,14 @@ function App() {
           schema={formSchema}
           onChange={handleOnFormChange}
           onFocus={handleOnFieldFocus}
+          generalData={generalData}
           formData={formData}
           customFields={customFields}
           setImagesView={setImagesView}
           imagesView={imagesView}
+          setFormData={setFormData}
           beforeChangePage={handleBeforeChangePage}
+          beforeFinish={handleBeforeFinish}
         />
       )}
       {showSummary && (
