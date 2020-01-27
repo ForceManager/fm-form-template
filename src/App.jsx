@@ -168,6 +168,7 @@ function App() {
 
       if (
         actions.onChange &&
+        actions.onChange[selectedForm.value] &&
         actions.onChange[selectedForm.value][sectionName] &&
         actions.onChange[selectedForm.value][sectionName][field.name]
       ) {

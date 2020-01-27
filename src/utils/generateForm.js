@@ -53,11 +53,26 @@ const generateForm = (selectedForm, formData, generalData) => {
                 field.attrs.relatedEntity &&
                 field.attrs.relatedEntity !== ''
               ) {
-                const id =
-                  field.attrs.relatedEntity[1] === 'accounts' &&
-                  field.attrs.relatedEntity[2] === 'this'
-                    ? generalData.account.id
-                    : field.attrs.relatedEntity[2];
+                let id;
+                console.log('relatedEntity', field.attrs.relatedEntity);
+                if (!field.attrs.relatedEntity[2]) {
+                  id = -1;
+                } else if (
+                  field.attrs.relatedEntity[2] === 'this' &&
+                  ((!field.attrs.relatedEntity[1] && field.attrs.relatedEntity[0] === 'accounts') ||
+                    field.attrs.relatedEntity[1] === 'accountId')
+                ) {
+                  id = generalData.account.id;
+                } else if (
+                  field.attrs.relatedEntity[2] === 'this' &&
+                  !field.attrs.relatedEntity[1] &&
+                  field.attrs.relatedEntity[0] === 'users'
+                ) {
+                  id = generalData.user.id;
+                } else {
+                  id = field.attrs.relatedEntity[2];
+                }
+
                 schemaPromises.push(
                   bridge
                     .getRelatedEntity(

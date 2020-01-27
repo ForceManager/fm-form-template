@@ -22,15 +22,19 @@ function FormEdit({
   setFormData,
   ...props
 }) {
-  const [currentPage, setCurrentPage] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages] = useState(schema.length);
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    if (currentPage === null) {
-      setCurrentPage(schema.findIndex((page) => !formData.formObject[page.name]));
-    }
-  }, [currentPage, formData.formObject, schema]);
+  // useEffect(() => {
+  //   if (currentPage === null) {
+  //     let page = schema.findIndex((page) => !formData.formObject[page.name]);
+  //     if (page === -1) {
+  //       page = schema.length;
+  //     }
+  //     setCurrentPage(page);
+  //   }
+  // }, [currentPage, formData.formObject, schema]);
 
   useEffect(() => {
     const pageSchema = schema[currentPage];
