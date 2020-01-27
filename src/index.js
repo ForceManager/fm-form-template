@@ -6,6 +6,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import MomentUtils from '@date-io/moment';
 import App from './App';
 import materialTheme from './configs/materialTheme';
+import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <HoiPoiProvider>
@@ -17,3 +18,5 @@ ReactDOM.render(
   </HoiPoiProvider>,
   document.getElementById('root'),
 );
+
+serviceWorker.register();
