@@ -21,7 +21,6 @@ const beforeFinish = ({
   setGeneralData,
   setFormSchema,
 }) => {
-  console.log('beforeFinish');
   let newStates = {
     formData: { ...formData },
     generalData: { ...generalData },

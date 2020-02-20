@@ -41,7 +41,7 @@ const generateForm = (selectedForm, formData, generalData) => {
                   bridge
                     .getValueList(field.attrs.table)
                     .then((res) => {
-                      field.attrs.options = res;
+                      field.attrs.options = [...field.attrs.options, ...res];
                     })
                     .catch((err) => {
                       reject(err);
@@ -54,7 +54,6 @@ const generateForm = (selectedForm, formData, generalData) => {
                 field.attrs.relatedEntity !== ''
               ) {
                 let id;
-                console.log('relatedEntity', field.attrs.relatedEntity);
                 if (!field.attrs.relatedEntity[2]) {
                   id = -1;
                 } else if (

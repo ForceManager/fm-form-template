@@ -1,79 +1,110 @@
 {
   "formSchema": {
-    "horarios": {
-      "title": "Horarios",
-      "name": "horarios",
+    "form1": {
+      "title": "Form 1",
+      "name": "form1",
       "id": 1,
       "schema": [
         {
-          "title": "Seleccionar el Usuario",
-          "name": "selecUser",
-          "className": "select-user",
+          "title": "Page 1",
+          "name": "page1",
+          "className": "page-one",
           "fields": [
             {
-              "label": "Usuario:",
-              "name": "user",
+              "label": "Contact",
+              "name": "conatct",
               "type": "select",
-              "validations": ["required"],
               "attrs": {
-                "relatedEntity": ["users"],
+                "relatedEntity": ["contacts"],
                 "options": []
+              }
+            },
+            {
+              "label": "Some text",
+              "name": "someText",
+              "type": "text"
+            },
+            {
+              "label": "Select some",
+              "name": "selectsome",
+              "type": "checkboxGroup",
+              "validations": ["min(1)"],
+              "attrs": {
+                "options": [
+                  {
+                    "label": "Option 1",
+                    "value": "optionOne"
+                  },
+                  {
+                    "label": "Option 2",
+                    "value": "optionTwo"
+                  },
+                  {
+                    "label": "Option 3",
+                    "value": "optionThree"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "title": "Time Allocation Table",
-          "name": "timeAllocationTable",
-          "className": "time-allocation-table",
+          "title": "Page 2",
+          "name": "page2",
+          "className": "page-two",
           "fields": [
             {
-              "name": "timeAllocationTable",
+              "name": "my-multiplier1",
               "type": "multiplier",
-              "max": 5,
+              "max": 3,
               "buttonLabel": "ADD",
-              "buttonClassName": "time-allocation-add-button",
+              "buttonClassName": "my-multiplier-one-add-button",
               "schema": [
                 {
                   "name": "timeAllocationTable",
                   "fields": [
                     {
-                      "label": "Dia",
-                      "name": "day",
-                      "type": "select",
-                      "validations": ["required"],
-                      "attrs": {
-                        "table": "Z_tbldiasSemana",
-                        "options": []
-                      }
+                      "label": "Hour 1",
+                      "name": "hour1",
+                      "type": "timePicker",
+                      "validations": ["required"]
                     },
                     {
-                      "label": "Hour: From",
-                      "name": "hourFromM",
+                      "label": "Hour 1",
+                      "name": "hour2",
                       "type": "timePicker",
-                      "validations": ["smallerThanHourToM"]
-                    },
-                    {
-                      "label": "Hour: To",
-                      "name": "hourToM",
-                      "type": "timePicker",
-                      "validations": ["biggerThanHourFromM"]
-                    },
-                    {
-                      "label": "Hour: From",
-                      "name": "hourFromT",
-                      "type": "timePicker",
-                      "validations": ["smallerThanHourToT"]
-                    },
-                    {
-                      "label": "Hour: To",
-                      "name": "hourToT",
-                      "type": "timePicker",
-                      "validations": ["biggerThanHourFromT"]
+                      "validations": []
                     }
                   ]
                 }
               ]
+            }
+          ]
+        },
+        {
+          "title": "Photos page",
+          "name": "photos",
+          "className": "photos",
+          "imagesView": true,
+          "readOnlyOnState": 2,
+          "fields": []
+        },
+        {
+          "title": "Signatures page",
+          "name": "signatures",
+          "className": "signatures",
+          "readOnlyOnState": 3,
+          "fields": [
+            {
+              "label": "Customer’s name",
+              "name": "customerName",
+              "type": "text"
+            },
+            {
+              "label": "Customer’s signature",
+              "name": "customerSignature",
+              "type": "signature",
+              "validations": ["required"]
             }
           ]
         }

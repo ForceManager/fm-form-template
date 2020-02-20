@@ -111,9 +111,9 @@ function FormEdit({
         .showLoading()
         .then(() => validate())
         .then(() => beforeChangePage(currentPage))
-        .then((newState) => {
-          if (newState) {
-            return bridge.saveData(newState.formData);
+        .then((newFormData) => {
+          if (newFormData) {
+            return bridge.saveData(newFormData);
           } else {
             return bridge.saveData(formData);
           }
@@ -162,7 +162,6 @@ function FormEdit({
     bridge
       .saveData(formData)
       .then(() => {
-        debugger;
         bridge.finishActivity();
       })
       .catch((err) => {
