@@ -13,15 +13,15 @@
     > div:nth-child(2) {
       > div > div {
         padding: 15px;
-        span[class*="postCloseComponent"] {
+        span[class*='postCloseComponent'] {
           display: none;
         }
       }
     }
   }
-  input{
+  input {
     font-size: 13px;
-    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     line-height: 20px;
     letter-spacing: 0.5px;
     color: #788590;
@@ -34,18 +34,18 @@
     display: flex;
   }
   .checkbox-label,
-  .signature-label{
+  .signature-label {
     width: 100%;
     font-size: 13px;
     font-weight: 500;
-    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     line-height: 1.54;
     letter-spacing: 0.5px;
     color: #3c4248;
     margin-bottom: 10px;
   }
   .field-multiplier {
-    div[class*="_item"] {
+    div[class*='_item'] {
       border-bottom: 1px solid #f0f3f5;
       padding-bottom: 20px;
       margin-bottom: 10px;
@@ -54,10 +54,10 @@
         padding-bottom: 0;
         margin-bottom: 0;
       }
-      span[class*="_Label-"] {
-        flex: .5;
+      span[class*='_Label-'] {
+        flex: 0.5;
       }
-      div[class*="formControl"] {
+      div[class*='formControl'] {
         flex: 1;
       }
       .MuiInput-underline:before {
@@ -67,4 +67,13 @@
   }
 }
 
-
+.platform-web {
+  .summary {
+    > div {
+      > div:first-child {
+        background: none;
+        padding: none;
+      }
+    }
+  }
+}

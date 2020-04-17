@@ -31,7 +31,7 @@
             font-size: 13px;
             font-weight: normal;
             line-height: 40px;
-            font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
             letter-spacing: 0.5px;
             text-transform: uppercase;
             max-width: initial;
@@ -50,16 +50,16 @@
             > div {
               width: 20px;
             }
-            div[class*="postComponent"] {
+            div[class*='postComponent'] {
               display: none !important;
             }
-            div[class*="error"] {
+            div[class*='error'] {
               width: 120px;
               margin-left: -100px;
             }
           }
           &.field-textarea {
-            > div::before  {
+            > div::before {
               border-bottom: 1px solid #dce3eb !important;
               textarea {
                 border-radius: 0;
@@ -69,20 +69,20 @@
           &.field-datePicker,
           &.field-timePicker,
           &.field-dateTimePicker {
-            &[class*="errored"] {
-              & div[class*="formControl"]::before {
+            &[class*='errored'] {
+              & div[class*='formControl']::before {
                 border-bottom: 1px solid #f04540;
                 transform: scaleX(1);
                 z-index: 1;
               }
             }
-            div[class*="postComponent"] {
+            div[class*='postComponent'] {
               position: absolute;
               right: 0;
             }
-            input{
+            input {
               font-size: 13px;
-              font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+              font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
               line-height: 20px;
               letter-spacing: 0.5px;
               color: #788590;
@@ -105,35 +105,32 @@
                 > div {
                   max-width: 459px;
                   margin: 0 auto;
-                  span[class*="_Label-"] {
-                    flex: .5;
-                  }
-                  div[class*="formControl"] {
-                    flex: 1;
+                  span[class*='_Label-'] {
+                    flex: 0.5;
                   }
                 }
               }
             }
-            input{
+            input {
               font-size: 13px;
-              font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+              font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
               line-height: 20px;
               letter-spacing: 0.5px;
               color: #788590;
             }
-            span[class*="_removeIcon"] {
+            span[class*='_removeIcon'] {
               position: absolute;
               right: 15px;
             }
             .field-datePicker,
             .field-timePicker,
             .field-dateTimePicker {
-              div[class*="_postComponent-"] {
+              div[class*='_postComponent-'] {
                 position: absolute;
                 right: 0;
               }
-              &[class*="errored"] {
-                & div[class*="formControl"]::before {
+              &[class*='errored'] {
+                & div[class*='formControl']::before {
                   border-bottom: 1px solid #f04540;
                   transform: scaleX(1);
                   z-index: 1;
@@ -141,7 +138,10 @@
               }
             }
           }
-          span[class*="postCloseComponent"] {
+          div[class*='formControl'] {
+            flex: 1;
+          }
+          span[class*='postCloseComponent'] {
             width: 10px;
             height: 10px;
             > span {
@@ -149,22 +149,22 @@
               height: 10px;
             }
           }
-          &[class*="isReadOnly"],
-          .form-page > div[class*="isReadOnly"] {
-            span[class*="postCloseComponent"] {
+          &[class*='isReadOnly'],
+          .form-page > div[class*='isReadOnly'] {
+            span[class*='postCloseComponent'] {
               width: 8px;
               height: 8px;
               > span {
                 width: 8px;
                 height: 8px;
                 margin-right: 5px;
-                div[class*="dropdown-indicator"] {
+                div[class*='dropdown-indicator'] {
                   width: 8px;
                 }
               }
             }
           }
-          .form-page > div[class*="isReadOnly"] {
+          .form-page > div[class*='isReadOnly'] {
             .Mui-disabled {
               &:before {
                 right: -15px;
@@ -198,7 +198,7 @@
         }
       }
     }
-    .signature-content-container{
+    .signature-content-container {
       display: flex;
       flex-direction: column;
       overflow: scroll;
@@ -219,7 +219,7 @@
       .form-signature {
         padding: 0 15px;
         .form-page.signatures {
-          > div[class*="header"] {
+          > div[class*='header'] {
             display: none;
           }
         }
@@ -249,33 +249,63 @@
       margin-left: 20px;
       cursor: pointer;
       svg {
-        transform: rotate(90deg)
+        transform: rotate(90deg);
       }
     }
-    .forms-pager-number{
+    .forms-pager-number {
       color: #7a8792;
     }
-    .forms-pager-finish{
+    .forms-pager-finish {
       font-weight: bold;
       color: #7a8792;
       cursor: pointer;
     }
-    .forms-pager-next{
+    .forms-pager-next {
       margin-right: 20px;
       cursor: pointer;
       svg {
-        transform: rotate(-90deg)
+        transform: rotate(-90deg);
+      }
+    }
+  }
+}
+
+.platform-web {
+  .forms-pager {
+    .form-container {
+      height: calc(100vh - 50px);
+      > div {
+        > .form-page {
+          > div {
+            padding: initial;
+            &:first-child {
+              background: none;
+            }
+          }
+        }
+      }
+    }
+    .forms-pager-bar {
+      border-top: 1px solid #e1e4e7;
+      background: white;
+      padding: 20px 0 0;
+      height: 50px;
+      .forms-pager-prev,
+      .forms-pager-next {
+        span {
+          margin: 6px 0;
+        }
       }
     }
   }
 }
 
 @media only screen and (max-width: 600px) {
-  .forms-pager .form-container>div>.form-page>div.field-multiplier{
-    >div>div {
+  .forms-pager .form-container > div > .form-page > div.field-multiplier {
+    > div > div {
       padding-right: 35px;
     }
-    span[class*=_removeIcon] {
+    span[class*='_removeIcon'] {
       display: flex !important;
       top: -5px;
       right: 0;
@@ -307,4 +337,3 @@
   //   }
   // }
 }
-

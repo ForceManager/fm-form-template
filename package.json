@@ -4,22 +4,22 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "@date-io/moment": "^1.3.6",
-    "@material-ui/core": "^4.0.2",
-    "@material-ui/pickers": "^3.1.0",
+    "@date-io/moment": "^2.6.0",
+    "@material-ui/core": "^4.9.10",
+    "@material-ui/pickers": "^3.2.10",
     "fm-bridge": "^0.0.1-beta.16",
-    "hoi-poi-ui": "^0.0.1-alpha.123",
+    "hoi-poi-ui": "^0.0.1",
     "moment": "^2.24.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   },
   "devDependencies": {
-    "concurrently": "^5.0.0",
-    "cross-env": "^6.0.3",
-    "eslint-config-prettier": "^6.5.0",
-    "node-sass": "^4.12.0",
-    "prettier": "^1.18.2",
-    "react-scripts": "3.2.0"
+    "concurrently": "^5.1.0",
+    "cross-env": "^7.0.2",
+    "eslint-config-prettier": "^6.10.1",
+    "node-sass": "^4.13.1",
+    "prettier": "^2.0.4",
+    "react-scripts": "3.4.1"
   },
   "scripts": {
     "start": "cross-env BROWSER=none concurrently --kill-others  \"npm run react-start\" \"npm run fm-start\"",
