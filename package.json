@@ -8,7 +8,7 @@
     "@material-ui/core": "^4.9.10",
     "@material-ui/pickers": "^3.2.10",
     "fm-bridge": "^0.0.1-beta.16",
-    "hoi-poi-ui": "^0.0.1",
+    "hoi-poi-ui": "^0.0.1-alpha.129",
     "moment": "^2.24.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
