@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Toast, toast } from 'hoi-poi-ui';
 import { bridge } from 'fm-bridge';
 import FormSelector from './components/FormSelector';
 import FormEdit from './components/FormEdit';
 import FormSummary from './components/FormSummary';
+import FormError from './components/FormError';
 import Signature from './components/Signature';
 import DatePicker from './components/DatePicker';
 import TimePicker from './components/TimePicker';
@@ -13,6 +14,7 @@ import Checkbox from './components/Checkbox';
 import utils from './utils';
 import config from './configs/config.json';
 import actions from './configs/actions';
+import { version } from '../package.json';
 
 import './app.scss';
 
@@ -38,33 +40,40 @@ function App() {
   const [formData, setFormData] = useState(null);
   const [formSchema, setFormSchema] = useState(null);
   const [imagesView, setImagesView] = useState(false);
+  const [error, setError] = useState(false);
+  const [summaryConfig, setSummaryConfig] = useState(
+    (selectedForm &&
+      config.formSchema[selectedForm.value] &&
+      config.formSchema[selectedForm.value].summary) ||
+      {},
+  );
 
   const setStates = useCallback(
     (data) => {
+      if (data && data.formSchema) {
+        setFormSchema([...data.formSchema]);
+      }
       if (data && data.formData) {
         setFormData({ ...formData, ...data.formData });
       }
       if (data && data.generalData) {
         setGeneralData({ ...generalData, ...data.generalData });
       }
-      if (data && data.formSchema) {
-        setFormSchema({ ...formSchema, ...data.formSchema });
-      }
     },
-    [formData, generalData, formSchema, setFormData, setGeneralData, setFormSchema],
+    [formData, generalData, setFormData, setGeneralData, setFormSchema],
   );
 
   useEffect(() => {
-    let states = {};
+    let statesList = {};
     bridge
       .showLoading()
       .then(() => bridge.getFormStates())
       .then((res) => {
-        states = res;
+        statesList = res;
         return bridge.getFormInitData();
       })
       .then((res) => {
-        const initData = utils.formatInitData(res, states);
+        const initData = utils.formatInitData(res, statesList);
         setFormData(initData.formData);
         setGeneralData(initData.generalData);
         bridge.hideLoading();
@@ -72,8 +81,18 @@ function App() {
       .catch((err) => {
         console.warn(err);
         bridge.hideLoading();
+        setError(true);
       });
   }, []);
+
+  useEffect(() => {
+    setSummaryConfig(
+      (selectedForm &&
+        config.formSchema[selectedForm.value] &&
+        config.formSchema[selectedForm.value].summary) ||
+        {},
+    );
+  }, [selectedForm]);
 
   useEffect(() => {
     if (selectedForm || !generalData) return;
@@ -90,26 +109,28 @@ function App() {
 
   useEffect(() => {
     if (!selectedForm || !formData || !generalData || formSchema) return;
+    let data = {};
     bridge
       .showLoading()
       .then(() => utils.generateForm(selectedForm, formData, generalData))
       .then((res) => {
-        setFormSchema(res.formSchema);
-        if (res.formData) {
-          setFormData(res.formData);
-        }
+        data = {
+          formData: res.formData,
+          generalData: res.generalData,
+          formSchema: res.formSchema,
+        };
         if (!actions || !actions.onFormReady) {
           return Promise.resolve({});
         }
-        const data = {
-          formData: res.formData,
-          generalData,
-          formSchema: res.formSchema,
-        };
         return actions.onFormReady(data);
       })
       .then((res) => {
-        setStates(res);
+        const newStates = {
+          formData: res && res.formData ? res.formData : data.formData,
+          generalData: res && res.generalData ? res.generalData : data.generalData,
+          formSchema: res && res.formSchema ? res.formSchema : data.formSchema,
+        };
+        setStates(newStates);
         bridge.hideLoading();
       })
       .catch((err) => {
@@ -118,6 +139,7 @@ function App() {
         if (err.toast) {
           toast(err.toast);
         }
+        // setError(true);
       });
   }, [selectedForm, generalData, formSchema, formData, setStates]);
 
@@ -182,17 +204,12 @@ function App() {
         };
         actions.onChange[selectedForm.value][sectionName][field.name](data)
           .then((res) => {
-            if (res && res.formData) {
-              setFormData({ ...newFormData, ...res.formData });
-            } else {
-              setFormData({ ...newFormData });
-            }
-            if (res && res.generalData) {
-              setGeneralData({ ...generalData, ...res.generalData });
-            }
-            if (res && res.formSchema) {
-              setFormSchema({ ...formSchema, ...res.formSchema });
-            }
+            const newStates = {
+              formData: res.formData ? { ...newFormData, ...res.formData } : { ...newFormData },
+              generalData: res.generalData ? res.generalData : null,
+              formSchema: res.formSchema ? res.formSchema : null,
+            };
+            setStates(newStates);
           })
           .catch((err) => {
             console.warn(err);
@@ -202,11 +219,11 @@ function App() {
         setFormData(newFormData);
       }
     },
-    [formData, formSchema, generalData, selectedForm],
+    [formData, formSchema, generalData, selectedForm, setStates],
   );
 
   const handleBeforeChangePage = useCallback(
-    (currentPage) => {
+    (currentPage, next) => {
       return utils.beforeChangePage({
         selectedForm,
         formSchema,
@@ -216,6 +233,7 @@ function App() {
         setFormData,
         setGeneralData,
         setFormSchema,
+        next,
       });
     },
     [formData, formSchema, generalData, selectedForm],
@@ -237,22 +255,36 @@ function App() {
     [formData, formSchema, generalData, selectedForm],
   );
 
-  const showSelector = generalData && generalData.mode === 'creation' && !selectedForm;
-  const showEdit =
-    formSchema &&
-    generalData &&
-    ((generalData.mode === 'creation' && selectedForm) ||
-      (generalData.mode === 'edition' && formData && !formData.endState));
-  const showSummary = !!(
-    formSchema &&
-    generalData &&
-    generalData.mode === 'edition' &&
-    formData &&
-    formData.endState
-  );
+  const showSelector = useMemo(() => {
+    return generalData && generalData.mode === 'creation' && !selectedForm;
+  }, [generalData, selectedForm]);
+
+  const showEdit = useMemo(() => {
+    return (
+      formSchema &&
+      generalData &&
+      ((generalData.mode === 'creation' && selectedForm) ||
+        (generalData.mode === 'edition' && formData && !formData.endState))
+    );
+  }, [formSchema, generalData, selectedForm, formData]);
+
+  const showSummary = useMemo(() => {
+    return !!(
+      formSchema &&
+      generalData &&
+      generalData.mode === 'edition' &&
+      formData &&
+      formData.endState
+    );
+  }, [formSchema, generalData, formData]);
+
+  const platformClass = useMemo(() => {
+    return generalData && generalData.platform ? `platform-${generalData.platform}` : '';
+  }, [generalData]);
 
   return (
-    <div className="form-container">
+    <div className={`form-container ${platformClass}`}>
+      {error && <FormError />}
       {showSelector && (
         <FormSelector
           schema={config.formSchema}
@@ -273,12 +305,19 @@ function App() {
           setFormData={setFormData}
           beforeChangePage={handleBeforeChangePage}
           beforeFinish={handleBeforeFinish}
+          summaryConfig={summaryConfig}
         />
       )}
       {showSummary && (
-        <FormSummary schema={formSchema} values={formData.formObject} customFields={customFields} />
+        <FormSummary
+          schema={formSchema}
+          values={formData.formObject}
+          customFields={customFields}
+          summaryConfig={summaryConfig}
+        />
       )}
       <Toast />
+      <div className={`form-version ${error || showSelector ? 'show' : ''}`}>{version}</div>
     </div>
   );
 }

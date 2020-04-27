@@ -7,7 +7,9 @@ const setListObject = ({ selectedForm, formData, generalData, currentPage, listO
           newListObject[key] = selectedForm.label;
           break;
         case 'state':
-          newListObject[key] = generalData.states[formData.idState].name;
+          newListObject[key] = generalData.states.find(
+            (state) => state.id === formData.idState,
+          ).name;
           break;
         case 'creationDate':
           newListObject[key] = formData.formObject.fechaCreacion;

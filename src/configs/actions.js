@@ -4,6 +4,7 @@ const actions = {
   beforeChangePage,
   beforeFinish,
   formatEntityList: {},
+  formtValuelist: {},
 };
 
 function onFormReady(data) {

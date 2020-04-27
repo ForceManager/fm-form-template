@@ -1,15 +1,17 @@
-import React, { useEffect, useCallback, useMemo } from 'react';
+import React, { useEffect, useCallback, useMemo, memo } from 'react';
+import PropTypes from 'prop-types';
 import { Multiplier, Section, Input, CheckboxGroup } from 'hoi-poi-ui';
+import { bridge } from 'fm-bridge';
 import Signature from '../../components/Signature';
 import Checkbox from '../../components/Checkbox';
-import { bridge } from 'fm-bridge';
 
 import './style.scss';
 
-function FormSummary({ schema, values, customFields }) {
+function FormSummary({ schema, values, customFields, summaryConfig }) {
   useEffect(() => {
+    if (summaryConfig.disablePhotos) return;
     bridge.showCameraImages();
-  }, []);
+  }, [summaryConfig.disablePhotos]);
 
   const renderSectionContent = useCallback(
     (section, index) => {
@@ -20,7 +22,12 @@ function FormSummary({ schema, values, customFields }) {
       return Object.keys(sectionValues).map((key) => {
         let field = sectionFields.find((el) => el.name === key);
         if (!field) return null;
-        let fieldValue = field.type === 'select' ? sectionValues[key].label : sectionValues[key];
+        let fieldValue =
+          field.type === 'select'
+            ? sectionValues[key]
+              ? sectionValues[key].label
+              : ''
+            : sectionValues[key];
         let Field;
         let options;
         let multiplierSchema;
@@ -77,4 +84,15 @@ function FormSummary({ schema, values, customFields }) {
   return <div className="summary">{renderSections}</div>;
 }
 
-export default FormSummary;
+FormSummary.defaultProps = {
+  summaryConfig: { disablePhotos: false },
+};
+
+FormSummary.propTypes = {
+  schema: PropTypes.object,
+  values: PropTypes.object,
+  customFields: PropTypes.object,
+  summaryConfig: PropTypes.object,
+};
+
+export default memo(FormSummary);

@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
+import PropTypes from 'prop-types';
 import { Form, Icon, Toast, toast } from 'hoi-poi-ui';
 import { bridge } from 'fm-bridge';
 import utils from '../../utils';
 import FormSummary from '../FormSummary';
-// import config from '../../configs/config.json';
 
 import './style.scss';
 
@@ -20,25 +20,17 @@ function FormEdit({
   beforeChangePage,
   beforeFinish,
   setFormData,
+  summaryConfig,
   ...props
 }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages] = useState(schema.length);
   const [errors, setErrors] = useState({});
-
-  // useEffect(() => {
-  //   if (currentPage === null) {
-  //     let page = schema.findIndex((page) => !formData.formObject[page.name]);
-  //     if (page === -1) {
-  //       page = schema.length;
-  //     }
-  //     setCurrentPage(page);
-  //   }
-  // }, [currentPage, formData.formObject, schema]);
+  const [hasSummary] = useState(!summaryConfig.disable);
 
   useEffect(() => {
     const pageSchema = schema[currentPage];
-    if ((pageSchema && pageSchema.imagesView && !imagesView) || currentPage === totalPages) {
+    if (pageSchema && pageSchema.imagesView && !imagesView) {
       bridge
         .showCameraImages()
         .then(() => {
@@ -83,12 +75,14 @@ function FormEdit({
       if (currentPage > 0) {
         bridge
           .showLoading()
-          .then(() => bridge.saveData(formData))
+          .then(() => beforeChangePage(currentPage, 0))
+          .then(bridge.saveData)
           .then(() => {
             setCurrentPage(currentPage - 1);
             bridge.hideLoading();
           })
           .catch((err) => {
+            bridge.hideLoading();
             if (err.type === 'invalid') {
             } else {
               console.warn(err);
@@ -98,11 +92,10 @@ function FormEdit({
                 title: 'Error',
               });
             }
-            bridge.hideLoading();
           });
       }
     },
-    [currentPage, formData],
+    [beforeChangePage, currentPage],
   );
 
   const handleOnClickNext = useCallback(
@@ -110,19 +103,14 @@ function FormEdit({
       bridge
         .showLoading()
         .then(() => validate())
-        .then(() => beforeChangePage(currentPage))
-        .then((newFormData) => {
-          if (newFormData) {
-            return bridge.saveData(newFormData);
-          } else {
-            return bridge.saveData(formData);
-          }
-        })
+        .then(() => beforeChangePage(currentPage, 1))
+        .then(bridge.saveData)
         .then(() => {
           setCurrentPage(currentPage + 1);
           bridge.hideLoading();
         })
         .catch((err) => {
+          bridge.hideLoading();
           if (err.type === 'invalid') {
           } else {
             console.warn(err);
@@ -132,11 +120,36 @@ function FormEdit({
               title: 'Error',
             });
           }
-          bridge.hideLoading();
         });
     },
-    [beforeChangePage, currentPage, formData, validate],
+    [beforeChangePage, currentPage, validate],
   );
+
+  const handleOnClickFinish = useCallback(() => {
+    const noSummaryValidate = () => {
+      if (hasSummary) return Promise.resolve();
+      return validate();
+    };
+    bridge
+      .showLoading()
+      .then(noSummaryValidate)
+      .then(beforeFinish)
+      .then(bridge.saveData)
+      .then(bridge.hideLoading)
+      .then(bridge.finishActivity)
+      .catch((err) => {
+        bridge.hideLoading();
+        if (err.type === 'invalid') {
+        } else {
+          console.warn(err);
+          toast({
+            type: 'error',
+            text: 'The form could not be saved',
+            title: 'Error',
+          });
+        }
+      });
+  }, [beforeFinish, validate, hasSummary]);
 
   const handleOnFormChange = useCallback(
     (values, field) => {
@@ -156,24 +169,6 @@ function FormEdit({
     // onClose({ ...props });
   }, []);
 
-  const handleOnClickFinish = useCallback(() => {
-    // beforeFinish()
-    //   .then(() =>
-    bridge
-      .saveData(formData)
-      .then(() => {
-        bridge.finishActivity();
-      })
-      .catch((err) => {
-        console.warn(err);
-        toast({
-          type: 'error',
-          text: 'The form could not be saved',
-          title: 'Error',
-        });
-      });
-  }, [formData]);
-
   const renderPrev = useMemo(() => {
     if (currentPage === 0) return <div className="forms-pager-prev" />;
     return (
@@ -184,28 +179,40 @@ function FormEdit({
   }, [currentPage, handleOnClickPrev]);
 
   const renderNext = useMemo(() => {
-    if (currentPage === totalPages) return <div className="forms-pager-next" />;
+    if (currentPage === totalPages || (!hasSummary && currentPage === totalPages - 1))
+      return <div className="forms-pager-next" />;
     return (
       <div className="forms-pager-next" onClick={handleOnClickNext}>
         <Icon name="chevron" />
       </div>
     );
-  }, [currentPage, handleOnClickNext, totalPages]);
+  }, [currentPage, handleOnClickNext, totalPages, hasSummary]);
 
   const renderPageNumber = useMemo(() => {
-    if (currentPage === totalPages) {
+    if (currentPage === totalPages || (!hasSummary && currentPage === totalPages - 1)) {
       return (
         <div className="forms-pager-finish" onClick={handleOnClickFinish}>
-          FINISH
+          SALVA
         </div>
       );
     }
     return <div className="forms-pager-number">{`${currentPage + 1} / ${totalPages}`}</div>;
-  }, [currentPage, handleOnClickFinish, totalPages]);
+  }, [currentPage, handleOnClickFinish, totalPages, hasSummary]);
 
   const renderSummary = useMemo(() => {
     return <FormSummary schema={schema} values={formData.formObject} customFields={customFields} />;
   }, [customFields, formData.formObject, schema]);
+
+  const pageSchema = useMemo(
+    () =>
+      schema[currentPage]
+        ? {
+            ...schema[currentPage],
+            fields: schema[currentPage].fields.filter((field) => field.isHidden !== true),
+          }
+        : null,
+    [schema, currentPage],
+  );
 
   const renderForm = useMemo(() => {
     // TODO set isReadOnly segun config
@@ -214,7 +221,7 @@ function FormEdit({
 
     return (
       <Form
-        schema={[schema[currentPage]]}
+        schema={[pageSchema]}
         currentPage={currentPage}
         onChange={handleOnFormChange}
         onFocus={handleOnFieldFocus}
@@ -235,14 +242,15 @@ function FormEdit({
     handleOnFieldFocus,
     handleOnFormChange,
     schema,
+    pageSchema,
   ]);
 
   const renderContent = useMemo(() => {
-    if (currentPage === totalPages) {
+    if (hasSummary && currentPage === totalPages) {
       return renderSummary;
     }
     return renderForm;
-  }, [currentPage, renderForm, renderSummary, totalPages]);
+  }, [currentPage, renderForm, renderSummary, totalPages, hasSummary]);
 
   return (
     <div className="forms-pager">
@@ -257,4 +265,24 @@ function FormEdit({
   );
 }
 
-export default FormEdit;
+FormEdit.defaultProps = {
+  summaryConfig: { disable: false },
+};
+
+FormEdit.propTypes = {
+  schema: PropTypes.object,
+  onChange: PropTypes.func,
+  onFocus: PropTypes.func,
+  generalData: PropTypes.object,
+  formData: PropTypes.object,
+  customFields: PropTypes.object,
+  setImagesView: PropTypes.func,
+  imagesView: PropTypes.bool,
+  overrrides: PropTypes.object,
+  beforeChangePage: PropTypes.func,
+  beforeFinish: PropTypes.func,
+  setFormData: PropTypes.func,
+  summaryConfig: PropTypes.object,
+};
+
+export default memo(FormEdit);

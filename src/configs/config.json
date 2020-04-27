@@ -4,6 +4,17 @@
       "title": "Form 1",
       "name": "form1",
       "id": 1,
+      "summary": {
+        "disable": true,
+        "disablePhotos": true
+      },
+      "states": [
+        {
+          "id": 1,
+          "setOnPage": 0,
+          "endState": 0
+        }
+      ],
       "schema": [
         {
           "title": "Page 1",

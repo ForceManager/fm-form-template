@@ -1,12 +1,11 @@
 import moment from 'moment';
 import { bridge } from 'fm-bridge';
-// import config from '../configs/config.json';
 import CONSTANTS from '../constants';
 
-const formatInitData = (data, states) => {
+const formatInitData = (data, statesList) => {
   let initData;
   if (data.mode === 'creation') {
-    bridge.setTitle('Form creation');
+    bridge.setTitle('Aggiunta prodotto');
     initData = {
       formData: {
         formObject: {
@@ -14,22 +13,27 @@ const formatInitData = (data, states) => {
           userCreacion: data.user.id,
         },
         idFormType: data.form.idFormType,
-        idState: states[0].id,
-        endState: 0,
+        idState: null,
+        endState: null,
         selectedForm: null,
       },
       generalData: {
         account: data.account,
         user: data.user,
         mode: data.mode,
+        platform: data.platform,
         isReadonly: data.isReadonly || false,
         idPreSelectedFormType: data.idPreSelectedFormType,
         imei: data.imei,
-        states,
+        statesList,
       },
     };
   } else if (data.mode === 'edition') {
-    bridge.setTitle('Form edition');
+    if (data.form.endState) {
+      bridge.setTitle('Form summary');
+    } else {
+      bridge.setTitle('Modifica prodotto');
+    }
     initData = {
       formData: {
         ...data.form,
@@ -38,8 +42,9 @@ const formatInitData = (data, states) => {
         account: data.account,
         user: data.user,
         mode: data.mode,
+        platform: data.platform,
         isReadonly: data.isReadonly || false,
-        states,
+        statesList,
       },
     };
   }

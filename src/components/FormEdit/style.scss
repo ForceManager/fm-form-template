@@ -36,6 +36,9 @@
             text-transform: uppercase;
             max-width: initial;
           }
+          &:nth-child(2) {
+            margin-top: 10px;
+          }
           // &.field-select{
           //   &[class*="isReadOnly"] {
           //     .hoi-poi-select__indicators {
@@ -277,9 +280,12 @@
       > div {
         > .form-page {
           > div {
-            padding: initial;
             &:first-child {
+              padding: initial;
               background: none;
+            }
+            &:nth-child(2) {
+              margin-top: 20px;
             }
           }
         }
@@ -295,6 +301,24 @@
         span {
           margin: 6px 0;
         }
+      }
+      .forms-pager-finish {
+        font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        letter-spacing: 0.5px;
+        font-size: 11px;
+        font-weight: 400;
+        text-transform: uppercase;
+        display: inline-block;
+        padding: 9px 20px 8px;
+        cursor: pointer;
+        border-radius: 20px;
+        outline: none;
+        line-height: 13px;
+        text-align: center;
+        box-sizing: border-box;
+        background-color: #ff8c00;
+        min-width: 100px;
+        color: #ffffff;
       }
     }
   }
