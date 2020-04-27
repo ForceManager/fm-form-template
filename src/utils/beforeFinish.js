@@ -4,7 +4,7 @@ import setListObject from '../configs/setListObject';
 import setDetailObject from '../configs/setDetailObject';
 
 const actionsBeforeFinish = (data) => {
-  if (!actions.beforeChangePage) {
+  if (!actions.beforeFinish) {
     return actions.beforeFinish(data);
   } else {
     return Promise.resolve();
@@ -21,56 +21,59 @@ const beforeFinish = ({
   setGeneralData,
   setFormSchema,
 }) => {
-  let newStates = {
-    formData: { ...formData },
-    generalData: { ...generalData },
-    formSchema: { ...formSchema },
-    selectedForm,
-    currentPage,
-  };
-  return actionsBeforeFinish(newStates)
-    .then((res) => {
-      if (res) {
-        newStates = {
-          ...newStates,
-          formData: {
-            ...newStates.formData,
-            ...res.formData,
-          },
-          generalData: {
-            ...newStates.generalData,
-            ...res.generalData,
-          },
-          formSchema: {
-            ...newStates.formSchema,
-            ...res.formSchema,
-          },
-        };
-      }
+  return new Promise((resolve, reject) => {
+    const finalState = generalData.states.find((state) => state.setStateOnPage === -1);
+    let newStates = {
+      formData: {
+        ...formData,
+        idState: finalState ? finalState.id : formData.idState,
+        endState: finalState && finalState.endState ? 1 : 0,
+      },
+      generalData: { ...generalData },
+      formSchema: { ...formSchema },
+      selectedForm,
+      currentPage,
+    };
+    actionsBeforeFinish(newStates)
+      .then((res) => {
+        if (res) {
+          newStates = {
+            ...newStates,
+            formData: {
+              ...newStates.formData,
+              ...res.formData,
+            },
+            generalData: {
+              ...newStates.generalData,
+              ...res.generalData,
+            },
+            formSchema: {
+              ...newStates.formSchema,
+              ...res.formSchema,
+            },
+          };
+        }
 
-      let listObject = JSON.parse(JSON.stringify(config.listObject));
-      let detailObject = JSON.parse(JSON.stringify(config.detailObject));
-      return Promise.all([
-        setListObject({ ...newStates, listObject }),
-        setDetailObject({ ...newStates, detailObject }),
-      ]);
-    })
-    .then(([newListObject, newDetailObject]) => {
-      setFormData({
-        ...newStates.formData,
-        listObject: {
-          ...newStates.formData.listObject,
-          ...newListObject,
-        },
-        detailObject: {
-          ...newStates.formData.detailObject,
-          ...newDetailObject,
-        },
-      });
-      setGeneralData({ ...newStates.generalData });
-      setFormSchema({ ...newStates.formSchema });
-    })
-    .catch((err) => console.warn(err));
+        let listObject = JSON.parse(JSON.stringify(config.listObject));
+        let detailObject = JSON.parse(JSON.stringify(config.detailObject));
+        return Promise.all([
+          setListObject({ ...newStates, listObject }),
+          setDetailObject({ ...newStates, detailObject }),
+        ]);
+      })
+      .then(([newListObject, newDetailObject]) => {
+        const newFormData = {
+          ...newStates.formData,
+          listObject: newListObject,
+          detailObject: newDetailObject,
+        };
+        setFormData(newFormData);
+        setGeneralData({ ...newStates.generalData });
+        setFormSchema({ ...newStates.formSchema });
+        resolve(newFormData);
+      })
+      .catch(reject);
+  });
 };
 
 export default beforeFinish;
