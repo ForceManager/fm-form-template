@@ -192,12 +192,12 @@ function FormEdit({
     if (currentPage === totalPages || (!hasSummary && currentPage === totalPages - 1)) {
       return (
         <div className="forms-pager-finish" onClick={handleOnClickFinish}>
-          SALVA
+          {generalData.finishButtonLabel || 'FINISH'}
         </div>
       );
     }
     return <div className="forms-pager-number">{`${currentPage + 1} / ${totalPages}`}</div>;
-  }, [currentPage, handleOnClickFinish, totalPages, hasSummary]);
+  }, [currentPage, handleOnClickFinish, totalPages, hasSummary, generalData.finishButtonLabel]);
 
   const renderSummary = useMemo(() => {
     return <FormSummary schema={schema} values={formData.formObject} customFields={customFields} />;

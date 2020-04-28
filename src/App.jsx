@@ -73,7 +73,7 @@ function App() {
         return bridge.getFormInitData();
       })
       .then((res) => {
-        const initData = utils.formatInitData(res, statesList);
+        const initData = utils.formatInitData(res, statesList, config.literals);
         setFormData(initData.formData);
         setGeneralData(initData.generalData);
         bridge.hideLoading();

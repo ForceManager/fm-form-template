@@ -2,10 +2,10 @@ import moment from 'moment';
 import { bridge } from 'fm-bridge';
 import CONSTANTS from '../constants';
 
-const formatInitData = (data, statesList) => {
+const formatInitData = (data, statesList, literals) => {
   let initData;
   if (data.mode === 'creation') {
-    bridge.setTitle('Aggiunta prodotto');
+    bridge.setTitle(literals.formCeation || 'Form creation');
     initData = {
       formData: {
         formObject: {
@@ -30,9 +30,9 @@ const formatInitData = (data, statesList) => {
     };
   } else if (data.mode === 'edition') {
     if (data.form.endState) {
-      bridge.setTitle('Form summary');
+      bridge.setTitle(literals.formSummary || 'Form summary');
     } else {
-      bridge.setTitle('Modifica prodotto');
+      bridge.setTitle(literals.formEdition || 'Form edition');
     }
     initData = {
       formData: {

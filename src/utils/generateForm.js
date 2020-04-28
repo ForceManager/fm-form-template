@@ -13,13 +13,16 @@ const generateForm = (selectedForm, formData, generalData) => {
     let newFormSchema = JSON.parse(JSON.stringify(config.formSchema[selectedForm.value].schema));
     let newListObject = JSON.parse(JSON.stringify(config.listObject));
     let newDetailObject = JSON.parse(JSON.stringify(config.detailObject));
+    let finishButtonLabel = JSON.parse(
+      JSON.stringify(config.formSchema[selectedForm.value].finishButtonLabel),
+    );
     let states = JSON.parse(JSON.stringify(config.formSchema[selectedForm.value].states)).map(
       (state) => ({
         ...state,
         name: generalData.statesList.find((el) => state.id === el.id).name,
       }),
     );
-    const newGeneralData = { ...generalData, states };
+    const newGeneralData = { ...generalData, states, finishButtonLabel };
 
     const mapSections = (sections, currentPath) => {
       sections.forEach((section, sectionIndex) => {

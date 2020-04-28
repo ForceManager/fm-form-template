@@ -8,11 +8,22 @@
         "disable": true,
         "disablePhotos": true
       },
+      "finishButtonLabel": "FINISH",
       "states": [
         {
           "id": 1,
           "setOnPage": 0,
           "endState": 0
+        },
+        {
+          "id": 2,
+          "setOnPage": 2,
+          "endState": 0
+        },
+        {
+          "id": 3,
+          "setOnPage": -1,
+          "endState": 1
         }
       ],
       "schema": [
@@ -26,7 +37,9 @@
               "name": "conatct",
               "type": "select",
               "attrs": {
-                "relatedEntity": ["contacts"],
+                "relatedEntity": [
+                  "contacts"
+                ],
                 "options": []
               }
             },
@@ -39,7 +52,9 @@
               "label": "Select some",
               "name": "selectsome",
               "type": "checkboxGroup",
-              "validations": ["min(1)"],
+              "validations": [
+                "min(1)"
+              ],
               "attrs": {
                 "options": [
                   {
@@ -78,7 +93,9 @@
                       "label": "Hour 1",
                       "name": "hour1",
                       "type": "timePicker",
-                      "validations": ["required"]
+                      "validations": [
+                        "required"
+                      ]
                     },
                     {
                       "label": "Hour 1",
@@ -115,12 +132,19 @@
               "label": "Customer’s signature",
               "name": "customerSignature",
               "type": "signature",
-              "validations": ["required"]
+              "validations": [
+                "required"
+              ]
             }
           ]
         }
       ]
     }
+  },
+  "literals": {
+    "formCeation": "Form creation",
+    "formEdition": "Form edition",
+    "formSummary": "Form summary"
   },
   "listObject": {
     "pos11": "selectedForm",
