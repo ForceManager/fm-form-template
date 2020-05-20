@@ -145,25 +145,25 @@ function App() {
 
   const handleOnFieldFocus = useCallback(
     (values, field, currentPage) => {
-      const sectionName = formSchema[currentPage].name;
-      if (field.subType !== 'date') return;
-      bridge
-        .openDatePicker()
-        .then((res) => {
-          setFormData({
-            ...formData,
-            formObject: {
-              ...formData.formObject,
-              [sectionName]: {
-                ...formData.formObject[sectionName],
-                [field.name]: res,
-              },
-            },
-          });
-        })
-        .catch((err) => {
-          console.warn(err);
-        });
+      // const sectionName = formSchema[currentPage].name;
+      // if (field.subType !== 'date') return;
+      // bridge
+      //   .openDatePicker()
+      //   .then((res) => {
+      //     setFormData({
+      //       ...formData,
+      //       formObject: {
+      //         ...formData.formObject,
+      //         [sectionName]: {
+      //           ...formData.formObject[sectionName],
+      //           [field.name]: res,
+      //         },
+      //       },
+      //     });
+      //   })
+      //   .catch((err) => {
+      //     console.warn(err);
+      //   });
     },
     [formData, formSchema],
   );

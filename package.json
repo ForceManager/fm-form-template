@@ -1,14 +1,14 @@
 {
   "name": "form-template",
-  "version": "0.0.1-beta.6",
-  "private": true,
+  "version": "0.0.1",
+  "private": false,
   "license": "MIT",
   "dependencies": {
     "@date-io/moment": "^1.3.6",
     "@material-ui/core": "^4.9.11",
     "@material-ui/pickers": "^3.2.10",
-    "fm-bridge": "^0.0.1-beta.18",
-    "hoi-poi-ui": "^0.0.1-alpha.129",
+    "fm-bridge": "^0.0.1-beta.22",
+    "hoi-poi-ui": "^0.0.2",
     "moment": "^2.24.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"

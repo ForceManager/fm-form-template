@@ -18,7 +18,7 @@
         position: initial;
         margin: 40px 0;
         > div {
-          padding: 10px 15px;
+          padding: 10px 15px 20px;
           max-width: 459px;
           margin: 0 auto;
           &:first-child {
@@ -141,6 +141,12 @@
               }
             }
           }
+          div[class*='__Input__error'] {
+            height: 30px;
+            bottom: -32px;
+            position: absolute;
+            line-height: 15px;
+          }
           div[class*='formControl'] {
             flex: 1;
           }
@@ -244,12 +250,12 @@
     width: 100vw;
     display: flex;
     box-sizing: border-box;
-    padding: 8px 0;
     justify-content: space-between;
     border-top: 1px solid #f0f3f5;
     background-color: #f0f3f5;
     .forms-pager-prev {
-      margin-left: 20px;
+      padding: 8px 0;
+      margin-left: 12px;
       cursor: pointer;
       svg {
         transform: rotate(90deg);
@@ -259,12 +265,14 @@
       color: #7a8792;
     }
     .forms-pager-finish {
+      padding: 8px 12px;
       font-weight: bold;
       color: #7a8792;
       cursor: pointer;
     }
     .forms-pager-next {
-      margin-right: 20px;
+      padding: 8px 0;
+      margin-right: 12px;
       cursor: pointer;
       svg {
         transform: rotate(-90deg);

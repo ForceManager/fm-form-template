@@ -7,7 +7,7 @@ const validateFields = (fields, values, formData, schema, currentPage) => {
   function validate(fields, values) {
     let errors = {};
     fields.forEach((element) => {
-      if (element.type === 'multiplier') {
+      if (!element.isHidden && element.type === 'multiplier') {
         if (!errors[element.name]) errors[element.name] = [];
         if (!values) {
           errors[element.name] = element.schema[0].fields.map((field) =>
@@ -21,7 +21,7 @@ const validateFields = (fields, values, formData, schema, currentPage) => {
           });
         }
       } else {
-        if (element.validations) {
+        if (!element.isHidden && element.validations) {
           element.validations.forEach((validation) => {
             if (!errors[element.name]) {
               const params = validation.substring(
