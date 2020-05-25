@@ -41,17 +41,19 @@ Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### 7) Get development API keys
+### 7) Create development API keys
+
+If you have already created the 'fm-fragments' keys, you can skip this step.
 
 - Go to 'Manage Keys' section of the new [ForceManager Setup](https://setup.forcemanager.net/#/app/apikeys).
 - Select 'Thirt party integraions' tab and click to 'Create API keys'.
-- Set Name and Description to 'Forms' and select 'external_basic' for the plan.
+- Set Name and Description to 'fm-fragments' and select 'external_basic' for the plan.
 
 ### 6) Configure Dev mode
 
 - Click on the gear icon on the top right corner to see the config panel.
 - Set de Entitiy ID with the ID of the account you want to use.
-- Go to Login tab and set the Public and Private Keys you generated previously.
+- Go to Login tab and set Implementation Id and your Setup credentials.
 
 ### 7) Code
 
