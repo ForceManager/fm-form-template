@@ -1,6 +1,13 @@
 function getDefaultValues(selectedForm, formData, generalData) {
   return new Promise((resolve, reject) => {
-    resolve();
+    const defaultValues = {
+      form1: {
+        page1: {
+          someText: 'Lorem ipsum',
+        },
+      },
+    };
+    resolve(defaultValues[selectedForm.value]);
   });
 }
 
