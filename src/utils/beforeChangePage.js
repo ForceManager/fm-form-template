@@ -54,7 +54,7 @@ const beforeChangePage = ({
         currentPage: next ? currentPage + 1 : currentPage - 1,
       },
       generalData: { ...generalData },
-      formSchema: { ...formSchema },
+      formSchema: [...formSchema],
       selectedForm,
       currentPage,
     };
@@ -72,10 +72,7 @@ const beforeChangePage = ({
               ...newStates.generalData,
               ...res.generalData,
             },
-            formSchema: {
-              ...newStates.formSchema,
-              ...res.formSchema,
-            },
+            formSchema: res.formSchema || newStates.formSchema,
           };
         }
 
@@ -94,7 +91,7 @@ const beforeChangePage = ({
         };
         setFormData(newFormData);
         setGeneralData({ ...newStates.generalData });
-        setFormSchema({ ...newStates.formSchema });
+        setFormSchema([...newStates.formSchema]);
         resolve(newFormData);
       })
       .catch(reject);
