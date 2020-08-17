@@ -37,9 +37,6 @@
               "name": "conatct",
               "type": "select",
               "attrs": {
-                "relatedEntity": [
-                  "contacts"
-                ],
                 "options": []
               }
             },

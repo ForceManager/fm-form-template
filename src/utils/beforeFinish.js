@@ -22,12 +22,12 @@ const beforeFinish = ({
   setFormSchema,
 }) => {
   return new Promise((resolve, reject) => {
-    const finalState = generalData.states.find((state) => state.setStateOnPage === -1);
+    const finalState = generalData.states.find((state) => state.setOnPage === -1);
     let newStates = {
       formData: {
         ...formData,
         idState: finalState ? finalState.id : formData.idState,
-        endState: finalState && finalState.endState ? 1 : 0,
+        endState: finalState?.endState ? 1 : 0,
       },
       generalData: { ...generalData },
       formSchema: { ...formSchema },

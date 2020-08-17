@@ -13,9 +13,9 @@ const formatInitData = (data, statesList, literals) => {
           userCreacion: data.user.id,
         },
         idFormType: data.form.idFormType,
+        idFormSubtype: null,
         idState: null,
         endState: null,
-        selectedForm: null,
       },
       generalData: {
         account: data.account,
@@ -27,6 +27,7 @@ const formatInitData = (data, statesList, literals) => {
         imei: data.imei,
         statesList,
       },
+      selectedForm: null,
     };
   } else if (data.mode === 'edition') {
     if (data.form.endState) {
