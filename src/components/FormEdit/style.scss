@@ -13,10 +13,26 @@
       height: 100%;
       width: 100%;
       > .form-page {
-        overflow-y: scroll;
         height: calc(100% - 40px);
         position: initial;
         margin: 40px 0;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+          width: 17px;
+          height: 17px;
+        }
+        &::-webkit-scrollbar-thumb {
+          border-radius: 10px;
+          background: #d0d4d8;
+          background-clip: content-box;
+          border: 4px solid rgba(0, 0, 0, 0);
+        }
+        &::-webkit-scrollbar-thumb:window-inactive {
+          border-radius: 10px;
+          background: #d0d4d8;
+          background-clip: content-box;
+          border: 4px solid rgba(0, 0, 0, 0);
+        }
         > div {
           padding: 10px 15px 20px;
           max-width: 459px;
