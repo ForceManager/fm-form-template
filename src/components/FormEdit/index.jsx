@@ -30,7 +30,7 @@ function FormEdit({
 
   useEffect(() => {
     const pageSchema = schema[currentPage];
-    if (pageSchema && pageSchema.imagesView && !imagesView) {
+    if (pageSchema?.imagesView && !imagesView) {
       bridge
         .showCameraImages()
         .then(() => {

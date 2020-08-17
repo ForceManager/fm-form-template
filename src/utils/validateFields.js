@@ -35,7 +35,7 @@ const validateFields = (fields, values, formData, schema, currentPage) => {
                 formData,
                 field: element,
                 values: values || null,
-                value: (values && values[element.name]) || null,
+                value: values?.[element.name] || null,
                 schema,
                 currentPage,
                 parentIndex,

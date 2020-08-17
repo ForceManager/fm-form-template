@@ -42,17 +42,13 @@ const generateForm = (selectedForm, formData, generalData) => {
             break;
           case 'select':
             field.isFullWidth = true;
-            if (field.attrs && field.attrs.table && field.attrs.table !== '') {
+            if (field.attrs?.table !== '') {
               schemaPromises.push(
                 bridge
                   .getValueList(field.attrs.table)
                   .then((res) => {
                     const options = field.attrs.options ? field.attrs.options : [];
-                    if (
-                      field.attrs.table &&
-                      actions.formtValuelist &&
-                      actions.formtValuelist[field.attrs.table]
-                    ) {
+                    if (field.attrs.table && actions.formtValuelist?.[field.attrs.table]) {
                       field.attrs.options = [
                         ...options,
                         ...actions.formtValuelist[field.attrs.table]({
@@ -68,11 +64,7 @@ const generateForm = (selectedForm, formData, generalData) => {
                   })
                   .catch(reject),
               );
-            } else if (
-              field.attrs &&
-              field.attrs.relatedEntity &&
-              field.attrs.relatedEntity !== ''
-            ) {
+            } else if (field.attrs?.relatedEntity !== '') {
               let id;
               if (!field.attrs.relatedEntity[2]) {
                 id = -1;
@@ -99,8 +91,7 @@ const generateForm = (selectedForm, formData, generalData) => {
                     const options = field.attrs.options ? field.attrs.options : [];
                     if (
                       field.attrs.relatedEntity[3] &&
-                      actions.formatEntityList &&
-                      actions.formatEntityList[field.attrs.relatedEntity[3]]
+                      actions.formatEntityList?.[field.attrs.relatedEntity[3]]
                     ) {
                       field.attrs.options = [
                         ...options,

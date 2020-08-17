@@ -18,7 +18,7 @@ const setReadOnlyOnState = (newStates, newFormStateId) => {
     if (newFormStateId) {
       newStates.formSchema = Object.keys(newStates.formSchema).map((key) => {
         const section = newStates.formSchema[key];
-        if (section.readOnlyOnState && section.readOnlyOnState === newFormStateId) {
+        if (section.readOnlyOnState === newFormStateId) {
           const fields = section.fields.map((field) => {
             field.isReadOnly = true;
             return field;
@@ -44,8 +44,7 @@ const beforeChangePage = ({
   next,
 }) => {
   return new Promise((resolve, reject) => {
-    const newFormState =
-      next && generalData.states.find((el) => el.setStateOnPage === currentPage + 1);
+    const newFormState = next && generalData.states.find((el) => el.setOnPage === currentPage + 1);
     const newFormStateId = newFormState ? newFormState.id : null;
     let newStates = {
       formData: {

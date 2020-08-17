@@ -42,10 +42,7 @@ function App() {
   const [imagesView, setImagesView] = useState(false);
   const [error, setError] = useState(false);
   const [summaryConfig, setSummaryConfig] = useState(
-    (selectedForm &&
-      config.formSchema[selectedForm.value] &&
-      config.formSchema[selectedForm.value].summary) ||
-      {},
+    (selectedForm && config.formSchema[selectedForm.value]?.summary) || {},
   );
 
   const setStates = useCallback(
@@ -86,19 +83,14 @@ function App() {
   }, []);
 
   useEffect(() => {
-    setSummaryConfig(
-      (selectedForm &&
-        config.formSchema[selectedForm.value] &&
-        config.formSchema[selectedForm.value].summary) ||
-        {},
-    );
+    setSummaryConfig((selectedForm && config.formSchema[selectedForm.value]?.summary) || {});
   }, [selectedForm]);
 
   useEffect(() => {
-    if (selectedForm || !generalData) return;
+    if (selectedForm || !generalData || !formData.idFormSubType) return;
     if (generalData.mode === 'edition') {
       const selectedForm = Object.keys(config.formSchema).find(
-        (key) => config.formSchema[key].id === formData.idFormType,
+        (key) => key === formData.idFormSubType,
       );
       setSelectedForm({
         label: config.formSchema[selectedForm].title,
@@ -126,9 +118,9 @@ function App() {
       })
       .then((res) => {
         const newStates = {
-          formData: res && res.formData ? res.formData : data.formData,
-          generalData: res && res.generalData ? res.generalData : data.generalData,
-          formSchema: res && res.formSchema ? res.formSchema : data.formSchema,
+          formData: res?.formData ? res.formData : data.formData,
+          generalData: res?.generalData ? res.generalData : data.generalData,
+          formSchema: res?.formSchema ? res.formSchema : data.formSchema,
         };
         setStates(newStates);
         bridge.hideLoading();
@@ -142,31 +134,6 @@ function App() {
         // setError(true);
       });
   }, [selectedForm, generalData, formSchema, formData, setStates]);
-
-  const handleOnFieldFocus = useCallback(
-    (values, field, currentPage) => {
-      // const sectionName = formSchema[currentPage].name;
-      // if (field.subType !== 'date') return;
-      // bridge
-      //   .openDatePicker()
-      //   .then((res) => {
-      //     setFormData({
-      //       ...formData,
-      //       formObject: {
-      //         ...formData.formObject,
-      //         [sectionName]: {
-      //           ...formData.formObject[sectionName],
-      //           [field.name]: res,
-      //         },
-      //       },
-      //     });
-      //   })
-      //   .catch((err) => {
-      //     console.warn(err);
-      //   });
-    },
-    [formData, formSchema],
-  );
 
   const handleOnFormChange = useCallback(
     (values, field, currentPage) => {
@@ -188,12 +155,7 @@ function App() {
         },
       };
 
-      if (
-        actions.onChange &&
-        actions.onChange[selectedForm.value] &&
-        actions.onChange[selectedForm.value][sectionName] &&
-        actions.onChange[selectedForm.value][sectionName][field.name]
-      ) {
+      if (actions.onChange?.[selectedForm.value]?.[sectionName]?.[field.name]) {
         const data = {
           formData: { ...formData, ...newFormData },
           generalData,
@@ -256,26 +218,19 @@ function App() {
   );
 
   const showSelector = useMemo(() => {
-    return generalData && generalData.mode === 'creation' && !selectedForm;
+    return generalData?.mode === 'creation' && !selectedForm;
   }, [generalData, selectedForm]);
 
   const showEdit = useMemo(() => {
     return (
       formSchema &&
-      generalData &&
-      ((generalData.mode === 'creation' && selectedForm) ||
-        (generalData.mode === 'edition' && formData && !formData.endState))
+      ((generalData?.mode === 'creation' && selectedForm) ||
+        (generalData?.mode === 'edition' && formData && !formData.endState))
     );
   }, [formSchema, generalData, selectedForm, formData]);
 
   const showSummary = useMemo(() => {
-    return !!(
-      formSchema &&
-      generalData &&
-      generalData.mode === 'edition' &&
-      formData &&
-      formData.endState
-    );
+    return !!(formSchema && generalData?.mode === 'edition' && formData?.endState);
   }, [formSchema, generalData, formData]);
 
   const platformClass = useMemo(() => {
@@ -296,7 +251,6 @@ function App() {
         <FormEdit
           schema={formSchema}
           onChange={handleOnFormChange}
-          onFocus={handleOnFieldFocus}
           generalData={generalData}
           formData={formData}
           customFields={customFields}
