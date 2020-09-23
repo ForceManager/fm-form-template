@@ -318,15 +318,20 @@
     .forms-pager-bar {
       border-top: 1px solid #e1e4e7;
       background: white;
-      padding: 20px 0 0;
+      padding: 19px 0 0;
       height: 50px;
       .forms-pager-prev,
       .forms-pager-next {
+        padding: 0;
         span {
           margin: 6px 0;
         }
       }
+      .forms-pager-number {
+        line-height: 29px;
+      }
       .forms-pager-finish {
+        height: 30px;
         font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
         letter-spacing: 0.5px;
         font-size: 11px;

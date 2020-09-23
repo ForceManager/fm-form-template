@@ -1,6 +1,6 @@
 {
-  "name": "form-template",
-  "version": "0.0.3",
+  "name": "fm-form-template",
+  "version": "0.0.4",
   "private": false,
   "license": "MIT",
   "dependencies": {
@@ -27,8 +27,10 @@
     "fm-start": "fm start",
     "build": "fm set_public_url && react-scripts build",
     "build-sandbox": "fm set_public_url_sandbox && react-scripts build",
-    "deploy": "npm run build && fm deploy",
-    "deploy-sandbox": "npm run build-sandbox && fm deploy",
+    "deploy": "fm set_public_url && npm run release",
+    "deploy-sandbox": "fm set_public_url_sandbox && npm run release",
+    "release": "sh ./scripts/release.sh",
+    "version": "echo $npm_package_version",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
