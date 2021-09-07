@@ -135,6 +135,8 @@ function App() {
       });
   }, [selectedForm, generalData, formSchema, formData, setStates]);
 
+  const handleOnFieldFocus = useCallback((values, field, currentPage) => {}, []);
+
   const handleOnFormChange = useCallback(
     (values, field, currentPage) => {
       const sectionName = formSchema[currentPage].name;
@@ -251,6 +253,7 @@ function App() {
         <FormEdit
           schema={formSchema}
           onChange={handleOnFormChange}
+          onfocus={handleOnFieldFocus}
           generalData={generalData}
           formData={formData}
           customFields={customFields}
