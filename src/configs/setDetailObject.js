@@ -8,7 +8,7 @@ const setDetailObject = ({ selectedForm, formData, generalData, currentPage, det
             value = selectedForm.label;
             break;
           case 'state':
-            value = generalData.states[formData.idState].name;
+            value = generalData.states.find((state) => state.id === formData.idState).name;
             break;
           case 'creationDate':
             value = formData.formObject.fechaCreacion;

@@ -42,7 +42,7 @@ const generateForm = (selectedForm, formData, generalData) => {
             break;
           case 'select':
             field.isFullWidth = true;
-            if (field.attrs?.table !== '') {
+            if (field.attrs.table && field.attrs.table !== '') {
               schemaPromises.push(
                 bridge
                   .getValueList(field.attrs.table)
@@ -64,7 +64,7 @@ const generateForm = (selectedForm, formData, generalData) => {
                   })
                   .catch(reject),
               );
-            } else if (field.attrs?.relatedEntity !== '') {
+            } else if (field.attrs.relatedEntity && field.attrs.relatedEntity !== '') {
               let id;
               if (!field.attrs.relatedEntity[2]) {
                 id = -1;
