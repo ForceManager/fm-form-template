@@ -142,7 +142,7 @@ function App() {
       const sectionName = formSchema[currentPage].name;
 
       if (field.type === 'checkbox') {
-        if (formData.formObject[sectionName][field.name]) {
+        if (formData.formObject[sectionName] && formData.formObject[sectionName][field.name]) {
           values[field.name] = false;
         } else {
           values[field.name] = true;
@@ -253,7 +253,7 @@ function App() {
         <FormEdit
           schema={formSchema}
           onChange={handleOnFormChange}
-          onfocus={handleOnFieldFocus}
+          onFocus={handleOnFieldFocus}
           generalData={generalData}
           formData={formData}
           customFields={customFields}
