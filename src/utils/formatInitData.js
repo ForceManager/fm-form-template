@@ -12,7 +12,7 @@ const formatInitData = (data, statesList, literals) => {
           fechaCreacion: moment().format(CONSTANTS.FORMATS.DATE_TIME),
           userCreacion: data.user.id,
         },
-        idFormType: data.idFormType || data.idPreSelectedFormType,
+        idFormType: data.idFormType || data.form.idFormType || data.idPreSelectedFormType,
         idFormSubtype: null,
         idState: null,
         endState: null,
