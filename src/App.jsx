@@ -59,12 +59,25 @@ function App() {
     },
     [formData, generalData, setFormData, setGeneralData, setFormSchema],
   );
+  
+  const startTime = Date.now();
+  const getFormStatesBE = () => {
+    return new Promise((resolve, reject) => {
+      bridge
+        .getFormStates()
+        .then((res) => resolve(res))
+        .catch(() => {
+          if (Date.now() - startTime > 10000) reject('Timeout getting states');
+          getFormStatesBE();
+        });
+    });
+  };
 
   useEffect(() => {
     let statesList = {};
     bridge
       .showLoading()
-      .then(() => bridge.getFormStates())
+      .then(() => getFormStatesBE())
       .then((res) => {
         statesList = res;
         return bridge.getFormInitData();
