@@ -100,10 +100,10 @@ function App() {
   }, [selectedForm]);
 
   useEffect(() => {
-    if (selectedForm || !generalData || !formData.idFormSubType) return;
+    if (selectedForm || !generalData || !formData.idFormSubtype) return;
     if (generalData.mode === 'edition') {
       const selectedForm = Object.keys(config.formSchema).find(
-        (key) => key === formData.idFormSubType,
+        (key) => key === formData.idFormSubtype,
       );
       setSelectedForm({
         label: config.formSchema[selectedForm].title,
